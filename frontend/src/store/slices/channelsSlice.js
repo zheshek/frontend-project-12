@@ -25,11 +25,7 @@ export const addChannel = createAsyncThunk(
   'channels/addChannel',
   async (name, { rejectWithValue }) => {
     try {
-      // Проверяем наличие нецензурных слов
-      if (profanityFilter.isProfane(name)) {
-        return rejectWithValue('Название канала содержит недопустимые слова');
-      }
-      
+      // Убираем проверку нецензурных слов - она уже сделана в модальном окне!
       const response = await api.post('/channels', { name });
       notifyChannelCreated();
       return response.data;
@@ -58,11 +54,7 @@ export const renameChannel = createAsyncThunk(
   'channels/renameChannel',
   async ({ id, name }, { rejectWithValue }) => {
     try {
-      // Проверяем наличие нецензурных слов
-      if (profanityFilter.isProfane(name)) {
-        return rejectWithValue('Название канала содержит недопустимые слова');
-      }
-      
+      // Для переименования тоже убираем проверку
       const response = await api.patch(`/channels/${id}`, { name });
       notifyChannelRenamed();
       return response.data;
@@ -106,7 +98,7 @@ const channelsSlice = createSlice({
       })
       .addCase(addChannel.fulfilled, (state, action) => {
         state.channels.push(action.payload);
-        state.currentChannelId = action.payload.id;
+        state.currentChannelId = action.payload.id; // ← ВАЖНО: автоматически выбираем новый канал
       })
       .addCase(addChannel.rejected, (state, action) => {
         state.error = action.payload;
