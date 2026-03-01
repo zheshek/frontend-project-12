@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import profanityFilter from '../../utils/profanity.js'; // <-- ИСПРАВЛЕННЫЙ ПУТЬ
+import profanityFilter from '../../utils/profanity.js';
 
 const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
   const { t } = useTranslation();
@@ -15,26 +15,27 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
     }
   }, [show]);
 
+  // Убираем проверку на profanity из валидации!
   const validationSchema = yup.object().shape({
     name: yup
       .string()
       .required(t('channels.errors.required'))
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
-      .notOneOf(channelNames, t('channels.errors.nameExists'))
-      .test('profanity', t('profanity.channelNameError'), (value) => {
-        return !profanityFilter.isProfane(value);
-      }),
+      .notOneOf(channelNames, t('channels.errors.nameExists')),
+    // проверка на profanity УДАЛЕНА!
   });
 
   const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
     try {
+      // Применяем фильтр здесь - заменяем плохие слова на *****
       const cleanedName = profanityFilter.clean(values.name);
       await onAddChannel(cleanedName);
       resetForm();
       onHide();
     } catch (error) {
       console.error('Error adding channel:', error);
+      setErrors({ name: error.message || 'Failed to add channel' });
     } finally {
       setSubmitting(false);
     }
