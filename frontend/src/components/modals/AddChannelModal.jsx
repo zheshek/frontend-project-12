@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import profanityFilter from '../utils/profanity.js'; // <-- ИМПОРТИРУЕМ ФИЛЬТР
+import profanityFilter from '../../utils/profanity.js'; // <-- ИСПРАВЛЕННЫЙ ПУТЬ
 
 const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
   const { t } = useTranslation();
@@ -23,20 +23,17 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       .max(20, t('channels.errors.nameLength'))
       .notOneOf(channelNames, t('channels.errors.nameExists'))
       .test('profanity', t('profanity.channelNameError'), (value) => {
-        // Проверяем на нецензурные слова
         return !profanityFilter.isProfane(value);
       }),
   });
 
   const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
     try {
-      // Применяем фильтр к названию канала
       const cleanedName = profanityFilter.clean(values.name);
       await onAddChannel(cleanedName);
       resetForm();
       onHide();
     } catch (error) {
-      // Обработка ошибок
       console.error('Error adding channel:', error);
     } finally {
       setSubmitting(false);
