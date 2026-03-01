@@ -22,7 +22,7 @@ const LoginPage = () => {
     password: yup
       .string()
       .required(t('auth.errors.required'))
-      .min(6, t('auth.errors.passwordLength')),
+      .min(3, t('auth.errors.passwordLength')),
   });
 
   useEffect(() => {

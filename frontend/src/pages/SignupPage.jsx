@@ -101,7 +101,7 @@ const SignupPage = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         isInvalid={touched.username && !!errors.username}
-                        placeholder={t("auth.username")}
+                        placeholder={t("auth.signupUsername")}
                         autoComplete="username"
                         disabled={loading}
                       />
