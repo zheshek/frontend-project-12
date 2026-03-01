@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import { login, clearError } from '../store/slices/authSlice';
 
 const LoginPage = () => {
-  const { t } = useTranslation(); // 👈 ХУК ЗДЕСЬ
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
@@ -35,9 +35,12 @@ const LoginPage = () => {
   }, [isAuthenticated, navigate, dispatch]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    await dispatch(login(values));
+  dispatch(clearError());
+  await dispatch(login(values));
+  setTimeout(() => {
     setSubmitting(false);
-  };
+  }, 1000);
+};
 
   return (
     <Container fluid className="h-100">
@@ -49,6 +52,7 @@ const LoginPage = () => {
               
               {error && (
                 <Alert 
+                key="login-error"
                   variant="danger" 
                   onClose={() => dispatch(clearError())} 
                   dismissible
