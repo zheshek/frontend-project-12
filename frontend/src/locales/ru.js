@@ -7,7 +7,7 @@ export default {
     cancel: "Отмена",
     save: "Сохранить",
     delete: "Удалить",
-    add: "Добавить",
+    add: "+",
     edit: "Редактировать",
     close: "Закрыть",
     confirm: "Подтвердить",
@@ -19,16 +19,17 @@ export default {
       login: "Войти",
       online: "Online",
       offline: "Offline",
-      connectionError: "Нет соединения с сервером",
+      connectionError: "Ошибка соединения",
     },
 
     // Авторизация
     auth: {
       login: "Вход",
       signup: "Регистрация",
-      username: "Имя пользователя",
+      loginUsername: "Ваш ник", 
+       signupUsername: "Имя пользователя", 
       password: "Пароль",
-      confirmPassword: "Подтверждение пароля",
+      confirmPassword: "Подтвердите пароль",
       noAccount: "Нет аккаунта?",
       hasAccount: "Уже есть аккаунт?",
       loginButton: "Войти",
@@ -56,7 +57,7 @@ export default {
       newChannelName: "Новое имя канала",
       channelCreated: "Канал создан",
       channelRenamed: "Канал переименован",
-      channelRemoved: "Канал удален",
+      channelRemoved: "Канал удалён",
       confirmRemove: "Вы уверены, что хотите удалить канал",
       messagesWillBeDeleted: "Все сообщения в этом канале будут удалены!",
       errors: {

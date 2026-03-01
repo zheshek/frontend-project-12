@@ -74,7 +74,7 @@ const LoginPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>{t('auth.username')}</Form.Label>
+                      <Form.Label>{t('auth.loginUsername')}</Form.Label>
                       <Form.Control
                         type="text"
                         name="username"

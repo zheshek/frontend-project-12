@@ -24,7 +24,6 @@ const SignupPage = () => {
     (state) => state.auth,
   );
 
-  // 👇 validationSchema ВНУТРИ компонента, с вызовом t()
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -94,7 +93,7 @@ const SignupPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>{t("auth.username")}</Form.Label>
+                      <Form.Label>{t('auth.signupUsername')}</Form.Label>
                       <Form.Control
                         type="text"
                         name="username"

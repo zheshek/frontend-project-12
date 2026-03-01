@@ -1,16 +1,65 @@
-# React + Vite
+# 📱 Hexlet Chat (Slack-like Chat)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Actions Status](https://github.com/zheshek/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/zheshek/frontend-project-12/actions)
 
-Currently, two official plugins are available:
+Упрощенный аналог Slack-чата для командного общения. Проект создан в учебных целях для демонстрации навыков работы с современными веб-технологиями.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Демо
 
-## React Compiler
+Приложение доступно по ссылке: [https://frontend-project-12.onrender.com](https://frontend-project-12.onrender.com)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📋 Описание
 
-## Expanding the ESLint configuration
+Проект представляет собой real-time чат с возможностью:
+- 🔐 Регистрации и авторизации пользователей (JWT)
+- 💬 Создания, переименования и удаления каналов
+- 📨 Обмена сообщениями в реальном времени (WebSocket)
+- 🚫 Фильтрации нецензурных слов
+- 🔔 Всплывающих уведомлений о действиях
+- 🌐 Интернационализации (русский язык)
+- 📱 Адаптивного дизайна
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠 Технологии
+
+### Frontend
+- **React 18** - библиотека для пользовательских интерфейсов
+- **Redux Toolkit** - управление состоянием
+- **React Router v6** - навигация
+- **React Bootstrap** - UI компоненты
+- **Formik + Yup** - формы и валидация
+- **Socket.IO-client** - WebSocket соединения
+- **i18next** - интернационализация
+- **Axios** - HTTP запросы
+- **Vite** - сборка проекта
+
+### Backend
+- **@hexlet/chat-server** - готовый сервер на Express + Socket.IO
+- **JWT** - аутентификация
+
+### Мониторинг
+- **Rollbar** - отслеживание ошибок в продакшене
+
+## ⚙️ Установка и запуск
+
+### Требования
+- Node.js 18 или выше
+- npm 8 или выше
+
+### Локальная разработка
+
+```bash
+# Клонирование репозитория
+git clone https://github.com/zheshek/frontend-project-12.git
+cd frontend-project-12
+
+# Установка зависимостей
+make install
+
+# Сборка проекта
+make build
+
+# Запуск сервера (продакшен)
+make start
+
+# Режим разработки (сервер + фронтенд с hot reload)
+make dev

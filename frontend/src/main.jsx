@@ -4,9 +4,9 @@ import { Provider as ReduxProvider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./i18n";
 import App from "./App";
 import { store } from "./store";
-import "./i18n";
 import "./index.css";
 
 // Простая конфигурация как в инструкции
