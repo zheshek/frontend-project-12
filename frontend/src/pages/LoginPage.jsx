@@ -13,7 +13,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
-  // 👇 validationSchema ВНУТРИ компонента, после хука
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -82,7 +81,7 @@ const LoginPage = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         isInvalid={touched.username && errors.username}
-                        placeholder={t('auth.username')}
+                        placeholder={t('auth.loginUsername')}
                         autoComplete="username"
                         disabled={loading}
                       />
