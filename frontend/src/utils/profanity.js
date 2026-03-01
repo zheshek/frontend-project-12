@@ -1,8 +1,7 @@
 import filter from 'leo-profanity';
 
-// Загружаем русский словарь
+// Загружаем русский и английский словари
 filter.loadDictionary('ru');
-// Загружаем английский словарь для слова 'boobs'
 filter.loadDictionary('en');
 
 const profanityFilter = {
