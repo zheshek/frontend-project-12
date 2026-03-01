@@ -1,0 +1,25 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/zheshek/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/zheshek/frontend-project-12/actions)",
+  "main": "index.js",
+  "scripts": {
+  "start": "npx start-server -s ./frontend/dist",
+  "dev": "cd frontend && npm run dev",
+  "build": "cd frontend && npm run build"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zheshek/frontend-project-12.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zheshek/frontend-project-12/issues"
+  },
+  "homepage": "https://github.com/zheshek/frontend-project-12#readme",
+  "dependencies": {
+    "@hexlet/chat-server": "^2.0.4"
+  }
+}
