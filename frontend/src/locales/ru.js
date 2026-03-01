@@ -78,7 +78,7 @@ export default {
     },
 
     toasts: {
-      channelCreated: "Канал успешно создан",
+      channelCreated: "Канал создан",
       channelRenamed: "Канал успешно переименован",
       channelRemoved: "Канал успешно удален",
       networkError: "Ошибка сети. Проверьте подключение",
