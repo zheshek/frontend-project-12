@@ -12,14 +12,10 @@ customBadWords.forEach(word => filter.add(word));
 
 const profanityFilter = {
   // Очистка текста (замена на ***)
-  clean: (text) => {
-    if (typeof text !== 'string') return text;
-    const words = text.split(' ');
-    const cleanedWords = words.map(word => 
-      filter.isProfane(word) ? '*****' : word
-    );
-    return cleanedWords.join(' ');
-  }, 
+ clean: (text) => {
+  if (typeof text !== 'string') return text;
+  return text; 
+},
 
   // Проверка на наличие нецензурных слов
   isProfane: (text) => {
