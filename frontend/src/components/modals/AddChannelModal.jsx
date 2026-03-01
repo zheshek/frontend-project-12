@@ -55,12 +55,14 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
                 <Form.Control
                   type="text"
                   name="name"
+                  id="channel-name-input" 
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   isInvalid={touched.name && errors.name}
                   ref={inputRef}
                   disabled={isSubmitting}
+                  aria-label="Имя канала" 
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.name}
