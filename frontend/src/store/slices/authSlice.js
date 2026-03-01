@@ -12,8 +12,8 @@ export const login = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (error.response?.status === 401) {
-        showError('Неверное имя пользователя или пароль');
-        return rejectWithValue('Неверное имя пользователя или пароль');
+        showError('Неверные имя пользователя или пароль');
+        return rejectWithValue('Неверные имя пользователя или пароль');
       }
       showError('Ошибка сервера');
       return rejectWithValue('Ошибка сервера');
