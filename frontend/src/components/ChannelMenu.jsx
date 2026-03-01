@@ -11,6 +11,7 @@ const ChannelMenu = ({ channel, onRename, onRemove }) => {
         size="sm" 
         className="p-0 text-muted"
         style={{ textDecoration: 'none' }}
+        aria-label="Управление каналом"  // ← ДОБАВЛЯЕМ ЭТО!
       >
         ⋮
       </Dropdown.Toggle>
