@@ -42,7 +42,7 @@ export default {
         passwordLength: "Не менее 6 символов",
         passwordsMustMatch: "Пароли должны совпадать",
         invalidCredentials: "Неверное имя пользователя или пароль",
-        userExists: "Пользователь с таким именем уже существует",
+        userExists: "Такой пользователь уже существует",
         serverError: "Ошибка сервера",
       },
     },
