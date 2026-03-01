@@ -69,6 +69,7 @@ const SignupPage = () => {
                   onClose={() => dispatch(clearError())}
                   dismissible
                 >
+                  {console.log('Error in signup:', error)}
                   {error === "Conflict" ? t("auth.errors.userExists") : error}
                 </Alert>
               )}
