@@ -259,6 +259,7 @@ const ChatPage = () => {
                   sending ||
                   connectionStatus !== "connected"
                 }
+                aria-label="Новое сообщение"
               />
               <Button
                 type="submit"
