@@ -41,7 +41,7 @@ export default {
         usernameLength: "От 3 до 20 символов",
         passwordLength: "Не менее 6 символов",
         passwordsMustMatch: "Пароли должны совпадать",
-        invalidCredentials: "Неверное имя пользователя или пароль",
+        invalidCredentials: "Неверные имя пользователя или пароль",
         userExists: "Такой пользователь уже существует",
         serverError: "Ошибка сервера",
       },
