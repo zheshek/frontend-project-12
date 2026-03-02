@@ -32,7 +32,7 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
           <strong>
             #
             {channel?.name}
-            </strong>?
+          </strong>?
         </p>
 
         <p className="text-danger">
@@ -54,3 +54,4 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
 }
 
 export default RemoveChannelModal
+
