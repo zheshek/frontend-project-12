@@ -11,9 +11,10 @@ const ChannelMenu = ({ channel, onRename, onRemove }) => {
         size="sm" 
         className="p-0 text-muted"
         style={{ textDecoration: 'none' }}
-        aria-label="Управление каналом"  // ← ДОБАВЛЯЕМ ЭТО!
+        aria-label="Управление каналом"
       >
-        ⋮
+        <span aria-hidden="true">⋮</span>
+        <span className="visually-hidden">Управление каналом</span> {/* ← Добавляем скрытый текст */}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
