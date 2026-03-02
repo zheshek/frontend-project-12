@@ -18,36 +18,34 @@ const Header = () => {
   }
 
   return (
-    <Navbar bg='primary' variant='dark' expand='lg' className='px-3'>
+    <Navbar bg="primary" variant="dark" expand="lg" className="px-3">
       <Container fluid>
-        <Navbar.Brand as={Link} to='/'>
+        <Navbar.Brand as={Link} to="/">
           {t('appName')}
         </Navbar.Brand>
 
         <Navbar.Toggle />
 
-        <Navbar.Collapse className='justify-content-end'>
+        <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
-            <div className='d-flex align-items-center'>
+            <div className="d-flex align-items-center">
               {connectionStatus === 'connected' ? (
-                <Badge bg='success' className='me-3'>
-                  ●
-                  {t('header.online')}
+                <Badge bg="success" className="me-3">
+                  ● {t('header.online')}
                 </Badge>
               ) : (
-                <Badge bg='warning' text='dark' className='me-3'>
-                  ○
-                  {t('header.offline')}
+                <Badge bg="warning" text="dark" className="me-3">
+                  ○ {t('header.offline')}
                 </Badge>
               )}
 
-              <span className='text-white me-3'>
+              <span className="text-white me-3">
                 {user?.username}
               </span>
 
               <Button
-                variant='outline-light'
-                size='sm'
+                variant="outline-light"
+                size="sm"
                 onClick={handleLogout}
               >
                 {t('header.logout')}
@@ -56,8 +54,8 @@ const Header = () => {
           ) : (
             <Navbar.Text>
               <Link
-                to='/login'
-                className='text-white text-decoration-none'
+                to="/login"
+                className="text-white text-decoration-none"
               >
                 {t('header.login')}
               </Link>

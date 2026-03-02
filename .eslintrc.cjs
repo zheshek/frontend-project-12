@@ -15,7 +15,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-unused-vars': 'warn',
     'no-undef': 'warn',
-    // Отключаем стилистические правила, которые вызывают ошибки
+    // Отключаем все стилистические правила
     '@stylistic/semi': 'off',
     '@stylistic/quotes': 'off',
     '@stylistic/no-trailing-spaces': 'off',
