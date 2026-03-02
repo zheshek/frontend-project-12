@@ -1,22 +1,20 @@
+// frontend/src/store/slices/messagesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 import socketService from '../../services/socket';
-import { notifyNetworkError, notifyLoadError } from '../../utils/toast';
-import profanityFilter from '../../utils/profanity';
+import { notifyNetworkError } from '../../utils/toast';
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
   async (_, { rejectWithValue }) => {
     try {
+      console.log('📥 Fetching messages from server...');
       const response = await api.get('/messages');
-      // Фильтруем сообщения при загрузке
-      const filteredMessages = response.data.map(msg => ({
-        ...msg,
-        text: profanityFilter.clean(msg.text)
-      }));
-      return filteredMessages;
+      console.log('📥 Messages loaded:', response.data.length);
+      return response.data;
     } catch (error) {
-      notifyLoadError();
+      console.error('❌ Error loading messages:', error);
+      notifyNetworkError();
       return rejectWithValue('Ошибка загрузки сообщений');
     }
   }
@@ -26,48 +24,18 @@ export const sendMessage = createAsyncThunk(
   'messages/sendMessage',
   async (messageData, { rejectWithValue }) => {
     try {
-      // Фильтруем текст перед отправкой
-      const cleanText = profanityFilter.clean(messageData.text);
+      console.log('📤 Sending message to server:', messageData);
+      const response = await api.post('/messages', messageData);
+      console.log('📤 Message saved on server:', response.data);
       
-      socketService.sendMessage({
-        text: cleanText,
-        channelId: Number(messageData.channelId)
-      });
+      // Отправляем через сокет для real-time
+      socketService.sendMessage(response.data);
       
-      return {
-        id: Date.now(),
-        text: cleanText,
-        channelId: messageData.channelId,
-        username: messageData.username,
-        createdAt: new Date().toISOString(),
-        removable: true
-      };
+      return response.data;
     } catch (error) {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('/api/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            text: profanityFilter.clean(messageData.text),
-            channelId: Number(messageData.channelId),
-          }),
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          return {
-            ...data,
-            text: profanityFilter.clean(data.text)
-          };
-        }
-      } catch (postError) {
-        notifyNetworkError();
-        return rejectWithValue('Ошибка отправки сообщения');
-      }
+      console.error('❌ Error sending message:', error);
+      notifyNetworkError();
+      return rejectWithValue('Ошибка отправки сообщения');
     }
   }
 );
@@ -82,15 +50,11 @@ const messagesSlice = createSlice({
   },
   reducers: {
     addMessageFromSocket: (state, action) => {
-      // Фильтруем сообщение перед добавлением
-      const filteredMessage = {
-        ...action.payload,
-        text: profanityFilter.clean(action.payload.text)
-      };
-      
-      const exists = state.messages.some(m => m.id === filteredMessage.id);
+      console.log('📨 Adding message from socket:', action.payload);
+      // Проверяем, нет ли уже такого сообщения (чтобы избежать дубликатов)
+      const exists = state.messages.some(m => m.id === action.payload.id);
       if (!exists) {
-        state.messages.push(filteredMessage);
+        state.messages.push(action.payload);
       }
     },
     setConnectionStatus: (state, action) => {
@@ -105,17 +69,16 @@ const messagesSlice = createSlice({
       })
       .addCase(fetchMessages.fulfilled, (state, action) => {
         state.loading = false;
-        state.messages = action.payload;
+        state.messages = action.payload; // ← Заменяем, а не добавляем!
+        console.log('✅ Messages state updated:', state.messages.length);
       })
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
-        state.messages.push(action.payload);
-      })
-      .addCase(sendMessage.rejected, (state, action) => {
-        state.error = action.payload;
+        // Не добавляем здесь, так как сообщение придёт через socket
+        console.log('✅ Message sent, will arrive via socket');
       });
   },
 });
