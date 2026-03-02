@@ -21,7 +21,7 @@ const SignupPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth)
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -101,10 +101,7 @@ const SignupPage = () => {
                   isSubmitting,
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="username"
-                    >
+                    <Form.Group className="mb-3" controlId="username">
                       <Form.Label>
                         {t('auth.signupUsername')}
                       </Form.Label>
@@ -115,9 +112,7 @@ const SignupPage = () => {
                         value={values.username}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(
-                          touched.username && errors.username,
-                        )}
+                        isInvalid={Boolean(touched.username && errors.username)}
                         autoComplete="username"
                         disabled={loading}
                       />
@@ -127,10 +122,7 @@ const SignupPage = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group
-                      className="mb-3"
-                      controlId="password"
-                    >
+                    <Form.Group className="mb-3" controlId="password">
                       <Form.Label>
                         {t('auth.password')}
                       </Form.Label>
@@ -141,9 +133,7 @@ const SignupPage = () => {
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(
-                          touched.password && errors.password,
-                        )}
+                        isInvalid={Boolean(touched.password && errors.password)}
                         autoComplete="new-password"
                         disabled={loading}
                       />
@@ -153,10 +143,7 @@ const SignupPage = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group
-                      className="mb-4"
-                      controlId="confirmPassword"
-                    >
+                    <Form.Group className="mb-4" controlId="confirmPassword">
                       <Form.Label>
                         {t('auth.confirmPassword')}
                       </Form.Label>
@@ -168,8 +155,7 @@ const SignupPage = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         isInvalid={Boolean(
-                          touched.confirmPassword &&
-                            errors.confirmPassword,
+                          touched.confirmPassword && errors.confirmPassword,
                         )}
                         autoComplete="new-password"
                         disabled={loading}

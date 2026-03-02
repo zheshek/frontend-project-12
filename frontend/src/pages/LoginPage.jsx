@@ -20,7 +20,8 @@ const LoginPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
- const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
+
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth)
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -73,10 +74,7 @@ const LoginPage = () => {
               )}
 
               <Formik
-                initialValues={{
-                  username: '',
-                  password: '',
-                }}
+                initialValues={{ username: '', password: '' }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
               >
@@ -90,10 +88,7 @@ const LoginPage = () => {
                   isSubmitting,
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group
-                      className="mb-3"
-                      controlId="username"
-                    >
+                    <Form.Group className="mb-3" controlId="username">
                       <Form.Label>
                         {t('auth.loginUsername')}
                       </Form.Label>
@@ -104,9 +99,7 @@ const LoginPage = () => {
                         value={values.username}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(
-                          touched.username && errors.username,
-                        )}
+                        isInvalid={Boolean(touched.username && errors.username)}
                         autoComplete="username"
                         disabled={loading}
                       />
@@ -116,10 +109,7 @@ const LoginPage = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group
-                      className="mb-4"
-                      controlId="password"
-                    >
+                    <Form.Group className="mb-4" controlId="password">
                       <Form.Label>
                         {t('auth.password')}
                       </Form.Label>
@@ -130,9 +120,7 @@ const LoginPage = () => {
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(
-                          touched.password && errors.password,
-                        )}
+                        isInvalid={Boolean(touched.password && errors.password)}
                         autoComplete="current-password"
                         disabled={loading}
                       />

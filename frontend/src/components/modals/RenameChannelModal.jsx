@@ -44,13 +44,11 @@ const RenameChannelModal = ({
 
       resetForm()
       onHide()
-    } 
-    catch (err) {
+    } catch (err) {
       setErrors({
         name: err?.message || 'Failed to rename channel',
       })
-    } 
-    finally {
+    } finally {
       setSubmitting(false)
     }
   }

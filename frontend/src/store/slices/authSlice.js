@@ -3,7 +3,7 @@ import axios from 'axios'
 import { showSuccess, showError } from '../../utils/toast'
 import socketService from '../../services/socket'
 
-const saveToken = (token) => {
+const saveToken = token => {
   localStorage.setItem('token', token)
 }
 
@@ -95,12 +95,10 @@ const authSlice = createSlice({
     token: localStorage.getItem('token'),
     loading: false,
     error: null,
-    isAuthenticated: Boolean(
-      localStorage.getItem('token'),
-    ),
+    isAuthenticated: Boolean(localStorage.getItem('token')),
   },
   reducers: {
-    logout: (state) => {
+    logout: state => {
       state.user = null
       state.token = null
       state.isAuthenticated = false
@@ -110,13 +108,13 @@ const authSlice = createSlice({
 
       showSuccess('До встречи!')
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(login.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -130,7 +128,7 @@ const authSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      .addCase(signup.pending, (state) => {
+      .addCase(signup.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -148,7 +146,7 @@ const authSlice = createSlice({
         state.token = action.payload.token
         state.isAuthenticated = true
       })
-      .addCase(checkAuth.rejected, (state) => {
+      .addCase(checkAuth.rejected, state => {
         state.token = null
         state.isAuthenticated = false
       })

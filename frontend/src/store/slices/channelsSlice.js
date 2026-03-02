@@ -75,9 +75,9 @@ const channelsSlice = createSlice({
       state.currentChannelId = payload
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchChannels.pending, (state) => {
+      .addCase(fetchChannels.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -86,8 +86,9 @@ const channelsSlice = createSlice({
         state.channels = payload
 
         if (!state.currentChannelId && payload.length > 0) {
-          const defaultChannel = payload.find((c) => !c.removable)
-          state.currentChannelId = defaultChannel?.id ?? payload[0].id
+          const defaultChannel = payload.find(c => !c.removable)
+          state.currentChannelId =
+            defaultChannel?.id ?? payload[0].id
         }
       })
       .addCase(fetchChannels.rejected, (state, { payload }) => {
@@ -102,15 +103,23 @@ const channelsSlice = createSlice({
         state.error = payload
       })
       .addCase(removeChannel.fulfilled, (state, { payload }) => {
-        state.channels = state.channels.filter((c) => c.id !== payload)
+        state.channels = state.channels.filter(
+          c => c.id !== payload,
+        )
 
         if (state.currentChannelId === payload) {
-          const defaultChannel = state.channels.find((c) => !c.removable)
-          state.currentChannelId = defaultChannel?.id ?? null
+          const defaultChannel =
+            state.channels.find(c => !c.removable)
+
+          state.currentChannelId =
+            defaultChannel?.id ?? null
         }
       })
       .addCase(renameChannel.fulfilled, (state, { payload }) => {
-        const index = state.channels.findIndex((c) => c.id === payload.id)
+        const index = state.channels.findIndex(
+          c => c.id === payload.id,
+        )
+
         if (index !== -1) {
           state.channels[index] = payload
         }

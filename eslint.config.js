@@ -6,7 +6,7 @@ export default [
       'dist/**',
       'node_modules/**',
       'build/**',
-      '*.config.js'
+      '*.config.js',
     ],
     languageOptions: {
       ecmaVersion: 2022,

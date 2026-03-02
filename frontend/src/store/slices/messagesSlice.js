@@ -42,7 +42,9 @@ const messagesSlice = createSlice({
   },
   reducers: {
     addMessageFromSocket: (state, { payload }) => {
-      const exists = state.messages.some((m) => m.id === payload.id)
+      const exists = state.messages.some(
+        m => m.id === payload.id,
+      )
 
       if (!exists) {
         state.messages.push(payload)
@@ -52,9 +54,9 @@ const messagesSlice = createSlice({
       state.connectionStatus = payload
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchMessages.pending, (state) => {
+      .addCase(fetchMessages.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -70,7 +72,9 @@ const messagesSlice = createSlice({
   },
 })
 
-export const { addMessageFromSocket, setConnectionStatus } =
-  messagesSlice.actions
+export const {
+  addMessageFromSocket,
+  setConnectionStatus,
+} = messagesSlice.actions
 
 export default messagesSlice.reducer
