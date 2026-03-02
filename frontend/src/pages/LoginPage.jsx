@@ -20,9 +20,7 @@ const LoginPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { loading, error, isAuthenticated } = useSelector(
-    (state) => state.auth,
-  )
+ const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
 
   const validationSchema = yup.object().shape({
     username: yup

@@ -30,14 +30,14 @@ const Header = () => {
           {isAuthenticated ? (
             <div className="d-flex align-items-center">
               {connectionStatus === 'connected' ? (
-                <Badge bg="success" className="me-3">
-                  ● {t('header.online')}
-                </Badge>
-              ) : (
-                <Badge bg="warning" text="dark" className="me-3">
-                  ○ {t('header.offline')}
-                </Badge>
-              )}
+  <Badge bg="success" className="me-3">
+    ● {t('header.online')}
+  </Badge>
+) : (
+  <Badge bg="warning" text="dark" className="me-3">
+    ○ {t('header.offline')}
+  </Badge>
+)}
 
               <span className="text-white me-3">
                 {user?.username}

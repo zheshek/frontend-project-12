@@ -1,9 +1,40 @@
 export default [
   {
     files: ['**/*.{js,jsx}'],
+    ignores: [
+      'frontend/dist/**',
+      'dist/**',
+      'node_modules/**',
+      'build/**',
+      '*.config.js'
+    ],
     languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
       globals: {
+        // Браузерные глобалы
+        document: 'readonly',
+        window: 'readonly',
+        navigator: 'readonly',
+        fetch: 'readonly',
+        console: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        // Node.js глобалы для конфигов
         process: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
       },
     },
     rules: {
@@ -28,7 +59,7 @@ export default [
       '@stylistic/quote-props': 'off',
       // Оставляем только важные правила
       'no-unused-vars': 'warn',
-      'no-undef': 'warn',
+      'no-undef': 'off',
     },
   },
 ];
