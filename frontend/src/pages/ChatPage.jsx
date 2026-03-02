@@ -42,6 +42,7 @@ const ChatPage = () => {
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [isFirstConnection, setIsFirstConnection] = useState(true);
+  const [updateKey, setUpdateKey] = useState(0);
 
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
@@ -73,6 +74,7 @@ const ChatPage = () => {
     socketService.onNewMessage((message) => {
       console.log('📨 New message received via socket:', message);
       dispatch(addMessageFromSocket(message));
+      setUpdateKey(prev => prev + 1);
     });
 
     const handleConnect = () => {
@@ -156,7 +158,8 @@ const ChatPage = () => {
     (m) => Number(m.channelId) === Number(currentChannelId),
   );
   
-  console.log('Current messages for channel:', currentMessages);
+  console.log('Current messages for channel:', currentMessages.length);
+  console.log('Messages container key:', updateKey);
 
   const currentChannel = channels.find((c) => c.id === currentChannelId);
   const channelNames = channels.map((c) => c.name);
@@ -178,8 +181,8 @@ const ChatPage = () => {
   return (
     <Container fluid className="p-0 h-100 d-flex flex-column">
       <Row className="flex-grow-1 m-0" style={{ marginTop: "56px" }}>
-        {/* Левая колонка - КАНАЛЫ */}
-        <Col md={3} lg={2} className="bg-light p-3 border-end channels-column">
+        {/* Левая колонка - ТОЛЬКО КАНАЛЫ */}
+        <Col md={3} lg={2} className="bg-light p-3 border-end">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h6 className="text-muted mb-0">{t("channels.title")}</h6>
             <Button
@@ -190,14 +193,14 @@ const ChatPage = () => {
               +
             </Button>
           </div>
-          <ListGroup variant="flush" className="channels-list">
+          <ListGroup variant="flush">
             {channels.map((channel) => (
               <ListGroup.Item
                 key={channel.id}
                 action
                 active={channel.id === currentChannelId}
                 onClick={() => handleChannelChange(channel.id)}
-                className="d-flex justify-content-between align-items-center channel-item"
+                className="d-flex justify-content-between align-items-center"
               >
                 <span className="text-truncate"># {channel.name}</span>
                 <ChannelMenu
@@ -216,8 +219,8 @@ const ChatPage = () => {
           </ListGroup>
         </Col>
 
-        {/* Правая колонка - ЧАТ */}
-        <Col md={9} lg={10} className="d-flex flex-column p-3 chat-column">
+        {/* Правая колонка - ТОЛЬКО ЧАТ */}
+        <Col md={9} lg={10} className="d-flex flex-column p-3">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0 text-truncate"># {currentChannel?.name}</h4>
           </div>
@@ -228,17 +231,17 @@ const ChatPage = () => {
             </Alert>
           )}
 
-          {/* КОНТЕЙНЕР СООБЩЕНИЙ - с уникальными классами */}
-          <div className="flex-grow-1 overflow-auto mb-3 messages-container">
+          {/* КОНТЕЙНЕР СООБЩЕНИЙ - отдельный div */}
+          <div className="flex-grow-1 overflow-auto mb-3">
             {currentMessages.length === 0 ? (
-              <p className="text-center text-muted no-messages">
+              <p className="text-center text-muted">
                 {t("messages.noMessages")}
               </p>
             ) : (
               currentMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className="mb-3 p-2 bg-white rounded shadow-sm message-item"
+                  className="mb-3 p-2 bg-white rounded shadow-sm"
                 >
                   <div className="d-flex align-items-center mb-1">
                     <strong className="me-2" style={{ color: "#0d6efd" }}>
