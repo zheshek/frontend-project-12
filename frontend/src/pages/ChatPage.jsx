@@ -61,51 +61,71 @@ const ChatPage = () => {
     connectionStatus,
   } = useSelector((state) => state.messages);
 
+  // Загружаем каналы и сообщения при монтировании
   useEffect(() => {
-    console.log('🟢 ChatPage mounted for user:', user?.username);
+    console.log("📥 Fetching channels and messages...");
+    dispatch(fetchChannels());
+    dispatch(fetchMessages());
+  }, [dispatch]);
+
+  // Настройка сокета - ТОЛЬКО когда есть пользователь
+  useEffect(() => {
+    // Важно: не подключаем сокет, пока нет пользователя
+    if (!user?.username) {
+      console.log("⏳ Waiting for user login, socket not connected yet");
+      return;
+    }
+
+    console.log("🟢 Setting up socket connection for user:", user.username);
     socketService.connect();
+    
+    // Обновляем статус подключения
     dispatch(
       setConnectionStatus(
         socketService.isConnected() ? "connected" : "disconnected",
       ),
     );
 
+    // Подписываемся на новые сообщения
     socketService.onNewMessage((message) => {
-      console.log('📨 New message received via socket:', message);
+      console.log("📨 New message received via socket:", message);
       dispatch(addMessageFromSocket(message));
-      setUpdateKey(prev => prev + 1);
+      setUpdateKey((prev) => prev + 1);
     });
 
+    // Обработчики событий сокета
     const handleConnect = () => {
-      console.log('🔌 Socket connected for user:', user?.username);
+      console.log("🔌 Socket connected for user:", user.username);
       dispatch(setConnectionStatus("connected"));
       if (!isFirstConnection) {
         showInfo(t("toasts.reconnected"));
       }
       setIsFirstConnection(false);
+      
+      // Перезагружаем сообщения при переподключении
+      dispatch(fetchMessages());
     };
 
     const handleDisconnect = () => {
-      console.log('🔌 Socket disconnected for user:', user?.username);
+      console.log("🔌 Socket disconnected for user:", user.username);
       dispatch(setConnectionStatus("disconnected"));
       showWarning(t("toasts.disconnected"));
     };
 
+    // Регистрируем обработчики
     socketService.socket?.on("connect", handleConnect);
     socketService.socket?.on("disconnect", handleDisconnect);
 
+    // Очистка при размонтировании
     return () => {
-      console.log('🔴 ChatPage unmounted for user:', user?.username);
+      console.log("🔴 Cleaning up socket for user:", user.username);
       socketService.offNewMessage();
       socketService.socket?.off("connect", handleConnect);
       socketService.socket?.off("disconnect", handleDisconnect);
+      
+      // Не отключаем сокет полностью, так как он может использоваться другими компонентами
     };
-  }, [dispatch, t, user, isFirstConnection]);
-
-  useEffect(() => {
-    dispatch(fetchChannels());
-    dispatch(fetchMessages());
-  }, [dispatch]);
+  }, [dispatch, t, user?.username, isFirstConnection]); // Зависимость от user?.username, а не от всего user
 
   const handleChannelChange = (channelId) => {
     dispatch(setCurrentChannel(channelId));
@@ -139,11 +159,11 @@ const ChatPage = () => {
       username: user?.username,
     };
 
-    console.log('📤 Sending message:', messageData);
+    console.log("📤 Sending message:", messageData);
 
     try {
       await dispatch(sendMessage(messageData)).unwrap();
-      console.log('✅ Message sent successfully');
+      console.log("✅ Message sent successfully");
       setNewMessage("");
     } catch (error) {
       console.error("❌ Ошибка отправки:", error);
@@ -156,8 +176,8 @@ const ChatPage = () => {
   const currentMessages = messages.filter(
     (m) => Number(m.channelId) === Number(currentChannelId),
   );
-  
-  console.log('Current messages for channel:', currentMessages.length);
+
+  console.log("Current messages for channel:", currentMessages.length);
 
   const currentChannel = channels.find((c) => c.id === currentChannelId);
   const channelNames = channels.map((c) => c.name);
@@ -227,7 +247,7 @@ const ChatPage = () => {
             </Alert>
           )}
 
-          <div className="flex-grow-1 overflow-auto mb-3">
+          <div className="flex-grow-1 overflow-auto mb-3" key={updateKey}>
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">
                 {t("messages.noMessages")}
@@ -239,8 +259,8 @@ const ChatPage = () => {
                   className="mb-3 p-2 bg-white rounded shadow-sm"
                 >
                   <div className="d-flex align-items-center mb-1">
-                    <strong 
-                      className="me-2" 
+                    <strong
+                      className="me-2"
                       style={{ color: "#0d6efd" }}
                       data-testid={`message-username-${msg.id}`}
                     >
