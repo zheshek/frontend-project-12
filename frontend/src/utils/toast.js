@@ -3,7 +3,8 @@ import i18n from '../i18n';
 
 const t = i18n.t.bind(i18n);
 
-export const showSuccess = (message) => {
+// Оставляем базовые функции
+export const showSuccess = (message) => {  // ← Восстанавливаем
   toast.success(message, {
     position: 'top-right',
     autoClose: 3000,
@@ -16,7 +17,46 @@ export const showSuccess = (message) => {
   });
 };
 
-// Уведомления для каналов
+export const showError = (message) => {    // ← Восстанавливаем
+  toast.error(message, {
+    position: 'top-right',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+};
+
+export const showInfo = (message) => {
+  toast.info(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+};
+
+export const showWarning = (message) => {
+  toast.warning(message, {
+    position: 'top-right',
+    autoClose: 4000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+};
+
+// Уведомления для каналов - с прямым текстом
 export const notifyChannelCreated = () => {
   showSuccess('Канал создан');
 };
@@ -26,10 +66,10 @@ export const notifyChannelRenamed = () => {
 };
 
 export const notifyChannelRemoved = () => {
-  showSuccess('Канал удалён');  // ← Прямой текст
+  showSuccess('Канал удалён');
 };
 
-// Остальные функции
+// Уведомления для ошибок
 export const notifyNetworkError = () => {
   showError(t('toasts.networkError'));
 };
