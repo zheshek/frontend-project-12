@@ -142,7 +142,7 @@ const ChatPage = () => {
   return (
     <Container fluid className='p-0 h-100 d-flex flex-column'>
       <Row className='flex-grow-1 m-0' style={{ marginTop: '56px' }}>
-   <Col md={3} lg={2} className='bg-light p-3 border-end'>
+        <Col md={3} lg={2} className='bg-light p-3 border-end'>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h6 className="text-muted mb-0">
               {t('channels.title')}
@@ -164,37 +164,37 @@ const ChatPage = () => {
                 onClick={() =>
                   dispatch(setCurrentChannel(channel.id))
                 }
+                className="d-flex justify-content-between align-items-center"
               >
-                <span className='text-truncate'>
-                  #
-                  {' '}
-                  {channel.name}
-                </span>
+                <span className='text-truncate'># {channel.name}</span>
+                <ChannelMenu
+                  channel={channel}
+                  onRename={(ch) => {
+                    setSelectedChannel(ch)
+                    setShowRenameModal(true)
+                  }}
+                  onRemove={(ch) => {
+                    setSelectedChannel(ch)
+                    setShowRemoveModal(true)
+                  }}
+                />
               </ListGroup.Item>
             ))}
           </ListGroup>
         </Col>
 
         <Col md={9} lg={10} className='d-flex flex-column p-3'>
-          <h4 className='mb-3 text-truncate'>
-            #
-            {' '}
-            {currentChannel?.name}
-          </h4>
+          <h4 className='mb-3 text-truncate'># {currentChannel?.name}</h4>
 
           {connectionStatus !== 'connected' && (
             <Alert variant='warning' className='mb-3'>
-              ⚠️
-              {' '}
-              {t('header.connectionError')}
+              ⚠️ {t('header.connectionError')}
             </Alert>
           )}
 
           <div className='flex-grow-1 overflow-auto mb-3'>
             {currentMessages.length === 0 ? (
-              <p className='text-center text-muted'>
-                {t('messages.noMessages')}
-              </p>
+              <p className='text-center text-muted'>{t('messages.noMessages')}</p>
             ) : (
               currentMessages.map(msg => (
                 <div
@@ -215,7 +215,7 @@ const ChatPage = () => {
               <Form.Control
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
-                                placeholder={t('messages.typeMessage')}
+                placeholder={t('messages.typeMessage')}
                 aria-label="Новое сообщение"
                 disabled={
                   !currentChannelId ||
@@ -253,8 +253,8 @@ const ChatPage = () => {
           setSelectedChannel(null)
         }}
         onRenameChannel={async (data) => {
-  await dispatch(renameChannel(data)).unwrap()
-}}
+          await dispatch(renameChannel(data)).unwrap()
+        }}
         channel={selectedChannel}
         channelNames={channelNames}
       />
