@@ -142,7 +142,19 @@ const ChatPage = () => {
   return (
     <Container fluid className='p-0 h-100 d-flex flex-column'>
       <Row className='flex-grow-1 m-0' style={{ marginTop: '56px' }}>
-        <Col md={3} lg={2} className='bg-light p-3 border-end'>
+   <Col md={3} lg={2} className='bg-light p-3 border-end'>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h6 className="text-muted mb-0">
+              {t('channels.title')}
+            </h6>
+            <Button
+              variant="success"
+              size="sm"
+              onClick={() => setShowAddModal(true)}
+            >
+              +
+            </Button>
+          </div>
           <ListGroup variant='flush'>
             {channels.map(channel => (
               <ListGroup.Item
