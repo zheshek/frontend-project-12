@@ -47,17 +47,17 @@ const ChatPage = () => {
   const [showRemoveModal, setShowRemoveModal] = useState(false)
   const [selectedChannel, setSelectedChannel] = useState(null)
 
-  const { user } = useSelector((state) => state.auth)
+  const { user } = useSelector(state => state.auth)
   const {
     channels,
     currentChannelId,
     loading: channelsLoading,
-  } = useSelector((state) => state.channels)
+  } = useSelector(state => state.channels)
   const {
     messages,
     loading: messagesLoading,
     connectionStatus,
-  } = useSelector((state) => state.messages)
+  } = useSelector(state => state.messages)
 
   // Загружаем каналы и сообщения при монтировании
   useEffect(() => {
@@ -120,8 +120,6 @@ const ChatPage = () => {
       socketService.offNewMessage()
       socketService.socket?.off('connect', handleConnect)
       socketService.socket?.off('disconnect', handleDisconnect)
-      
-      // Не отключаем сокет полностью, так как он может использоваться другими компонентами
     }
   }, [dispatch, t, user?.username, isFirstConnection])
 
@@ -182,10 +180,7 @@ const ChatPage = () => {
 
   if (channelsLoading || messagesLoading) {
     return (
-      <Container
-        fluid
-        className="h-100 d-flex justify-content-center align-items-center"
-      >
+      <Container fluid className="h-100 d-flex justify-content-center align-items-center">
         <div className="text-center">
           <Spinner animation="border" variant="primary" className="mb-3" />
           <p>{t('loading')}</p>
@@ -200,13 +195,7 @@ const ChatPage = () => {
         <Col md={3} lg={2} className="bg-light p-3 border-end">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h6 className="text-muted mb-0">{t('channels.title')}</h6>
-            <Button
-              variant="success"
-              size="sm"
-              onClick={() => setShowAddModal(true)}
-            >
-              +
-            </Button>
+            <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>+</Button>
           </div>
           <ListGroup variant="flush">
             {channels.map((channel) => (
@@ -240,42 +229,25 @@ const ChatPage = () => {
           </div>
 
           {connectionStatus !== 'connected' && (
-            <Alert variant="warning" className="mb-3">
-              ⚠️ {t('header.connectionError')}
-            </Alert>
+            <Alert variant="warning" className="mb-3">⚠️ {t('header.connectionError')}</Alert>
           )}
 
           <div className="flex-grow-1 overflow-auto mb-3" key={updateKey}>
-            {currentMessages.length === 0 ? (
-              <p className="text-center text-muted">
-                {t('messages.noMessages')}
-              </p>
-            ) : (
-              currentMessages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className="mb-3 p-2 bg-white rounded shadow-sm"
-                >
+            {currentMessages.length === 0 
+              ? <p className="text-center text-muted">{t('messages.noMessages')}</p>
+              : currentMessages.map((msg) => (
+                <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
                   <div className="d-flex align-items-center mb-1">
-                    <strong
-                      className="me-2"
-                      style={{ color: '#0d6efd' }}
-                      data-testid={`message-username-${msg.id}`}
-                    >
+                    <strong className="me-2" style={{ color: '#0d6efd' }} data-testid={`message-username-${msg.id}`}>
                       {msg.username || t('messages.user')}
                     </strong>
                     <small className="text-muted">
-                      {msg.createdAt
-                        ? new Date(msg.createdAt).toLocaleString()
-                        : t('messages.justNow')}
+                      {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : t('messages.justNow')}
                     </small>
                   </div>
-                  <p className="mb-0" style={{ wordBreak: 'break-word' }}>
-                    {msg.text}
-                  </p>
+                  <p className="mb-0" style={{ wordBreak: 'break-word' }}>{msg.text}</p>
                 </div>
-              ))
-            )}
+              ))}
           </div>
 
           <Form onSubmit={handleSendMessage}>
@@ -285,22 +257,13 @@ const ChatPage = () => {
                 placeholder={t('messages.typeMessage')}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                disabled={
-                  !currentChannelId ||
-                  sending ||
-                  connectionStatus !== 'connected'
-                }
+                disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
                 aria-label="Новое сообщение"
               />
               <Button
                 type="submit"
                 variant="primary"
-                disabled={
-                  !currentChannelId ||
-                  !newMessage.trim() ||
-                  sending ||
-                  connectionStatus !== 'connected'
-                }
+                disabled={!currentChannelId || !newMessage.trim() || sending || connectionStatus !== 'connected'}
               >
                 {sending ? t('messages.sending') : t('send')}
               </Button>
@@ -330,7 +293,7 @@ const ChatPage = () => {
       <RemoveChannelModal
         show={showRemoveModal}
         onHide={() => {
-          setShowRemoveModal(false)
+          setShowRenameModal(false)
           setSelectedChannel(null)
         }}
         onRemoveChannel={handleRemoveChannel}

@@ -20,9 +20,7 @@ const SignupPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { loading, error, isAuthenticated } = useSelector(
-    (state) => state.auth
-  )
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth)
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -174,9 +172,7 @@ const SignupPage = () => {
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">
-                        {t('auth.hasAccount')}{' '}
-                      </span>
+                      <span className="text-muted">{t('auth.hasAccount')} </span>
                       <Link to="/login">{t('auth.login')}</Link>
                     </div>
                   </Form>

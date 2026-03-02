@@ -28,8 +28,7 @@ const Header = () => {
             <div className="d-flex align-items-center">
               {connectionStatus === 'connected' 
                 ? <Badge bg="success" className="me-3">● {t('header.online')}</Badge>
-                : <Badge bg="warning" text="dark" className="me-3">○ {t('header.offline')}</Badge>
-              }
+                : <Badge bg="warning" text="dark" className="me-3">○ {t('header.offline')}</Badge>}
               <span className="text-white me-3">{user?.username}</span>
               <Button variant="outline-light" size="sm" onClick={handleLogout}>
                 {t('header.logout')}

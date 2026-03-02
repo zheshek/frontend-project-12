@@ -11,7 +11,7 @@ const LoginPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth)
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -49,7 +49,7 @@ const LoginPage = () => {
           <Card className="shadow-sm">
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">{t('auth.login')}</h2>
-              
+
               {error && (
                 <Alert
                   variant="danger"
