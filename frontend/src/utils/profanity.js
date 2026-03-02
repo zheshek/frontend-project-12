@@ -6,7 +6,7 @@ filter.loadDictionary('ru')
 filter.add(['fuck', 'shit', 'bitch', 'asshole', 'damn', 'cunt', 'boobs'])
 
 const profanityFilter = {
-  clean: text => {
+  clean: (text) => {
     if (typeof text !== 'string' || !text.trim()) {
       return text
     }
@@ -18,7 +18,7 @@ const profanityFilter = {
     return text
   },
 
-  isProfane: text => {
+  isProfane: (text) => {
     if (typeof text !== 'string') {
       return false
     }

@@ -9,11 +9,12 @@ export const fetchMessages = createAsyncThunk(
     try {
       const { data } = await api.get('/messages')
       return data
-    } catch {
+    }
+    catch {
       notifyNetworkError()
       return rejectWithValue('Ошибка загрузки сообщений')
     }
-  }
+  },
 )
 
 export const sendMessage = createAsyncThunk(
@@ -25,11 +26,12 @@ export const sendMessage = createAsyncThunk(
       socketService.sendMessage(data)
 
       return data
-    } catch {
+    }
+    catch {
       notifyNetworkError()
       return rejectWithValue('Ошибка отправки сообщения')
     }
-  }
+  },
 )
 
 const messagesSlice = createSlice({
@@ -42,7 +44,7 @@ const messagesSlice = createSlice({
   },
   reducers: {
     addMessageFromSocket: (state, { payload }) => {
-      const exists = state.messages.some(m => m.id === payload.id)
+      const exists = state.messages.some((m) => m.id === payload.id)
 
       if (!exists) {
         state.messages.push(payload)
@@ -52,9 +54,9 @@ const messagesSlice = createSlice({
       state.connectionStatus = payload
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchMessages.pending, state => {
+      .addCase(fetchMessages.pending, (state) => {
         state.loading = true
         state.error = null
       })

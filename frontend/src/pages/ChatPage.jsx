@@ -70,7 +70,7 @@ const ChatPage = () => {
 
     dispatch(setConnectionStatus(socketService.isConnected() ? 'connected' : 'disconnected'))
 
-    socketService.onNewMessage(message => {
+    socketService.onNewMessage((message) => {
       dispatch(addMessageFromSocket(message))
     })
 
@@ -95,7 +95,7 @@ const ChatPage = () => {
     }
   }, [dispatch, t, user?.username])
 
-  const handleSendMessage = async e => {
+  const handleSendMessage = async (e) => {
     e.preventDefault()
 
     if (!newMessage.trim() || !currentChannelId || sending) return
@@ -108,13 +108,15 @@ const ChatPage = () => {
           text: newMessage,
           channelId: Number(currentChannelId),
           username: user?.username,
-        })
+        }),
       ).unwrap()
 
       setNewMessage('')
-    } catch (err) {
+    } 
+    catch (err) {
       rollbar.error('Ошибка отправки сообщения', err)
-    } finally {
+    } 
+    finally {
       setSending(false)
     }
   }
@@ -153,7 +155,10 @@ const ChatPage = () => {
                 onClick={() => dispatch(setCurrentChannel(channel.id))}
                 className="d-flex justify-content-between align-items-center"
               >
-                <span className="text-truncate"># {channel.name}</span>
+                <span className="text-truncate">
+                  # 
+                  {channel.name}
+                  </span>
                 <ChannelMenu
                   channel={channel}
                   onRename={ch => {
@@ -171,28 +176,39 @@ const ChatPage = () => {
         </Col>
 
         <Col md={9} lg={10} className="d-flex flex-column p-3">
-          <h4 className="mb-3 text-truncate"># {currentChannel?.name}</h4>
+          <h4 className="mb-3 text-truncate">
+            # 
+            {currentChannel?.name}
+            </h4>
 
           {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="mb-3">
-              ⚠️ {t('header.connectionError')}
+              ⚠️
+              {t('header.connectionError')}
             </Alert>
           )}
 
-          <div className="flex-grow-1 overflow-auto mb-3">
-            {currentMessages.length === 0 ? (
-              <p className="text-center text-muted">{t('messages.noMessages')}</p>
-            ) : (
-              currentMessages.map(msg => (
-                <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
-                  <strong className="me-2 text-primary">
-                    {msg.username || t('messages.user')}
-                  </strong>
-                  <p className="mb-0">{msg.text}</p>
-                </div>
-              ))
-            )}
-          </div>
+         <div className="flex-grow-1 overflow-auto mb-3">
+  {currentMessages.length === 0 ? (
+    <p className="text-center text-muted">
+      {t('messages.noMessages')}
+    </p>
+  ) : (
+    currentMessages.map(msg => (
+      <div
+        key={msg.id}
+        className="mb-3 p-2 bg-white rounded shadow-sm"
+      >
+        <strong className="me-2 text-primary">
+          {msg.username || t('messages.user')}
+        </strong>
+        <p className="mb-0">
+          {msg.text}
+        </p>
+      </div>
+    ))
+  )}
+</div>
 
           <Form onSubmit={handleSendMessage}>
             <InputGroup>

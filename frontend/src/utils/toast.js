@@ -12,28 +12,28 @@ const defaultOptions = {
   theme: 'light',
 }
 
-export const showSuccess = message => {
+export const showSuccess = (message) => {
   toast.success(message, {
     ...defaultOptions,
     autoClose: 3000,
   })
 }
 
-export const showError = message => {
+export const showError = (message) => {
   toast.error(message, {
     ...defaultOptions,
     autoClose: 5000,
   })
 }
 
-export const showInfo = message => {
+export const showInfo = (message) => {
   toast.info(message, {
     ...defaultOptions,
     autoClose: 3000,
   })
 }
 
-export const showWarning = message => {
+export const showWarning = (message) => {
   toast.warning(message, {
     ...defaultOptions,
     autoClose: 4000,

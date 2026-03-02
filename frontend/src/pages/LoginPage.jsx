@@ -133,7 +133,10 @@ const LoginPage = () => {
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">{t('auth.noAccount')} </span>
+                      <span className="text-muted">
+  {t('auth.noAccount')}
+  {' '}
+</span>
                       <Link to="/signup">{t('auth.signup')}</Link>
                     </div>
                   </Form>

@@ -35,11 +35,11 @@ class SocketService {
       console.log(`✅ Подключено! Socket ID: ${this.socket.id} (попытка #${this.connectionCount})`)
     })
 
-    this.socket.on('connect_error', err => {
+    this.socket.on('connect_error', (err) => {
       console.error(`⚠️ Ошибка подключения: ${err.message} (попытка #${this.connectionCount})`)
     })
 
-    this.socket.on('disconnect', reason => {
+    this.socket.on('disconnect', (reason) => {
       console.log(`❌ Отключено: ${reason} (попытка #${this.connectionCount})`)
     })
 
@@ -95,7 +95,7 @@ class SocketService {
       return
     }
     console.log('📤 Отправка сообщения:', message)
-    this.socket.emit('newMessage', message, ack => {
+    this.socket.emit('newMessage', (message, ack) => {
       console.log('📬 Подтверждение от сервера:', ack)
       if (callback) callback(ack)
     })

@@ -22,7 +22,7 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
       .max(20, t('channels.errors.nameLength'))
       .notOneOf(
         channelNames.filter(n => n !== channel?.name),
-        t('channels.errors.nameExists')
+        t('channels.errors.nameExists'),
       ),
   })
 
@@ -35,11 +35,13 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
 
       resetForm()
       onHide()
-    } catch (err) {
+    } 
+    catch (err) {
       setErrors({
         name: err?.message || 'Failed to rename channel',
       })
-    } finally {
+    } 
+    finally {
       setSubmitting(false)
     }
   }
