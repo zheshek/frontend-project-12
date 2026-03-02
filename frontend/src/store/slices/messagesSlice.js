@@ -44,7 +44,7 @@ const messagesSlice = createSlice({
   },
   reducers: {
     addMessageFromSocket: (state, { payload }) => {
-      const exists = state.messages.some((m) => m.id === payload.id)
+      const exists = state.messages.some(m => m.id === payload.id)
 
       if (!exists) {
         state.messages.push(payload)

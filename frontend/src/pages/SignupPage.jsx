@@ -163,7 +163,7 @@ const SignupPage = () => {
                       <span className="text-muted">
                         {t('auth.hasAccount')}
                         {' '}
-                         </span>
+                      </span>
                       <Link to="/login">{t('auth.login')}</Link>
                     </div>
                   </Form>
