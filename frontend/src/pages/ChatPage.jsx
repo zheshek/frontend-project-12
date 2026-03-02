@@ -218,7 +218,10 @@ const ChatPage = () => {
             </Alert>
           )}
 
-          <div className="flex-grow-1 overflow-auto mb-3">
+          <div 
+            className="flex-grow-1 overflow-auto mb-3" 
+            data-testid="messages-container"
+          >
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">
                 {t("messages.noMessages")}
@@ -228,6 +231,7 @@ const ChatPage = () => {
                 <div
                   key={msg.id}
                   className="mb-3 p-2 bg-white rounded shadow-sm"
+                  data-testid={`message-${msg.id}`}
                 >
                   <div className="d-flex align-items-center mb-1">
                     <strong className="me-2" style={{ color: "#0d6efd" }}>
