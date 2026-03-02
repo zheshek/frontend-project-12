@@ -13,11 +13,12 @@ export const fetchChannels = createAsyncThunk(
     try {
       const { data } = await api.get('/channels')
       return data
-    } catch {
+    } 
+    catch {
       notifyNetworkError()
       return rejectWithValue('Ошибка загрузки каналов')
     }
-  }
+  },
 )
 
 export const addChannel = createAsyncThunk(
@@ -27,11 +28,12 @@ export const addChannel = createAsyncThunk(
       const { data } = await api.post('/channels', { name })
       notifyChannelCreated()
       return data
-    } catch {
+    } 
+    catch {
       notifyNetworkError()
       return rejectWithValue('Ошибка при создании канала')
     }
-  }
+  },
 )
 
 export const removeChannel = createAsyncThunk(
@@ -41,11 +43,12 @@ export const removeChannel = createAsyncThunk(
       await api.delete(`/channels/${id}`)
       notifyChannelRemoved()
       return id
-    } catch {
+    } 
+    catch {
       notifyNetworkError()
       return rejectWithValue('Ошибка при удалении канала')
     }
-  }
+  },
 )
 
 export const renameChannel = createAsyncThunk(
@@ -55,11 +58,12 @@ export const renameChannel = createAsyncThunk(
       const { data } = await api.patch(`/channels/${id}`, { name })
       notifyChannelRenamed()
       return data
-    } catch {
+    } 
+    catch {
       notifyNetworkError()
       return rejectWithValue('Ошибка при переименовании канала')
     }
-  }
+  },
 )
 
 const channelsSlice = createSlice({

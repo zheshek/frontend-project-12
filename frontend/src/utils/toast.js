@@ -60,10 +60,11 @@ export const notifyLoadError = () => {
   showError(t('toasts.loadError'))
 }
 
-export const notifyConnectionStatus = isConnected => {
+export const notifyConnectionStatus = (isConnected) => {
   if (isConnected) {
     showInfo(t('toasts.reconnected'))
-  } else {
+  } 
+  else {
     showWarning(t('toasts.disconnected'))
   }
 }
