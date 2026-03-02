@@ -19,8 +19,7 @@ start:
 dev:
 	npx --no-install start-server -s ./frontend/dist &
 	cd frontend && npm run dev
-lint:
-	@echo "Linting skipped"
+
 
 
 .PHONY: install build start dev
