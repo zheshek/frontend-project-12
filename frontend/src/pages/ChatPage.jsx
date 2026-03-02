@@ -46,17 +46,17 @@ const ChatPage = () => {
   const [showRemoveModal, setShowRemoveModal] = useState(false)
   const [selectedChannel, setSelectedChannel] = useState(null)
 
-  const { user } = useSelector((state) => state.auth)
+  const { user } = useSelector(state => state.auth)
   const {
     channels,
     currentChannelId,
     loading: channelsLoading,
-  } = useSelector((state) => state.channels)
+  } = useSelector(state => state.channels)
   const {
     messages,
     loading: messagesLoading,
     connectionStatus,
-  } = useSelector((state) => state.messages)
+  } = useSelector(state => state.messages)
 
   useEffect(() => {
     dispatch(fetchChannels())
@@ -116,22 +116,24 @@ const ChatPage = () => {
       ).unwrap()
 
       setNewMessage('')
-    } catch (err) {
+    } 
+    catch (err) {
       rollbar.error('Ошибка отправки сообщения', err)
-    } finally {
+    } 
+    finally {
       setSending(false)
     }
   }
 
   const currentMessages = messages.filter(
-    (m) => Number(m.channelId) === Number(currentChannelId),
+    m => Number(m.channelId) === Number(currentChannelId),
   )
 
   const currentChannel = channels.find(
-    (c) => c.id === currentChannelId,
+    c => c.id === currentChannelId,
   )
 
-  const channelNames = channels.map((c) => c.name)
+  const channelNames = channels.map(c => c.name)
 
   if (channelsLoading || messagesLoading) {
     return (
@@ -177,7 +179,8 @@ const ChatPage = () => {
                 className="d-flex justify-content-between align-items-center"
               >
                 <span className="text-truncate">
-                  # {channel.name}
+                  # 
+                  {channel.name}
                 </span>
 
                 <ChannelMenu
@@ -198,12 +201,14 @@ const ChatPage = () => {
 
         <Col md={9} lg={10} className="d-flex flex-column p-3">
           <h4 className="mb-3 text-truncate">
-            # {currentChannel?.name}
+            # 
+            {currentChannel?.name}
           </h4>
 
           {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="mb-3">
-              ⚠️ {t('header.connectionError')}
+              ⚠️ 
+              {t('header.connectionError')}
             </Alert>
           )}
 
@@ -290,9 +295,9 @@ const ChatPage = () => {
           setShowRemoveModal(false)
           setSelectedChannel(null)
         }}
-        onRemoveChannel={(id) =>
+        onRemoveChannel={(id) => {
           dispatch(removeChannel(id))
-        }
+        }}
         channel={selectedChannel}
       />
     </Container>

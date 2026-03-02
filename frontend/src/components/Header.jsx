@@ -9,8 +9,8 @@ const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { isAuthenticated, user } = useSelector((state) => state.auth)
-  const { connectionStatus } = useSelector((state) => state.messages)
+  const { isAuthenticated, user } = useSelector(state => state.auth)
+  const { connectionStatus } = useSelector(state => state.messages)
 
   const handleLogout = () => {
     dispatch(logout())
