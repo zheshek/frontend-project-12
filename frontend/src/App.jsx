@@ -23,14 +23,14 @@ function App() {
     <Container fluid className="p-0 h-100 d-flex flex-column">
       <Header />
       <Routes>
-<Route
-  path="/"
-  element={(
-    <ProtectedRoute>
-      <ChatPage />
-    </ProtectedRoute>
-  )}
-/>
+        <Route
+          path="/"
+          element={(
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          )}
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/404" element={<NotFoundPage />} />
