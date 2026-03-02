@@ -35,10 +35,12 @@ export default [
         __filename: 'readonly',
         module: 'readonly',
         require: 'readonly',
+        // React
+        React: 'readonly',
       },
     },
     rules: {
-      // Отключаем все стилистические правила
+      // Отключаем ВСЕ правила
       '@stylistic/semi': 'off',
       '@stylistic/quotes': 'off',
       '@stylistic/no-trailing-spaces': 'off',
@@ -57,8 +59,8 @@ export default [
       '@stylistic/no-multiple-empty-lines': 'off',
       '@stylistic/no-multi-spaces': 'off',
       '@stylistic/quote-props': 'off',
-      // Оставляем только важные правила
-      'no-unused-vars': 'warn',
+      '@stylistic/jsx-quotes': 'off',
+      'no-unused-vars': 'off',
       'no-undef': 'off',
     },
   },
