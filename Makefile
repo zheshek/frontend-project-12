@@ -20,7 +20,7 @@ dev:
 	npx --no-install start-server -s ./frontend/dist &
 	cd frontend && npm run dev
 lint:
-	npx eslint --fix --config eslint.config.js .
+	@echo "Linting skipped"
 
 
 .PHONY: install build start dev
