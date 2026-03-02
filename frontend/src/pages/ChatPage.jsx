@@ -252,7 +252,9 @@ const ChatPage = () => {
           setShowRenameModal(false)
           setSelectedChannel(null)
         }}
-        onRenameChannel={data => dispatch(renameChannel(data))}
+        onRenameChannel={async (data) => {
+  await dispatch(renameChannel(data)).unwrap()
+}}
         channel={selectedChannel}
         channelNames={channelNames}
       />
