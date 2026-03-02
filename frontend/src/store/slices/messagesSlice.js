@@ -1,43 +1,36 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import api from '../../services/api'
-import socketService from '../../services/socket'
-import { notifyNetworkError } from '../../utils/toast'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../services/api';
+import socketService from '../../services/socket';
+import { notifyNetworkError } from '../../utils/toast';
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
   async (_, { rejectWithValue }) => {
     try {
-      console.log('📥 Fetching messages from server...')
-      const response = await api.get('/messages')
-      console.log('📥 Messages loaded:', response.data.length)
-      return response.data
-    } catch (error) {
-      console.error('❌ Error loading messages:', error)
-      notifyNetworkError()
-      return rejectWithValue('Ошибка загрузки сообщений')
+      const { data } = await api.get('/messages');
+      return data;
+    } catch {
+      notifyNetworkError();
+      return rejectWithValue('Ошибка загрузки сообщений');
     }
-  }
-)
+  },
+);
 
 export const sendMessage = createAsyncThunk(
   'messages/sendMessage',
   async (messageData, { rejectWithValue }) => {
     try {
-      console.log('📤 Sending message to server:', messageData)
-      const response = await api.post('/messages', messageData)
-      console.log('📤 Message saved on server:', response.data)
-      
-      // Отправляем через сокет для real-time
-      socketService.sendMessage(response.data)
-      
-      return response.data
-    } catch (error) {
-      console.error('❌ Error sending message:', error)
-      notifyNetworkError()
-      return rejectWithValue('Ошибка отправки сообщения')
+      const { data } = await api.post('/messages', messageData);
+
+      socketService.sendMessage(data);
+
+      return data;
+    } catch {
+      notifyNetworkError();
+      return rejectWithValue('Ошибка отправки сообщения');
     }
-  }
-)
+  },
+);
 
 const messagesSlice = createSlice({
   name: 'messages',
@@ -48,38 +41,36 @@ const messagesSlice = createSlice({
     connectionStatus: 'disconnected',
   },
   reducers: {
-    addMessageFromSocket: (state, action) => {
-      console.log('📨 Adding message from socket:', action.payload)
-      // Проверяем, нет ли уже такого сообщения (чтобы избежать дубликатов)
-      const exists = state.messages.some(m => m.id === action.payload.id)
+    addMessageFromSocket: (state, { payload }) => {
+      const exists = state.messages.some((m) => m.id === payload.id);
+
       if (!exists) {
-        state.messages.push(action.payload)
+        state.messages.push(payload);
       }
     },
-    setConnectionStatus: (state, action) => {
-      state.connectionStatus = action.payload
+    setConnectionStatus: (state, { payload }) => {
+      state.connectionStatus = payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMessages.pending, (state) => {
-        state.loading = true
-        state.error = null
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchMessages.fulfilled, (state, action) => {
-        state.loading = false
-        state.messages = action.payload // ← Заменяем, а не добавляем!
-        console.log('✅ Messages state updated:', state.messages.length)
+      .addCase(fetchMessages.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.messages = payload;
       })
-      .addCase(fetchMessages.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
+      .addCase(fetchMessages.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
       })
-      .addCase(sendMessage.fulfilled, () => {
-        // Сообщение уже добавлено через socket, ничего не делаем
-      })
+      .addCase(sendMessage.fulfilled, () => {});
   },
-})
+});
 
-export const { addMessageFromSocket, setConnectionStatus } = messagesSlice.actions
-export default messagesSlice.reducer
+export const { addMessageFromSocket, setConnectionStatus } =
+  messagesSlice.actions;
+
+export default messagesSlice.reducer;
