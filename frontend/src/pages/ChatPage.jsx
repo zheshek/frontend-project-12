@@ -12,7 +12,6 @@ import {
   Form,
   InputGroup,
   Spinner,
-  Badge,
   Alert,
 } from "react-bootstrap";
 import { showInfo, showWarning } from "../utils/toast";
@@ -74,10 +73,8 @@ const ChatPage = () => {
       dispatch(addMessageFromSocket(message));
     });
 
-    // Слушаем события подключения/отключения
     const handleConnect = () => {
       dispatch(setConnectionStatus("connected"));
-      // Не показываем уведомление при первом подключении
       if (!isFirstConnection) {
         showInfo(t("toasts.reconnected"));
       }
@@ -97,7 +94,7 @@ const ChatPage = () => {
       socketService.socket?.off("connect", handleConnect);
       socketService.socket?.off("disconnect", handleDisconnect);
     };
-  }, [dispatch, t]);
+  }, [dispatch, t, isFirstConnection]);
 
   useEffect(() => {
     dispatch(fetchChannels());
@@ -170,6 +167,7 @@ const ChatPage = () => {
   return (
     <Container fluid className="p-0 h-100 d-flex flex-column">
       <Row className="flex-grow-1 m-0" style={{ marginTop: "56px" }}>
+        {/* Левая колонка - каналы */}
         <Col md={3} lg={2} className="bg-light p-3 border-end">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h6 className="text-muted mb-0">{t("channels.title")}</h6>
@@ -207,6 +205,7 @@ const ChatPage = () => {
           </ListGroup>
         </Col>
 
+        {/* Правая колонка - чат */}
         <Col md={9} lg={10} className="d-flex flex-column p-3">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0 text-truncate"># {currentChannel?.name}</h4>
@@ -218,10 +217,8 @@ const ChatPage = () => {
             </Alert>
           )}
 
-          <div 
-            className="flex-grow-1 overflow-auto mb-3" 
-            data-testid="messages-container"
-          >
+          {/* Контейнер сообщений - ИСПРАВЛЕНО */}
+          <div className="flex-grow-1 overflow-auto mb-3">
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">
                 {t("messages.noMessages")}
@@ -231,7 +228,6 @@ const ChatPage = () => {
                 <div
                   key={msg.id}
                   className="mb-3 p-2 bg-white rounded shadow-sm"
-                  data-testid={`message-${msg.id}`}
                 >
                   <div className="d-flex align-items-center mb-1">
                     <strong className="me-2" style={{ color: "#0d6efd" }}>
@@ -251,6 +247,7 @@ const ChatPage = () => {
             )}
           </div>
 
+          {/* Форма отправки сообщения */}
           <Form onSubmit={handleSendMessage}>
             <InputGroup>
               <Form.Control
