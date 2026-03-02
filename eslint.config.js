@@ -17,7 +17,6 @@ export default [
         },
       },
       globals: {
-        // Браузерные глобалы
         document: 'readonly',
         window: 'readonly',
         navigator: 'readonly',
@@ -29,18 +28,15 @@ export default [
         clearInterval: 'readonly',
         localStorage: 'readonly',
         sessionStorage: 'readonly',
-        // Node.js глобалы для конфигов
         process: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
         module: 'readonly',
         require: 'readonly',
-        // React
         React: 'readonly',
       },
     },
     rules: {
-      // Отключаем ВСЕ правила
       '@stylistic/semi': 'off',
       '@stylistic/quotes': 'off',
       '@stylistic/no-trailing-spaces': 'off',
@@ -64,4 +60,4 @@ export default [
       'no-undef': 'off',
     },
   },
-];
+]
