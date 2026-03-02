@@ -15,7 +15,6 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
     }
   }, [show])
 
-  // Убираем проверку на profanity из валидации!
   const validationSchema = yup.object().shape({
     name: yup
       .string()
@@ -23,12 +22,10 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
       .notOneOf(channelNames, t('channels.errors.nameExists')),
-    // проверка на profanity УДАЛЕНА!
   })
 
   const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
     try {
-      // Применяем фильтр здесь - заменяем плохие слова на *****
       const cleanedName = profanityFilter.clean(values.name)
       await onAddChannel(cleanedName)
       resetForm()

@@ -76,7 +76,6 @@ const ChatPage = () => {
 
     console.log('🟢 Setting up socket connection for user:', user.username)
     socketService.connect()
-    
     // Обновляем статус подключения
     dispatch(
       setConnectionStatus(
@@ -85,10 +84,10 @@ const ChatPage = () => {
     )
 
     // Подписываемся на новые сообщения
-    socketService.onNewMessage((message) => {
+    socketService.onNewMessage(message => {
       console.log('📨 New message received via socket:', message)
       dispatch(addMessageFromSocket(message))
-      setUpdateKey((prev) => prev + 1)
+      setUpdateKey(prev => prev + 1)
     })
 
     // Обработчики событий сокета
@@ -99,7 +98,7 @@ const ChatPage = () => {
         showInfo(t('toasts.reconnected'))
       }
       setIsFirstConnection(false)
-      
+
       // Перезагружаем сообщения при переподключении
       dispatch(fetchMessages())
     }
@@ -123,11 +122,11 @@ const ChatPage = () => {
     }
   }, [dispatch, t, user?.username, isFirstConnection])
 
-  const handleChannelChange = (channelId) => {
+  const handleChannelChange = channelId => {
     dispatch(setCurrentChannel(channelId))
   }
 
-  const handleAddChannel = (name) => {
+  const handleAddChannel = name => {
     dispatch(addChannel(name))
     setShowAddModal(false)
   }
@@ -138,13 +137,13 @@ const ChatPage = () => {
     setSelectedChannel(null)
   }
 
-  const handleRemoveChannel = (id) => {
+  const handleRemoveChannel = id => {
     dispatch(removeChannel(id))
     setShowRemoveModal(false)
     setSelectedChannel(null)
   }
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async e => {
     e.preventDefault()
     if (!newMessage.trim() || !currentChannelId || sending) return
 
@@ -169,14 +168,12 @@ const ChatPage = () => {
     }
   }
 
-  const currentMessages = messages.filter(
-    (m) => Number(m.channelId) === Number(currentChannelId)
-  )
+  const currentMessages = messages.filter(m => Number(m.channelId) === Number(currentChannelId))
 
   console.log('Current messages for channel:', currentMessages.length)
 
-  const currentChannel = channels.find((c) => c.id === currentChannelId)
-  const channelNames = channels.map((c) => c.name)
+  const currentChannel = channels.find(c => c.id === currentChannelId)
+  const channelNames = channels.map(c => c.name)
 
   if (channelsLoading || messagesLoading) {
     return (
@@ -198,7 +195,7 @@ const ChatPage = () => {
             <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>+</Button>
           </div>
           <ListGroup variant="flush">
-            {channels.map((channel) => (
+            {channels.map(channel => (
               <ListGroup.Item
                 key={channel.id}
                 action
@@ -209,11 +206,11 @@ const ChatPage = () => {
                 <span className="text-truncate"># {channel.name}</span>
                 <ChannelMenu
                   channel={channel}
-                  onRename={(ch) => {
+                  onRename={ch => {
                     setSelectedChannel(ch)
                     setShowRenameModal(true)
                   }}
-                  onRemove={(ch) => {
+                  onRemove={ch => {
                     setSelectedChannel(ch)
                     setShowRemoveModal(true)
                   }}
@@ -233,9 +230,9 @@ const ChatPage = () => {
           )}
 
           <div className="flex-grow-1 overflow-auto mb-3" key={updateKey}>
-            {currentMessages.length === 0 
+            {currentMessages.length === 0
               ? <p className="text-center text-muted">{t('messages.noMessages')}</p>
-              : currentMessages.map((msg) => (
+              : currentMessages.map(msg => (
                 <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
                   <div className="d-flex align-items-center mb-1">
                     <strong className="me-2" style={{ color: '#0d6efd' }} data-testid={`message-username-${msg.id}`}>
@@ -256,7 +253,7 @@ const ChatPage = () => {
                 type="text"
                 placeholder={t('messages.typeMessage')}
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
+                onChange={e => setNewMessage(e.target.value)}
                 disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
                 aria-label="Новое сообщение"
               />

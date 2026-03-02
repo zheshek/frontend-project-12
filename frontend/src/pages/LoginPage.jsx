@@ -118,21 +118,9 @@ const LoginPage = () => {
                         size="lg"
                         disabled={loading || isSubmitting}
                       >
-                        {loading ? (
-                          <>
-                            <Spinner
-                              as="span"
-                              animation="border"
-                              size="sm"
-                              role="status"
-                              aria-hidden="true"
-                              className="me-2"
-                            />
-                            {t('auth.loggingIn')}
-                          </>
-                        ) : (
-                          t('auth.loginButton')
-                        )}
+                        {loading
+                          ? <><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />{t('auth.loggingIn')}</>
+                          : t('auth.loginButton')}
                       </Button>
                     </div>
 

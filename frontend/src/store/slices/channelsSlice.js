@@ -4,7 +4,7 @@ import {
   notifyChannelCreated,
   notifyChannelRenamed,
   notifyChannelRemoved,
-  notifyNetworkError
+  notifyNetworkError,
 } from '../../utils/toast'
 
 export const fetchChannels = createAsyncThunk(
