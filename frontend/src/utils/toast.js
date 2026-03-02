@@ -16,59 +16,20 @@ export const showSuccess = (message) => {
   });
 };
 
-export const showError = (message) => {
-  toast.error(message, {
-    position: 'top-right',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-};
-
-export const showInfo = (message) => {
-  toast.info(message, {
-    position: 'top-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-};
-
-export const showWarning = (message) => {
-  toast.warning(message, {
-    position: 'top-right',
-    autoClose: 4000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-};
-
 // Уведомления для каналов
 export const notifyChannelCreated = () => {
-  showSuccess(t('toasts.channelCreated'));
+  showSuccess('Канал создан');
 };
 
 export const notifyChannelRenamed = () => {
-  showSuccess(t('toasts.channelRenamed'));
+  showSuccess('Канал переименован');
 };
 
 export const notifyChannelRemoved = () => {
-  showSuccess(t('toasts.channelRemoved'));
+  showSuccess('Канал удалён');  // ← Прямой текст
 };
 
-// Уведомления для ошибок
+// Остальные функции
 export const notifyNetworkError = () => {
   showError(t('toasts.networkError'));
 };
