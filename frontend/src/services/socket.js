@@ -94,9 +94,9 @@ class SocketService {
       console.warn('⚠️ Сокет не подключён при отправке сообщения');
       return;
     }
-    console.log(`📤 Отправка сообщения:`, message);
+    console.log('📤 Отправка сообщения:', message);
     this.socket.emit('newMessage', message, (ack) => {
-      console.log(`📬 Подтверждение от сервера:`, ack);
+      console.log('📬 Подтверждение от сервера:', ack);
       if (callback) callback(ack);
     });
   }

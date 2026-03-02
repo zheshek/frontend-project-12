@@ -6,7 +6,6 @@ import {
   notifyChannelRemoved,
   notifyNetworkError 
 } from '../../utils/toast';
-import profanityFilter from '../../utils/profanity';
 
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
