@@ -62,6 +62,7 @@ const ChatPage = () => {
   } = useSelector((state) => state.messages);
 
   useEffect(() => {
+    console.log('🟢 ChatPage mounted for user:', user?.username);
     socketService.connect();
     dispatch(
       setConnectionStatus(
@@ -70,10 +71,12 @@ const ChatPage = () => {
     );
 
     socketService.onNewMessage((message) => {
+      console.log('📨 New message received via socket:', message);
       dispatch(addMessageFromSocket(message));
     });
 
     const handleConnect = () => {
+      console.log('🔌 Socket connected for user:', user?.username);
       dispatch(setConnectionStatus("connected"));
       if (!isFirstConnection) {
         showInfo(t("toasts.reconnected"));
@@ -82,6 +85,7 @@ const ChatPage = () => {
     };
 
     const handleDisconnect = () => {
+      console.log('🔌 Socket disconnected for user:', user?.username);
       dispatch(setConnectionStatus("disconnected"));
       showWarning(t("toasts.disconnected"));
     };
@@ -90,11 +94,12 @@ const ChatPage = () => {
     socketService.socket?.on("disconnect", handleDisconnect);
 
     return () => {
+      console.log('🔴 ChatPage unmounted for user:', user?.username);
       socketService.offNewMessage();
       socketService.socket?.off("connect", handleConnect);
       socketService.socket?.off("disconnect", handleDisconnect);
     };
-  }, [dispatch, t, isFirstConnection]);
+  }, [dispatch, t, user, isFirstConnection]);
 
   useEffect(() => {
     dispatch(fetchChannels());
@@ -133,11 +138,14 @@ const ChatPage = () => {
       username: user?.username,
     };
 
+    console.log('📤 Sending message:', messageData);
+
     try {
       await dispatch(sendMessage(messageData)).unwrap();
+      console.log('✅ Message sent successfully');
       setNewMessage("");
     } catch (error) {
-      console.error("Ошибка отправки:", error);
+      console.error("❌ Ошибка отправки:", error);
       rollbar.error("Ошибка отправки сообщения", error);
     } finally {
       setSending(false);
@@ -147,6 +155,9 @@ const ChatPage = () => {
   const currentMessages = messages.filter(
     (m) => Number(m.channelId) === Number(currentChannelId),
   );
+  
+  console.log('Current messages for channel:', currentMessages);
+
   const currentChannel = channels.find((c) => c.id === currentChannelId);
   const channelNames = channels.map((c) => c.name);
 
@@ -167,8 +178,8 @@ const ChatPage = () => {
   return (
     <Container fluid className="p-0 h-100 d-flex flex-column">
       <Row className="flex-grow-1 m-0" style={{ marginTop: "56px" }}>
-        {/* Левая колонка - каналы */}
-        <Col md={3} lg={2} className="bg-light p-3 border-end">
+        {/* Левая колонка - КАНАЛЫ */}
+        <Col md={3} lg={2} className="bg-light p-3 border-end channels-column">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h6 className="text-muted mb-0">{t("channels.title")}</h6>
             <Button
@@ -179,14 +190,14 @@ const ChatPage = () => {
               +
             </Button>
           </div>
-          <ListGroup variant="flush">
+          <ListGroup variant="flush" className="channels-list">
             {channels.map((channel) => (
               <ListGroup.Item
                 key={channel.id}
                 action
                 active={channel.id === currentChannelId}
                 onClick={() => handleChannelChange(channel.id)}
-                className="d-flex justify-content-between align-items-center"
+                className="d-flex justify-content-between align-items-center channel-item"
               >
                 <span className="text-truncate"># {channel.name}</span>
                 <ChannelMenu
@@ -205,8 +216,8 @@ const ChatPage = () => {
           </ListGroup>
         </Col>
 
-        {/* Правая колонка - чат */}
-        <Col md={9} lg={10} className="d-flex flex-column p-3">
+        {/* Правая колонка - ЧАТ */}
+        <Col md={9} lg={10} className="d-flex flex-column p-3 chat-column">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0 text-truncate"># {currentChannel?.name}</h4>
           </div>
@@ -217,17 +228,17 @@ const ChatPage = () => {
             </Alert>
           )}
 
-          {/* Контейнер сообщений - ИСПРАВЛЕНО */}
-          <div className="flex-grow-1 overflow-auto mb-3">
+          {/* КОНТЕЙНЕР СООБЩЕНИЙ - с уникальными классами */}
+          <div className="flex-grow-1 overflow-auto mb-3 messages-container">
             {currentMessages.length === 0 ? (
-              <p className="text-center text-muted">
+              <p className="text-center text-muted no-messages">
                 {t("messages.noMessages")}
               </p>
             ) : (
               currentMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className="mb-3 p-2 bg-white rounded shadow-sm"
+                  className="mb-3 p-2 bg-white rounded shadow-sm message-item"
                 >
                   <div className="d-flex align-items-center mb-1">
                     <strong className="me-2" style={{ color: "#0d6efd" }}>
@@ -247,7 +258,7 @@ const ChatPage = () => {
             )}
           </div>
 
-          {/* Форма отправки сообщения */}
+          {/* Форма отправки */}
           <Form onSubmit={handleSendMessage}>
             <InputGroup>
               <Form.Control
