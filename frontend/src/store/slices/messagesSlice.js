@@ -76,10 +76,6 @@ const messagesSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(sendMessage.fulfilled, (state, action) => {
-        // Не добавляем здесь, так как сообщение придёт через socket
-        console.log('✅ Message sent, will arrive via socket');
-      });
   },
 });
 
