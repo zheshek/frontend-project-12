@@ -1,18 +1,18 @@
-import React, { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, Form, Button } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
+import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Modal, Form, Button } from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
 
 const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNames }) => {
-  const { t } = useTranslation();
-  const inputRef = useRef(null);
+  const { t } = useTranslation()
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if (show && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [show]);
+  }, [show])
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -20,20 +20,20 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
       .required(t('channels.errors.required'))
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
-      .notOneOf(channelNames.filter(n => n !== channel?.name), t('channels.errors.nameExists')),
-  });
+      .notOneOf(channelNames.filter(n => n !== channel?.name), t('channels.errors.nameExists'))
+  })
 
   const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
     try {
-      await onRenameChannel({ id: channel.id, name: values.name }).unwrap(); // ← Ждём завершения и используем unwrap()
-      resetForm();
-      onHide(); // ← Закрываем только после успеха
+      await onRenameChannel({ id: channel.id, name: values.name }).unwrap()
+      resetForm()
+      onHide()
     } catch (error) {
-      setErrors({ name: error.message || 'Failed to rename channel' });
+      setErrors({ name: error.message || 'Failed to rename channel' })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -79,7 +79,7 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
         )}
       </Formik>
     </Modal>
-  );
-};
+  )
+}
 
-export default RenameChannelModal;
+export default RenameChannelModal

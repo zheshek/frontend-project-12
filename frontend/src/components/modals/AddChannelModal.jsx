@@ -1,19 +1,19 @@
-import React, { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, Form, Button } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import profanityFilter from '../../utils/profanity.js';
+import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Modal, Form, Button } from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
+import profanityFilter from '../../utils/profanity.js'
 
 const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
-  const { t } = useTranslation();
-  const inputRef = useRef(null);
+  const { t } = useTranslation()
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if (show && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [show]);
+  }, [show])
 
   // Убираем проверку на profanity из валидации!
   const validationSchema = yup.object().shape({
@@ -22,24 +22,24 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       .required(t('channels.errors.required'))
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
-      .notOneOf(channelNames, t('channels.errors.nameExists')),
+      .notOneOf(channelNames, t('channels.errors.nameExists'))
     // проверка на profanity УДАЛЕНА!
-  });
+  })
 
   const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
     try {
       // Применяем фильтр здесь - заменяем плохие слова на *****
-      const cleanedName = profanityFilter.clean(values.name);
-      await onAddChannel(cleanedName);
-      resetForm();
-      onHide();
+      const cleanedName = profanityFilter.clean(values.name)
+      await onAddChannel(cleanedName)
+      resetForm()
+      onHide()
     } catch (error) {
-      console.error('Error adding channel:', error);
-      setErrors({ name: error.message || 'Failed to add channel' });
+      console.error('Error adding channel:', error)
+      setErrors({ name: error.message || 'Failed to add channel' })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -59,14 +59,14 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
                 <Form.Control
                   type="text"
                   name="name"
-                  id="channel-name-input" 
+                  id="channel-name-input"
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   isInvalid={touched.name && errors.name}
                   ref={inputRef}
                   disabled={isSubmitting}
-                  aria-label="Имя канала" 
+                  aria-label="Имя канала"
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.name}
@@ -85,7 +85,7 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
         )}
       </Formik>
     </Modal>
-  );
-};
+  )
+}
 
-export default AddChannelModal;
+export default AddChannelModal

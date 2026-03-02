@@ -1,21 +1,20 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Navbar, Container, Button, Badge } from 'react-bootstrap';
-import { logout } from '../store/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { Navbar, Container, Button, Badge } from 'react-bootstrap'
+import { logout } from '../store/slices/authSlice'
 
 const Header = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { connectionStatus } = useSelector((state) => state.messages);
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { isAuthenticated, user } = useSelector((state) => state.auth)
+  const { connectionStatus } = useSelector((state) => state.messages)
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
-  };
+    dispatch(logout())
+    navigate('/login')
+  }
 
   return (
     <Navbar bg="primary" variant="dark" expand="lg" className="px-3">
@@ -29,12 +28,12 @@ const Header = () => {
             <div className="d-flex align-items-center">
               {connectionStatus === 'connected' && (
                 <Badge bg="success" className="me-3">
-                  í¿¢ {t('header.online')}
+                  â— {t('header.online')}
                 </Badge>
               )}
               {connectionStatus === 'disconnected' && (
                 <Badge bg="warning" text="dark" className="me-3">
-                  í¿¡ {t('header.offline')}
+                  â—‹ {t('header.offline')}
                 </Badge>
               )}
               <span className="text-white me-3">{user?.username}</span>
@@ -52,7 +51,7 @@ const Header = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

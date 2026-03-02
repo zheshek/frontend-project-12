@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, Button } from 'react-bootstrap';
+import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Modal, Button } from 'react-bootstrap'
 
 const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
-  const { t } = useTranslation();
-  const cancelRef = useRef(null);
+  const { t } = useTranslation()
+  const cancelRef = useRef(null)
 
   useEffect(() => {
     if (show && cancelRef.current) {
-      cancelRef.current.focus();
+      cancelRef.current.focus()
     }
-  }, [show]);
+  }, [show])
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -32,7 +32,7 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
         </Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default RemoveChannelModal;
+export default RemoveChannelModal

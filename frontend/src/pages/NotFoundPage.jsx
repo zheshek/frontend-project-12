@@ -1,10 +1,9 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'
+import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const NotFoundPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Container fluid className="h-100">
@@ -21,7 +20,7 @@ const NotFoundPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default NotFoundPage;
+export default NotFoundPage

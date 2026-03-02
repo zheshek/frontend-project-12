@@ -26,8 +26,8 @@ export default {
     auth: {
       login: 'Вход',
       signup: 'Регистрация',
-      loginUsername: 'Ваш ник', 
-       signupUsername: 'Имя пользователя', 
+      loginUsername: 'Ваш ник',
+      signupUsername: 'Имя пользователя',
       password: 'Пароль',
       confirmPassword: 'Подтвердите пароль',
       noAccount: 'Нет аккаунта?',
@@ -89,6 +89,7 @@ export default {
       signupSuccess: 'Регистрация успешна!',
       logout: 'До встречи!',
     },
+
     // Ошибки
     errors: {
       networkError: 'Ошибка сети. Проверьте подключение.',
@@ -97,10 +98,12 @@ export default {
       pageNotFound: 'Страница не найдена',
       goHome: 'Вернуться на главную',
     },
- profanity: {
-    channelNameError: 'Название канала содержит недопустимые слова',
-    messageFiltered: 'Сообщение отфильтровано',
-  },
+
+    profanity: {
+      channelNameError: 'Название канала содержит недопустимые слова',
+      messageFiltered: 'Сообщение отфильтровано',
+    },
+
     // Модальные окна
     modals: {
       addChannel: {
@@ -114,5 +117,4 @@ export default {
       },
     },
   },
-};
-
+}

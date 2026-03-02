@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import { login, clearError } from '../store/slices/authSlice';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
+import { login, clearError } from '../store/slices/authSlice'
 
 const LoginPage = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -23,24 +23,24 @@ const LoginPage = () => {
       .string()
       .required(t('auth.errors.required'))
       .min(3, t('auth.errors.passwordLength')),
-  });
+  })
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/')
     }
     return () => {
-      dispatch(clearError());
-    };
-  }, [isAuthenticated, navigate, dispatch]);
+      dispatch(clearError())
+    }
+  }, [isAuthenticated, navigate, dispatch])
 
   const handleSubmit = async (values, { setSubmitting }) => {
-  dispatch(clearError());
-  await dispatch(login(values));
-  setTimeout(() => {
-    setSubmitting(false);
-  }, 1000);
-};
+    dispatch(clearError())
+    await dispatch(login(values))
+    setTimeout(() => {
+      setSubmitting(false)
+    }, 1000)
+  }
 
   return (
     <Container fluid className="h-100">
@@ -51,10 +51,9 @@ const LoginPage = () => {
               <h2 className="text-center mb-4">{t('auth.login')}</h2>
               
               {error && (
-                <Alert 
-                key="login-error"
-                  variant="danger" 
-                  onClose={() => dispatch(clearError())} 
+                <Alert
+                  variant="danger"
+                  onClose={() => dispatch(clearError())}
                   dismissible
                 >
                   {error}
@@ -149,7 +148,7 @@ const LoginPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

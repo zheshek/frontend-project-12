@@ -1,10 +1,10 @@
-import { toast } from 'react-toastify';
-import i18n from '../i18n';
+import { toast } from 'react-toastify'
+import i18n from '../i18n'
 
-const t = i18n.t.bind(i18n);
+const t = i18n.t.bind(i18n)
 
 // Оставляем базовые функции
-export const showSuccess = (message) => {  // ← Восстанавливаем
+export const showSuccess = (message) => {
   toast.success(message, {
     position: 'top-right',
     autoClose: 3000,
@@ -14,10 +14,10 @@ export const showSuccess = (message) => {  // ← Восстанавливаем
     draggable: true,
     progress: undefined,
     theme: 'light',
-  });
-};
+  })
+}
 
-export const showError = (message) => {    // ← Восстанавливаем
+export const showError = (message) => {
   toast.error(message, {
     position: 'top-right',
     autoClose: 5000,
@@ -27,8 +27,8 @@ export const showError = (message) => {    // ← Восстанавливаем
     draggable: true,
     progress: undefined,
     theme: 'light',
-  });
-};
+  })
+}
 
 export const showInfo = (message) => {
   toast.info(message, {
@@ -40,8 +40,8 @@ export const showInfo = (message) => {
     draggable: true,
     progress: undefined,
     theme: 'light',
-  });
-};
+  })
+}
 
 export const showWarning = (message) => {
   toast.warning(message, {
@@ -53,35 +53,35 @@ export const showWarning = (message) => {
     draggable: true,
     progress: undefined,
     theme: 'light',
-  });
-};
+  })
+}
 
 // Уведомления для каналов - с прямым текстом
 export const notifyChannelCreated = () => {
-  showSuccess('Канал создан');
-};
+  showSuccess('Канал создан')
+}
 
 export const notifyChannelRenamed = () => {
-  showSuccess('Канал переименован');
-};
+  showSuccess('Канал переименован')
+}
 
 export const notifyChannelRemoved = () => {
-  showSuccess('Канал удалён');
-};
+  showSuccess('Канал удалён')
+}
 
 // Уведомления для ошибок
 export const notifyNetworkError = () => {
-  showError(t('toasts.networkError'));
-};
+  showError(t('toasts.networkError'))
+}
 
 export const notifyLoadError = () => {
-  showError(t('toasts.loadError'));
-};
+  showError(t('toasts.loadError'))
+}
 
 export const notifyConnectionStatus = (isConnected) => {
   if (isConnected) {
-    showInfo(t('toasts.reconnected'));
+    showInfo(t('toasts.reconnected'))
   } else {
-    showWarning(t('toasts.disconnected'));
+    showWarning(t('toasts.disconnected'))
   }
-};
+}
