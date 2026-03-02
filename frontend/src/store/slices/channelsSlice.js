@@ -17,7 +17,7 @@ export const fetchChannels = createAsyncThunk(
       notifyNetworkError()
       return rejectWithValue('Ошибка загрузки каналов')
     }
-  },
+  }
 )
 
 export const addChannel = createAsyncThunk(
@@ -31,7 +31,7 @@ export const addChannel = createAsyncThunk(
       notifyNetworkError()
       return rejectWithValue('Ошибка при создании канала')
     }
-  },
+  }
 )
 
 export const removeChannel = createAsyncThunk(
@@ -45,7 +45,7 @@ export const removeChannel = createAsyncThunk(
       notifyNetworkError()
       return rejectWithValue('Ошибка при удалении канала')
     }
-  },
+  }
 )
 
 export const renameChannel = createAsyncThunk(
@@ -59,7 +59,7 @@ export const renameChannel = createAsyncThunk(
       notifyNetworkError()
       return rejectWithValue('Ошибка при переименовании канала')
     }
-  },
+  }
 )
 
 const channelsSlice = createSlice({
@@ -87,8 +87,7 @@ const channelsSlice = createSlice({
 
         if (!state.currentChannelId && payload.length > 0) {
           const defaultChannel = payload.find(c => !c.removable)
-          state.currentChannelId =
-            defaultChannel?.id ?? payload[0].id
+          state.currentChannelId = defaultChannel?.id ?? payload[0].id
         }
       })
       .addCase(fetchChannels.rejected, (state, { payload }) => {
@@ -103,22 +102,16 @@ const channelsSlice = createSlice({
         state.error = payload
       })
       .addCase(removeChannel.fulfilled, (state, { payload }) => {
-        state.channels = state.channels.filter(
-          c => c.id !== payload,
-        )
+        state.channels = state.channels.filter(c => c.id !== payload)
 
         if (state.currentChannelId === payload) {
-          const defaultChannel =
-            state.channels.find(c => !c.removable)
+          const defaultChannel = state.channels.find(c => !c.removable)
 
-          state.currentChannelId =
-            defaultChannel?.id ?? null
+          state.currentChannelId = defaultChannel?.id ?? null
         }
       })
       .addCase(renameChannel.fulfilled, (state, { payload }) => {
-        const index = state.channels.findIndex(
-          c => c.id === payload.id,
-        )
+        const index = state.channels.findIndex(c => c.id === payload.id)
 
         if (index !== -1) {
           state.channels[index] = payload

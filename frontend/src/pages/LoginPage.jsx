@@ -2,16 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Form,
-  Button,
-  Container,
-  Row,
-  Col,
-  Card,
-  Alert,
-  Spinner,
-} from 'react-bootstrap'
+import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import { login, clearError } from '../store/slices/authSlice'
@@ -59,16 +50,10 @@ const LoginPage = () => {
         <Col xs={12} md={6} lg={4}>
           <Card className="shadow-sm">
             <Card.Body className="p-4">
-              <h2 className="text-center mb-4">
-                {t('auth.login')}
-              </h2>
+              <h2 className="text-center mb-4">{t('auth.login')}</h2>
 
               {error && (
-                <Alert
-                  variant="danger"
-                  onClose={() => dispatch(clearError())}
-                  dismissible
-                >
+                <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
                   {error}
                 </Alert>
               )}
@@ -89,9 +74,7 @@ const LoginPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>
-                        {t('auth.loginUsername')}
-                      </Form.Label>
+                      <Form.Label>{t('auth.loginUsername')}</Form.Label>
 
                       <Form.Control
                         type="text"
@@ -110,9 +93,7 @@ const LoginPage = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="password">
-                      <Form.Label>
-                        {t('auth.password')}
-                      </Form.Label>
+                      <Form.Label>{t('auth.password')}</Form.Label>
 
                       <Form.Control
                         type="password"
@@ -147,20 +128,13 @@ const LoginPage = () => {
                             className="me-2"
                           />
                         )}
-                        {loading
-                          ? t('auth.loggingIn')
-                          : t('auth.loginButton')}
+                        {loading ? t('auth.loggingIn') : t('auth.loginButton')}
                       </Button>
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">
-                        {t('auth.noAccount')}
-                        {' '}
-                      </span>
-                      <Link to="/signup">
-                        {t('auth.signup')}
-                      </Link>
+                      <span className="text-muted">{t('auth.noAccount')} </span>
+                      <Link to="/signup">{t('auth.signup')}</Link>
                     </div>
                   </Form>
                 )}

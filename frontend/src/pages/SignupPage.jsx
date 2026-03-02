@@ -2,16 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Form,
-  Button,
-  Container,
-  Row,
-  Col,
-  Card,
-  Alert,
-  Spinner,
-} from 'react-bootstrap'
+import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import { signup, clearError } from '../store/slices/authSlice'
@@ -36,10 +27,7 @@ const SignupPage = () => {
     confirmPassword: yup
       .string()
       .required(t('auth.errors.required'))
-      .oneOf(
-        [yup.ref('password')],
-        t('auth.errors.passwordsMustMatch'),
-      ),
+      .oneOf([yup.ref('password')], t('auth.errors.passwordsMustMatch')),
   })
 
   useEffect(() => {
@@ -66,19 +54,11 @@ const SignupPage = () => {
         <Col xs={12} md={6} lg={4}>
           <Card className="shadow-sm">
             <Card.Body className="p-4">
-              <h2 className="text-center mb-4">
-                {t('auth.signup')}
-              </h2>
+              <h2 className="text-center mb-4">{t('auth.signup')}</h2>
 
               {error && (
-                <Alert
-                  variant="danger"
-                  onClose={() => dispatch(clearError())}
-                  dismissible
-                >
-                  {error === 'Conflict'
-                    ? t('auth.errors.userExists')
-                    : error}
+                <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
+                  {error === 'Conflict' ? t('auth.errors.userExists') : error}
                 </Alert>
               )}
 
@@ -102,9 +82,7 @@ const SignupPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>
-                        {t('auth.signupUsername')}
-                      </Form.Label>
+                      <Form.Label>{t('auth.signupUsername')}</Form.Label>
 
                       <Form.Control
                         type="text"
@@ -123,9 +101,7 @@ const SignupPage = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="password">
-                      <Form.Label>
-                        {t('auth.password')}
-                      </Form.Label>
+                      <Form.Label>{t('auth.password')}</Form.Label>
 
                       <Form.Control
                         type="password"
@@ -144,9 +120,7 @@ const SignupPage = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="confirmPassword">
-                      <Form.Label>
-                        {t('auth.confirmPassword')}
-                      </Form.Label>
+                      <Form.Label>{t('auth.confirmPassword')}</Form.Label>
 
                       <Form.Control
                         type="password"
@@ -154,9 +128,7 @@ const SignupPage = () => {
                         value={values.confirmPassword}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(
-                          touched.confirmPassword && errors.confirmPassword,
-                        )}
+                        isInvalid={Boolean(touched.confirmPassword && errors.confirmPassword)}
                         autoComplete="new-password"
                         disabled={loading}
                       />
@@ -183,20 +155,13 @@ const SignupPage = () => {
                             className="me-2"
                           />
                         )}
-                        {loading
-                          ? t('auth.signingUp')
-                          : t('auth.signupButton')}
+                        {loading ? t('auth.signingUp') : t('auth.signupButton')}
                       </Button>
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">
-                        {t('auth.hasAccount')}
-                        {' '}
-                      </span>
-                      <Link to="/login">
-                        {t('auth.login')}
-                      </Link>
+                      <span className="text-muted">{t('auth.hasAccount')} </span>
+                      <Link to="/login">{t('auth.login')}</Link>
                     </div>
                   </Form>
                 )}

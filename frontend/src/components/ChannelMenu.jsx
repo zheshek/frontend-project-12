@@ -16,7 +16,7 @@ const CustomToggle = React.forwardRef(({ children, onClick, 'aria-label': ariaLa
     className="p-0 text-muted"
     role="button"
     tabIndex={0}
-    onKeyDown={(e) => {
+    onKeyDown={e => {
       if (e.key === 'Enter' || e.key === ' ') {
         onClick(e)
       }
@@ -45,9 +45,7 @@ const ChannelMenu = ({ channel, onRename, onRemove }) => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item onClick={() => onRename(channel)}>
-          Переименовать
-        </Dropdown.Item>
+        <Dropdown.Item onClick={() => onRename(channel)}>Переименовать</Dropdown.Item>
         <Dropdown.Item onClick={() => onRemove(channel)} className="text-danger">
           Удалить
         </Dropdown.Item>

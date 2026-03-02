@@ -11,9 +11,7 @@ const NotFoundPage = () => {
         <Col xs={12} md={6} className="text-center">
           <h1 className="display-1">404</h1>
           <h2 className="mb-4">{t('errors.pageNotFound')}</h2>
-          <p className="text-muted mb-4">
-            {t('errors.unknownError')}
-          </p>
+          <p className="text-muted mb-4">{t('errors.unknownError')}</p>
           <Button as={Link} to="/" variant="primary" size="lg">
             {t('errors.goHome')}
           </Button>

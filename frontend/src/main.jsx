@@ -11,7 +11,8 @@ import './index.css'
 
 // Простая конфигурация как в инструкции
 const rollbarConfig = {
-  accessToken: '3563fcd1122c43d79cc417558cd944cd8deea3b40375f3b72c7130329e08b736195c5d70983a030b109e89f65df30a83',
+  accessToken:
+    '3563fcd1122c43d79cc417558cd944cd8deea3b40375f3b72c7130329e08b736195c5d70983a030b109e89f65df30a83',
   environment: 'production',
   captureUncaught: true,
   captureUnhandledRejections: true,
@@ -28,5 +29,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </ReduxProvider>
       </ErrorBoundary>
     </RollbarProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

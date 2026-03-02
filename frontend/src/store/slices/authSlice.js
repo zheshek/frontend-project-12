@@ -33,15 +33,13 @@ export const login = createAsyncThunk(
       return data
     } catch (err) {
       if (err.response?.status === 401) {
-        return rejectWithValue(
-          'Неверные имя пользователя или пароль',
-        )
+        return rejectWithValue('Неверные имя пользователя или пароль')
       }
 
       showError('Ошибка сервера')
       return rejectWithValue('Ошибка сервера')
     }
-  },
+  }
 )
 
 export const signup = createAsyncThunk(
@@ -56,37 +54,30 @@ export const signup = createAsyncThunk(
       saveToken(data.token)
       reconnectSocket()
 
-      showSuccess(
-        'Регистрация успешна! Добро пожаловать!',
-      )
+      showSuccess('Регистрация успешна! Добро пожаловать!')
 
       return data
     } catch (err) {
       if (err.response?.status === 409) {
-        showError(
-          'Пользователь с таким именем уже существует',
-        )
+        showError('Пользователь с таким именем уже существует')
         return rejectWithValue('Conflict')
       }
 
       showError('Ошибка сервера')
       return rejectWithValue('Ошибка сервера')
     }
-  },
+  }
 )
 
-export const checkAuth = createAsyncThunk(
-  'auth/check',
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem('token')
+export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithValue }) => {
+  const token = localStorage.getItem('token')
 
-    if (!token) {
-      return rejectWithValue('No token')
-    }
+  if (!token) {
+    return rejectWithValue('No token')
+  }
 
-    return { token }
-  },
-)
+  return { token }
+})
 
 const authSlice = createSlice({
   name: 'auth',

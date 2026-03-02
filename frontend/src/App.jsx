@@ -25,11 +25,11 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={(
+          element={
             <ProtectedRoute>
               <ChatPage />
             </ProtectedRoute>
-          )}
+          }
         />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

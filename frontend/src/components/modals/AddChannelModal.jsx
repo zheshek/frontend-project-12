@@ -5,12 +5,7 @@ import { Formik } from 'formik'
 import * as yup from 'yup'
 import profanityFilter from '../../utils/profanity.js'
 
-const AddChannelModal = ({
-  show,
-  onHide,
-  onAddChannel,
-  channelNames,
-}) => {
+const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
   const { t } = useTranslation()
   const inputRef = useRef(null)
 
@@ -29,22 +24,17 @@ const AddChannelModal = ({
       .notOneOf(channelNames, t('channels.errors.nameExists')),
   })
 
-  const handleSubmit = async (
-    values,
-    { setSubmitting, setErrors, resetForm },
-  ) => {
+  const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
     try {
       const cleanedName = profanityFilter.clean(values.name)
       await onAddChannel(cleanedName)
       resetForm()
       onHide()
-    }
-    catch (err) {
+    } catch (err) {
       setErrors({
         name: err?.message || 'Failed to add channel',
       })
-    }
-    finally {
+    } finally {
       setSubmitting(false)
     }
   }
@@ -52,9 +42,7 @@ const AddChannelModal = ({
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>
-          {t('modals.addChannel.title')}
-        </Modal.Title>
+        <Modal.Title>{t('modals.addChannel.title')}</Modal.Title>
       </Modal.Header>
 
       <Formik
@@ -62,21 +50,11 @@ const AddChannelModal = ({
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({
-          handleSubmit,
-          handleChange,
-          handleBlur,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
+        {({ handleSubmit, handleChange, handleBlur, values, errors, touched, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <Modal.Body>
               <Form.Group>
-                <Form.Label>
-                  {t('channels.channelName')}
-                </Form.Label>
+                <Form.Label>{t('channels.channelName')}</Form.Label>
 
                 <Form.Control
                   type="text"
@@ -91,26 +69,16 @@ const AddChannelModal = ({
                   aria-label="Имя канала"
                 />
 
-                <Form.Control.Feedback type="invalid">
-                  {errors.name}
-                </Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
             </Modal.Body>
 
             <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={onHide}
-                disabled={isSubmitting}
-              >
+              <Button variant="secondary" onClick={onHide} disabled={isSubmitting}>
                 {t('cancel')}
               </Button>
 
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={isSubmitting}
-              >
+              <Button variant="primary" type="submit" disabled={isSubmitting}>
                 {t('add')}
               </Button>
             </Modal.Footer>

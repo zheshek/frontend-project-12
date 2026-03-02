@@ -47,10 +47,16 @@ const ChatPage = () => {
   const [selectedChannel, setSelectedChannel] = useState(null)
 
   const { user } = useSelector(state => state.auth)
-  const { channels, currentChannelId, loading: channelsLoading } =
-    useSelector(state => state.channels)
-  const { messages, loading: messagesLoading, connectionStatus } =
-    useSelector(state => state.messages)
+  const {
+    channels,
+    currentChannelId,
+    loading: channelsLoading,
+  } = useSelector(state => state.channels)
+  const {
+    messages,
+    loading: messagesLoading,
+    connectionStatus,
+  } = useSelector(state => state.messages)
 
   useEffect(() => {
     dispatch(fetchChannels())
@@ -62,11 +68,7 @@ const ChatPage = () => {
 
     socketService.connect()
 
-    dispatch(
-      setConnectionStatus(
-        socketService.isConnected() ? 'connected' : 'disconnected',
-      ),
-    )
+    dispatch(setConnectionStatus(socketService.isConnected() ? 'connected' : 'disconnected'))
 
     socketService.onNewMessage(message => {
       dispatch(addMessageFromSocket(message))
@@ -106,7 +108,7 @@ const ChatPage = () => {
           text: newMessage,
           channelId: Number(currentChannelId),
           username: user?.username,
-        }),
+        })
       ).unwrap()
 
       setNewMessage('')
@@ -117,63 +119,48 @@ const ChatPage = () => {
     }
   }
 
-  const currentMessages = messages.filter(
-    m => Number(m.channelId) === Number(currentChannelId),
-  )
+  const currentMessages = messages.filter(m => Number(m.channelId) === Number(currentChannelId))
 
-  const currentChannel = channels.find(
-    c => c.id === currentChannelId,
-  )
+  const currentChannel = channels.find(c => c.id === currentChannelId)
 
   const channelNames = channels.map(c => c.name)
 
   if (channelsLoading || messagesLoading) {
     return (
-      <Container
-        fluid
-        className='h-100 d-flex justify-content-center align-items-center'
-      >
-        <Spinner animation='border' variant='primary' />
-        <p className='mt-3'>{t('loading')}</p>
+      <Container fluid className="h-100 d-flex justify-content-center align-items-center">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3">{t('loading')}</p>
       </Container>
     )
   }
 
   return (
-    <Container fluid className='p-0 h-100 d-flex flex-column'>
-      <Row className='flex-grow-1 m-0' style={{ marginTop: '56px' }}>
-        <Col md={3} lg={2} className='bg-light p-3 border-end'>
+    <Container fluid className="p-0 h-100 d-flex flex-column">
+      <Row className="flex-grow-1 m-0" style={{ marginTop: '56px' }}>
+        <Col md={3} lg={2} className="bg-light p-3 border-end">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h6 className="text-muted mb-0">
-              {t('channels.title')}
-            </h6>
-            <Button
-              variant="success"
-              size="sm"
-              onClick={() => setShowAddModal(true)}
-            >
+            <h6 className="text-muted mb-0">{t('channels.title')}</h6>
+            <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>
               +
             </Button>
           </div>
-          <ListGroup variant='flush'>
+          <ListGroup variant="flush">
             {channels.map(channel => (
               <ListGroup.Item
                 key={channel.id}
                 action
                 active={channel.id === currentChannelId}
-                onClick={() =>
-                  dispatch(setCurrentChannel(channel.id))
-                }
+                onClick={() => dispatch(setCurrentChannel(channel.id))}
                 className="d-flex justify-content-between align-items-center"
               >
-                <span className='text-truncate'># {channel.name}</span>
+                <span className="text-truncate"># {channel.name}</span>
                 <ChannelMenu
                   channel={channel}
-                  onRename={(ch) => {
+                  onRename={ch => {
                     setSelectedChannel(ch)
                     setShowRenameModal(true)
                   }}
-                  onRemove={(ch) => {
+                  onRemove={ch => {
                     setSelectedChannel(ch)
                     setShowRemoveModal(true)
                   }}
@@ -183,28 +170,25 @@ const ChatPage = () => {
           </ListGroup>
         </Col>
 
-        <Col md={9} lg={10} className='d-flex flex-column p-3'>
-          <h4 className='mb-3 text-truncate'># {currentChannel?.name}</h4>
+        <Col md={9} lg={10} className="d-flex flex-column p-3">
+          <h4 className="mb-3 text-truncate"># {currentChannel?.name}</h4>
 
           {connectionStatus !== 'connected' && (
-            <Alert variant='warning' className='mb-3'>
+            <Alert variant="warning" className="mb-3">
               ⚠️ {t('header.connectionError')}
             </Alert>
           )}
 
-          <div className='flex-grow-1 overflow-auto mb-3'>
+          <div className="flex-grow-1 overflow-auto mb-3">
             {currentMessages.length === 0 ? (
-              <p className='text-center text-muted'>{t('messages.noMessages')}</p>
+              <p className="text-center text-muted">{t('messages.noMessages')}</p>
             ) : (
               currentMessages.map(msg => (
-                <div
-                  key={msg.id}
-                  className='mb-3 p-2 bg-white rounded shadow-sm'
-                >
-                  <strong className='me-2 text-primary'>
+                <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
+                  <strong className="me-2 text-primary">
                     {msg.username || t('messages.user')}
                   </strong>
-                  <p className='mb-0'>{msg.text}</p>
+                  <p className="mb-0">{msg.text}</p>
                 </div>
               ))
             )}
@@ -217,14 +201,10 @@ const ChatPage = () => {
                 onChange={e => setNewMessage(e.target.value)}
                 placeholder={t('messages.typeMessage')}
                 aria-label="Новое сообщение"
-                disabled={
-                  !currentChannelId ||
-                  sending ||
-                  connectionStatus !== 'connected'
-                }
+                disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
               />
               <Button
-                type='submit'
+                type="submit"
                 disabled={
                   !currentChannelId ||
                   !newMessage.trim() ||
@@ -252,7 +232,7 @@ const ChatPage = () => {
           setShowRenameModal(false)
           setSelectedChannel(null)
         }}
-        onRenameChannel={async (data) => {
+        onRenameChannel={async data => {
           await dispatch(renameChannel(data)).unwrap()
         }}
         channel={selectedChannel}
