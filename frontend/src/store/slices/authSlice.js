@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { showSuccess, showError } from '../../utils/toast';
+import socketService from '../../services/socket'; // Импортируем socketService
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -8,6 +9,11 @@ export const login = createAsyncThunk(
     try {
       const response = await axios.post('/api/v1/login', { username, password });
       localStorage.setItem('token', response.data.token);
+      
+      // Переподключаем сокет с новым токеном
+      socketService.disconnect();
+      socketService.connect();
+      
       showSuccess('Добро пожаловать!');
       return response.data;
     } catch (error) {
@@ -26,6 +32,11 @@ export const signup = createAsyncThunk(
     try {
       const response = await axios.post('/api/v1/signup', { username, password });
       localStorage.setItem('token', response.data.token);
+      
+      // Переподключаем сокет с новым токеном
+      socketService.disconnect();
+      socketService.connect();
+      
       showSuccess('Регистрация успешна! Добро пожаловать!');
       return response.data;
     } catch (error) {
@@ -65,6 +76,10 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem('token');
+      
+      // Отключаем сокет при выходе
+      socketService.disconnect();
+      
       showSuccess('До встречи!');
     },
     clearError: (state) => {

@@ -3,76 +3,106 @@ import { io } from 'socket.io-client';
 class SocketService {
   constructor() {
     this.socket = null;
-    this.connectionCount = 0; // Счётчик соединений
+    this.connectionCount = 0;
+    this.listeners = new Map(); // храним коллбэки для off
   }
 
-  connect() {
+  getSocket() {
+    if (this.socket) return this.socket;
+
     this.connectionCount++;
-    console.log(`🔌 Connecting WebSocket... (connection #${this.connectionCount})`);
-    
-    if (this.socket) {
-      console.log('🔄 Socket already exists, reusing');
-      return;
-    }
+    console.log(`🔌 Инициализация сокета (попытка #${this.connectionCount})`);
+
+    const token = localStorage.getItem('token');
 
     this.socket = io({
-      transports: ['websocket', 'polling'],
+      path: '/socket.io',
+      transports: ['websocket'], // только websocket — быстрее и стабильнее в CI
       reconnection: true,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: Infinity, // бесконечно пытаться
       reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      randomizationFactor: 0.5,
+      timeout: 20000,
       withCredentials: true,
+      auth: {
+        token: token || undefined,
+      },
     });
 
+    // Логи подключения
     this.socket.on('connect', () => {
-      console.log(`✅ WebSocket подключен, ID: ${this.socket.id} (connection #${this.connectionCount})`);
+      console.log(`✅ Подключено! Socket ID: ${this.socket.id} (попытка #${this.connectionCount})`);
+    });
+
+    this.socket.on('connect_error', (err) => {
+      console.error(`⚠️ Ошибка подключения: ${err.message} (попытка #${this.connectionCount})`);
     });
 
     this.socket.on('disconnect', (reason) => {
-      console.log(`❌ WebSocket отключен: ${reason} (connection #${this.connectionCount})`);
+      console.log(`❌ Отключено: ${reason} (попытка #${this.connectionCount})`);
     });
 
-    this.socket.on('connect_error', (error) => {
-      console.error(`⚠️ Ошибка подключения: ${error.message} (connection #${this.connectionCount})`);
-    });
-
+    // Логи всех входящих событий (очень полезно для дебага)
     this.socket.onAny((event, ...args) => {
-      console.log(`📨 [${this.connectionCount}] Socket event:`, event, args);
+      console.log(`📨 Получено событие: ${event}`, args);
     });
+
+    return this.socket;
+  }
+
+  connect() {
+    this.getSocket(); // просто инициализирует, если ещё нет
   }
 
   disconnect() {
-    console.log(`🔌 Disconnecting WebSocket... (connection #${this.connectionCount})`);
     if (this.socket) {
+      console.log(`🔌 Принудительное отключение сокета (попытка #${this.connectionCount})`);
       this.socket.disconnect();
       this.socket = null;
     }
   }
 
+  // Универсальный метод подписки с сохранением коллбэка
+  on(event, callback) {
+    if (!this.socket) this.connect();
+    this.socket.on(event, callback);
+    if (!this.listeners.has(event)) this.listeners.set(event, []);
+    this.listeners.get(event).push(callback);
+  }
+
+  // Отписка всех коллбэков от события
+  off(event) {
+    if (!this.socket) return;
+    const callbacks = this.listeners.get(event) || [];
+    callbacks.forEach(cb => this.socket.off(event, cb));
+    this.listeners.delete(event);
+  }
+
+  // Специальные методы для newMessage (для совместимости с твоим кодом)
   onNewMessage(callback) {
-    console.log(`👂 [${this.connectionCount}] Setting up newMessage listener`);
-    this.socket?.on('newMessage', (message) => {
-      console.log(`📩 [${this.connectionCount}] newMessage received:`, message);
-      callback(message);
-    });
+    this.on('newMessage', callback);
   }
 
   offNewMessage() {
-    console.log(`🔇 [${this.connectionCount}] Removing newMessage listener`);
-    this.socket?.off('newMessage');
+    this.off('newMessage');
   }
 
+  // Отправка сообщения
   sendMessage(message, callback) {
-    console.log(`📤 [${this.connectionCount}] Emitting newMessage:`, message);
-    this.socket?.emit('newMessage', message, (response) => {
-      console.log(`📬 [${this.connectionCount}] Server ack:`, response);
-      if (callback) callback(response);
+    if (!this.socket?.connected) {
+      console.warn('⚠️ Сокет не подключён при отправке сообщения');
+      return;
+    }
+    console.log(`📤 Отправка сообщения:`, message);
+    this.socket.emit('newMessage', message, (ack) => {
+      console.log(`📬 Подтверждение от сервера:`, ack);
+      if (callback) callback(ack);
     });
   }
 
   isConnected() {
-    const connected = this.socket?.connected || false;
-    console.log(`📊 [${this.connectionCount}] Connection status:`, connected ? 'connected' : 'disconnected');
-    return connected;
+    return this.socket?.connected ?? false;
   }
 }
 
