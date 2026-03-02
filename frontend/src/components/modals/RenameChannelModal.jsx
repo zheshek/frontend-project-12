@@ -20,7 +20,7 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
       .required(t('channels.errors.required'))
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
-      .notOneOf(channelNames.filter(n => n !== channel?.name), t('channels.errors.nameExists'))
+      .notOneOf(channelNames.filter(n => n !== channel?.name), t('channels.errors.nameExists')),
   })
 
   const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
