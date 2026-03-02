@@ -1,7 +1,7 @@
-import filter from 'leo-profanity';
+import filter from 'leo-profanity'
 
-filter.loadDictionary('en');
-filter.loadDictionary('ru');
+filter.loadDictionary('en')
+filter.loadDictionary('ru')
 
 filter.add([
   'fuck',
@@ -11,28 +11,28 @@ filter.add([
   'damn',
   'cunt',
   'boobs',
-]);
+])
 
 const profanityFilter = {
   clean: (text) => {
     if (typeof text !== 'string' || !text.trim()) {
-      return text;
+      return text
     }
 
     if (filter.check(text)) {
-      return '*****';
+      return '*****'
     }
 
-    return text;
+    return text
   },
 
   isProfane: (text) => {
     if (typeof text !== 'string') {
-      return false;
+      return false
     }
 
-    return filter.check(text);
+    return filter.check(text)
   },
-};
+}
 
-export default profanityFilter;
+export default profanityFilter

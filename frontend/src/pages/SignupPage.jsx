@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Form,
   Button,
@@ -11,19 +11,19 @@ import {
   Card,
   Alert,
   Spinner,
-} from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import { signup, clearError } from '../store/slices/authSlice';
+} from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
+import { signup, clearError } from '../store/slices/authSlice'
 
 const SignupPage = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const { loading, error, isAuthenticated } = useSelector(
     (state) => state.auth,
-  );
+  )
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -42,39 +42,39 @@ const SignupPage = () => {
         [yup.ref('password')],
         t('auth.errors.passwordsMustMatch'),
       ),
-  });
+  })
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/')
     }
 
     return () => {
-      dispatch(clearError());
-    };
-  }, [isAuthenticated, navigate, dispatch]);
+      dispatch(clearError())
+    }
+  }, [isAuthenticated, navigate, dispatch])
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const { username, password } = values;
+    const { username, password } = values
 
-    await dispatch(signup({ username, password }));
+    await dispatch(signup({ username, password }))
 
-    setSubmitting(false);
-  };
+    setSubmitting(false)
+  }
 
   return (
-    <Container fluid className='h-100'>
-      <Row className='justify-content-center align-content-center h-100'>
+    <Container fluid className="h-100">
+      <Row className="justify-content-center align-content-center h-100">
         <Col xs={12} md={6} lg={4}>
-          <Card className='shadow-sm'>
-            <Card.Body className='p-4'>
-              <h2 className='text-center mb-4'>
+          <Card className="shadow-sm">
+            <Card.Body className="p-4">
+              <h2 className="text-center mb-4">
                 {t('auth.signup')}
               </h2>
 
               {error && (
                 <Alert
-                  variant='danger'
+                  variant="danger"
                   onClose={() => dispatch(clearError())}
                   dismissible
                 >
@@ -104,68 +104,68 @@ const SignupPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group
-                      className='mb-3'
-                      controlId='username'
+                      className="mb-3"
+                      controlId="username"
                     >
                       <Form.Label>
                         {t('auth.signupUsername')}
                       </Form.Label>
 
                       <Form.Control
-                        type='text'
-                        name='username'
+                        type="text"
+                        name="username"
                         value={values.username}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         isInvalid={Boolean(
                           touched.username && errors.username,
                         )}
-                        autoComplete='username'
+                        autoComplete="username"
                         disabled={loading}
                       />
 
-                      <Form.Control.Feedback type='invalid'>
+                      <Form.Control.Feedback type="invalid">
                         {errors.username}
                       </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group
-                      className='mb-3'
-                      controlId='password'
+                      className="mb-3"
+                      controlId="password"
                     >
                       <Form.Label>
                         {t('auth.password')}
                       </Form.Label>
 
                       <Form.Control
-                        type='password'
-                        name='password'
+                        type="password"
+                        name="password"
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         isInvalid={Boolean(
                           touched.password && errors.password,
                         )}
-                        autoComplete='new-password'
+                        autoComplete="new-password"
                         disabled={loading}
                       />
 
-                      <Form.Control.Feedback type='invalid'>
+                      <Form.Control.Feedback type="invalid">
                         {errors.password}
                       </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group
-                      className='mb-4'
-                      controlId='confirmPassword'
+                      className="mb-4"
+                      controlId="confirmPassword"
                     >
                       <Form.Label>
                         {t('auth.confirmPassword')}
                       </Form.Label>
 
                       <Form.Control
-                        type='password'
-                        name='confirmPassword'
+                        type="password"
+                        name="confirmPassword"
                         value={values.confirmPassword}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -173,30 +173,30 @@ const SignupPage = () => {
                           touched.confirmPassword &&
                             errors.confirmPassword,
                         )}
-                        autoComplete='new-password'
+                        autoComplete="new-password"
                         disabled={loading}
                       />
 
-                      <Form.Control.Feedback type='invalid'>
+                      <Form.Control.Feedback type="invalid">
                         {errors.confirmPassword}
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <div className='d-grid gap-2'>
+                    <div className="d-grid gap-2">
                       <Button
-                        variant='primary'
-                        type='submit'
-                        size='lg'
+                        variant="primary"
+                        type="submit"
+                        size="lg"
                         disabled={loading || isSubmitting}
                       >
                         {loading && (
                           <Spinner
-                            as='span'
-                            animation='border'
-                            size='sm'
-                            role='status'
-                            aria-hidden='true'
-                            className='me-2'
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            className="me-2"
                           />
                         )}
                         {loading
@@ -205,12 +205,12 @@ const SignupPage = () => {
                       </Button>
                     </div>
 
-                    <div className='text-center mt-3'>
-                      <span className='text-muted'>
+                    <div className="text-center mt-3">
+                      <span className="text-muted">
                         {t('auth.hasAccount')}
                         {' '}
                       </span>
-                      <Link to='/login'>
+                      <Link to="/login">
                         {t('auth.login')}
                       </Link>
                     </div>
@@ -222,7 +222,7 @@ const SignupPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage

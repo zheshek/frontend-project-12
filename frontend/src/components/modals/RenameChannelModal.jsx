@@ -1,8 +1,8 @@
-import { useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, Form, Button } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
+import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Modal, Form, Button } from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
 
 const RenameChannelModal = ({
   show,
@@ -11,14 +11,14 @@ const RenameChannelModal = ({
   channel,
   channelNames,
 }) => {
-  const { t } = useTranslation();
-  const inputRef = useRef(null);
+  const { t } = useTranslation()
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if (show && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [show]);
+  }, [show])
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -30,7 +30,7 @@ const RenameChannelModal = ({
         channelNames.filter((n) => n !== channel?.name),
         t('channels.errors.nameExists'),
       ),
-  });
+  })
 
   const handleSubmit = async (
     values,
@@ -40,18 +40,18 @@ const RenameChannelModal = ({
       await onRenameChannel({
         id: channel.id,
         name: values.name,
-      }).unwrap();
+      }).unwrap()
 
-      resetForm();
-      onHide();
+      resetForm()
+      onHide()
     } catch (err) {
       setErrors({
         name: err?.message || 'Failed to rename channel',
-      });
+      })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -84,18 +84,18 @@ const RenameChannelModal = ({
                 </Form.Label>
 
                 <Form.Control
-                  type='text'
-                  name='name'
+                  type="text"
+                  name="name"
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   isInvalid={Boolean(touched.name && errors.name)}
                   ref={inputRef}
                   disabled={isSubmitting}
-                  aria-label='Имя канала'
+                  aria-label="Имя канала"
                 />
 
-                <Form.Control.Feedback type='invalid'>
+                <Form.Control.Feedback type="invalid">
                   {errors.name}
                 </Form.Control.Feedback>
               </Form.Group>
@@ -103,7 +103,7 @@ const RenameChannelModal = ({
 
             <Modal.Footer>
               <Button
-                variant='secondary'
+                variant="secondary"
                 onClick={onHide}
                 disabled={isSubmitting}
               >
@@ -111,8 +111,8 @@ const RenameChannelModal = ({
               </Button>
 
               <Button
-                variant='primary'
-                type='submit'
+                variant="primary"
+                type="submit"
                 disabled={isSubmitting}
               >
                 {t('save')}
@@ -122,7 +122,7 @@ const RenameChannelModal = ({
         )}
       </Formik>
     </Modal>
-  );
-};
+  )
+}
 
-export default RenameChannelModal;
+export default RenameChannelModal

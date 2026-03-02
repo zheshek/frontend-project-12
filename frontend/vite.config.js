@@ -1,9 +1,8 @@
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig, loadEnv } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-
+  const env = loadEnv(mode, process.cwd(), '')
   return {
     plugins: [react()],
     server: {
@@ -19,10 +18,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      'import.meta.env.VITE_ROLLBAR_TOKEN': JSON.stringify(
-        env.VITE_ROLLBAR_TOKEN,
-      ),
-      'process.env': {},
+      'import.meta.env.VITE_ROLLBAR_TOKEN': JSON.stringify(env.VITE_ROLLBAR_TOKEN),
     },
-  };
-});
+  }
+})

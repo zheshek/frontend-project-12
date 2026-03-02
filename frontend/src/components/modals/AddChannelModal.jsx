@@ -1,9 +1,9 @@
-import { useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, Form, Button } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import profanityFilter from '../../utils/profanity.js';
+import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Modal, Form, Button } from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
+import profanityFilter from '../../utils/profanity.js'
 
 const AddChannelModal = ({
   show,
@@ -11,14 +11,14 @@ const AddChannelModal = ({
   onAddChannel,
   channelNames,
 }) => {
-  const { t } = useTranslation();
-  const inputRef = useRef(null);
+  const { t } = useTranslation()
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if (show && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [show]);
+  }, [show])
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -27,25 +27,25 @@ const AddChannelModal = ({
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
       .notOneOf(channelNames, t('channels.errors.nameExists')),
-  });
+  })
 
   const handleSubmit = async (
     values,
     { setSubmitting, setErrors, resetForm },
   ) => {
     try {
-      const cleanedName = profanityFilter.clean(values.name);
-      await onAddChannel(cleanedName);
-      resetForm();
-      onHide();
+      const cleanedName = profanityFilter.clean(values.name)
+      await onAddChannel(cleanedName)
+      resetForm()
+      onHide()
     } catch (err) {
       setErrors({
         name: err?.message || 'Failed to add channel',
-      });
+      })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -77,19 +77,19 @@ const AddChannelModal = ({
                 </Form.Label>
 
                 <Form.Control
-                  type='text'
-                  name='name'
-                  id='channel-name-input'
+                  type="text"
+                  name="name"
+                  id="channel-name-input"
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   isInvalid={Boolean(touched.name && errors.name)}
                   ref={inputRef}
                   disabled={isSubmitting}
-                  aria-label='Имя канала'
+                  aria-label="Имя канала"
                 />
 
-                <Form.Control.Feedback type='invalid'>
+                <Form.Control.Feedback type="invalid">
                   {errors.name}
                 </Form.Control.Feedback>
               </Form.Group>
@@ -97,7 +97,7 @@ const AddChannelModal = ({
 
             <Modal.Footer>
               <Button
-                variant='secondary'
+                variant="secondary"
                 onClick={onHide}
                 disabled={isSubmitting}
               >
@@ -105,8 +105,8 @@ const AddChannelModal = ({
               </Button>
 
               <Button
-                variant='primary'
-                type='submit'
+                variant="primary"
+                type="submit"
                 disabled={isSubmitting}
               >
                 {t('add')}
@@ -116,7 +116,7 @@ const AddChannelModal = ({
         )}
       </Formik>
     </Modal>
-  );
-};
+  )
+}
 
-export default AddChannelModal;
+export default AddChannelModal
