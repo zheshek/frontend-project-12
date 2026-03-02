@@ -44,7 +44,6 @@ const ChatPage = () => {
   const [isFirstConnection, setIsFirstConnection] = useState(true);
   const [updateKey, setUpdateKey] = useState(0);
 
-  // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
@@ -159,7 +158,6 @@ const ChatPage = () => {
   );
   
   console.log('Current messages for channel:', currentMessages.length);
-  console.log('Messages container key:', updateKey);
 
   const currentChannel = channels.find((c) => c.id === currentChannelId);
   const channelNames = channels.map((c) => c.name);
@@ -181,7 +179,6 @@ const ChatPage = () => {
   return (
     <Container fluid className="p-0 h-100 d-flex flex-column">
       <Row className="flex-grow-1 m-0" style={{ marginTop: "56px" }}>
-        {/* Левая колонка - ТОЛЬКО КАНАЛЫ */}
         <Col md={3} lg={2} className="bg-light p-3 border-end">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h6 className="text-muted mb-0">{t("channels.title")}</h6>
@@ -219,7 +216,6 @@ const ChatPage = () => {
           </ListGroup>
         </Col>
 
-        {/* Правая колонка - ТОЛЬКО ЧАТ */}
         <Col md={9} lg={10} className="d-flex flex-column p-3">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="mb-0 text-truncate"># {currentChannel?.name}</h4>
@@ -231,7 +227,6 @@ const ChatPage = () => {
             </Alert>
           )}
 
-          {/* КОНТЕЙНЕР СООБЩЕНИЙ - отдельный div */}
           <div className="flex-grow-1 overflow-auto mb-3">
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">
@@ -244,7 +239,11 @@ const ChatPage = () => {
                   className="mb-3 p-2 bg-white rounded shadow-sm"
                 >
                   <div className="d-flex align-items-center mb-1">
-                    <strong className="me-2" style={{ color: "#0d6efd" }}>
+                    <strong 
+                      className="me-2" 
+                      style={{ color: "#0d6efd" }}
+                      data-testid={`message-username-${msg.id}`}
+                    >
                       {msg.username || t("messages.user")}
                     </strong>
                     <small className="text-muted">
@@ -261,7 +260,6 @@ const ChatPage = () => {
             )}
           </div>
 
-          {/* Форма отправки */}
           <Form onSubmit={handleSendMessage}>
             <InputGroup>
               <Form.Control
@@ -293,7 +291,6 @@ const ChatPage = () => {
         </Col>
       </Row>
 
-      {/* Modals */}
       <AddChannelModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
