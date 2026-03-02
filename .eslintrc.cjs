@@ -7,7 +7,6 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
-    'prettier', // Добавляем prettier
   ],
   parserOptions: {
     ecmaFeatures: { jsx: true },
@@ -19,6 +18,10 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-unused-vars': 'warn',
     'no-undef': 'warn',
+    // Стандартные правила ESLint
+    'semi': ['error', 'never'],
+    'quotes': ['error', 'single'],
+    'arrow-parens': ['error', 'as-needed'],
   },
   settings: {
     react: { version: 'detect' },
