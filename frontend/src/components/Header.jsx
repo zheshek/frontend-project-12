@@ -33,7 +33,8 @@ const Header = () => {
                 <Badge bg="success" className="me-3">
                   ● {t('header.online')}
                 </Badge>
-              ) : (
+              ) 
+              : (
                 <Badge bg="warning" text="dark" className="me-3">
                   ○ {t('header.offline')}
                 </Badge>
@@ -51,7 +52,8 @@ const Header = () => {
                 {t('header.logout')}
               </Button>
             </div>
-          ) : (
+          ) 
+          : (
             <Navbar.Text>
               <Link
                 to="/login"

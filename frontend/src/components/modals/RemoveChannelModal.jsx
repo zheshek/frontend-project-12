@@ -54,4 +54,3 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
 }
 
 export default RemoveChannelModal
-

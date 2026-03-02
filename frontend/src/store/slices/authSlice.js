@@ -31,7 +31,8 @@ export const login = createAsyncThunk(
       showSuccess('Добро пожаловать!')
 
       return data
-    } catch (err) {
+    } 
+    catch (err) {
       if (err.response?.status === 401) {
         return rejectWithValue('Неверные имя пользователя или пароль')
       }
@@ -39,7 +40,7 @@ export const login = createAsyncThunk(
       showError('Ошибка сервера')
       return rejectWithValue('Ошибка сервера')
     }
-  }
+  },
 )
 
 export const signup = createAsyncThunk(
@@ -57,7 +58,8 @@ export const signup = createAsyncThunk(
       showSuccess('Регистрация успешна! Добро пожаловать!')
 
       return data
-    } catch (err) {
+    } 
+    catch (err) {
       if (err.response?.status === 409) {
         showError('Пользователь с таким именем уже существует')
         return rejectWithValue('Conflict')
@@ -66,7 +68,7 @@ export const signup = createAsyncThunk(
       showError('Ошибка сервера')
       return rejectWithValue('Ошибка сервера')
     }
-  }
+  },
 )
 
 export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithValue }) => {
@@ -105,7 +107,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, state => {
+      .addCase(login.pending, (state) => {
         state.loading = true
         state.error = null
       })
