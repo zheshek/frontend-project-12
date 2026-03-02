@@ -11,7 +11,7 @@ const CustomToggle = React.forwardRef(({ children, onClick, 'aria-label': ariaLa
       textDecoration: 'none',
       cursor: 'pointer',
       display: 'inline-block',
-      padding: '0.25rem 0.5rem'
+      padding: '0.25rem 0.5rem',
     }}
     className="p-0 text-muted"
     role="button"

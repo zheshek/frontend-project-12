@@ -22,7 +22,7 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       .required(t('channels.errors.required'))
       .min(3, t('channels.errors.nameLength'))
       .max(20, t('channels.errors.nameLength'))
-      .notOneOf(channelNames, t('channels.errors.nameExists'))
+      .notOneOf(channelNames, t('channels.errors.nameExists')), // ← добавить запятую!
     // проверка на profanity УДАЛЕНА!
   })
 
