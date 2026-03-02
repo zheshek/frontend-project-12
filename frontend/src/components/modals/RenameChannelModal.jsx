@@ -52,6 +52,7 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
                   isInvalid={touched.name && errors.name}
                   ref={inputRef}
                   disabled={isSubmitting}
+                  aria-label="Имя канала"  // ← ДОБАВЛЯЕМ ЭТО!
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.name}
