@@ -23,6 +23,18 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
       .notOneOf(channelNames.filter(n => n !== channel?.name), t('channels.errors.nameExists')),
   });
 
+  const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
+    try {
+      await onRenameChannel({ id: channel.id, name: values.name }).unwrap(); // ← Ждём завершения и используем unwrap()
+      resetForm();
+      onHide(); // ← Закрываем только после успеха
+    } catch (error) {
+      setErrors({ name: error.message || 'Failed to rename channel' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -31,12 +43,8 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
       <Formik
         initialValues={{ name: channel?.name || '' }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          onRenameChannel({ id: channel.id, name: values.name });
-          resetForm();
-          setSubmitting(false);
-          onHide();
-        }}
+        onSubmit={handleSubmit}
+        enableReinitialize
       >
         {({ handleSubmit, handleChange, handleBlur, values, errors, touched, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
@@ -52,7 +60,7 @@ const RenameChannelModal = ({ show, onHide, onRenameChannel, channel, channelNam
                   isInvalid={touched.name && errors.name}
                   ref={inputRef}
                   disabled={isSubmitting}
-                  aria-label="Имя канала"  // ← ДОБАВЛЯЕМ ЭТО!
+                  aria-label="Имя канала"
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.name}
