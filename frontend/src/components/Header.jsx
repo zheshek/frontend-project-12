@@ -26,12 +26,11 @@ const Header = () => {
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
             <div className="d-flex align-items-center">
-              {connectionStatus === 'connected' && (
+              {connectionStatus === 'connected' ? (
                 <Badge bg="success" className="me-3">
                   ● {t('header.online')}
                 </Badge>
-              )}
-              {connectionStatus === 'disconnected' && (
+              ) : (
                 <Badge bg="warning" text="dark" className="me-3">
                   ○ {t('header.offline')}
                 </Badge>

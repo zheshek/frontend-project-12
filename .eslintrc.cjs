@@ -37,4 +37,4 @@ module.exports = {
     react: { version: 'detect' },
   },
   ignorePatterns: ['dist/**', 'node_modules/**', 'frontend/dist/**'],
-};
+}

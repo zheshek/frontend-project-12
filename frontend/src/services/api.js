@@ -18,7 +18,7 @@ export default api
 // API методы
 export const getChannels = () => api.get('/channels')
 export const getMessages = () => api.get('/messages')
-export const addChannel = (data) => api.post('/channels', data)
-export const removeChannel = (id) => api.delete(`/channels/${id}`)
-export const renameChannel = (data) => api.patch(`/channels/${data.id}`, data)
-export const addMessage = (data) => api.post('/messages', data)
+export const addChannel = data => api.post('/channels', data)
+export const removeChannel = id => api.delete(`/channels/${id}`)
+export const renameChannel = data => api.patch(`/channels/${data.id}`, data)
+export const addMessage = data => api.post('/messages', data)
