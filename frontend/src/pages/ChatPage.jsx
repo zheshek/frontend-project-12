@@ -85,12 +85,11 @@ const ChatPage = () => {
       showWarning(t('toasts.disconnected'))
     }
 
+    // Подписываемся на события (БЕЗ .off() здесь!)
     socketService.socket?.on('connect', handleConnect)
-    socketService.socket?.off('connect', handleConnect)
-
     socketService.socket?.on('disconnect', handleDisconnect)
-    socketService.socket?.off('disconnect', handleDisconnect)
 
+    // Очистка при размонтировании
     return () => {
       socketService.offNewMessage()
       socketService.socket?.off('connect', handleConnect)
@@ -160,7 +159,7 @@ const ChatPage = () => {
                 className="d-flex justify-content-between align-items-center"
               >
                 <span className="text-truncate">
-                  {'# '}
+                  # 
                   {channel.name}
                 </span>
 
@@ -182,13 +181,13 @@ const ChatPage = () => {
 
         <Col md={9} lg={10} className="d-flex flex-column p-3">
           <h4 className="mb-3 text-truncate">
-            {'# '}
+            # 
             {currentChannel?.name}
           </h4>
 
           {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="mb-3">
-              <span>⚠️ </span>
+              ⚠️ 
               {t('header.connectionError')}
             </Alert>
           )}
