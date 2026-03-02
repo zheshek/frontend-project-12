@@ -116,10 +116,10 @@ const ChatPage = () => {
       ).unwrap()
 
       setNewMessage('')
-    } 
+    }
     catch (err) {
       rollbar.error('Ошибка отправки сообщения', err)
-    } 
+    }
     finally {
       setSending(false)
     }
@@ -168,18 +168,17 @@ const ChatPage = () => {
           </div>
 
           <ListGroup variant="flush">
-            {channels.map((channel) => (
+            {channels.map(channel => (
               <ListGroup.Item
                 key={channel.id}
                 action
                 active={channel.id === currentChannelId}
                 onClick={() =>
-                  dispatch(setCurrentChannel(channel.id))
-                }
+                  dispatch(setCurrentChannel(channel.id))}
                 className="d-flex justify-content-between align-items-center"
               >
                 <span className="text-truncate">
-                  # 
+                  #
                   {channel.name}
                 </span>
 
@@ -201,13 +200,13 @@ const ChatPage = () => {
 
         <Col md={9} lg={10} className="d-flex flex-column p-3">
           <h4 className="mb-3 text-truncate">
-            # 
+            #
             {currentChannel?.name}
           </h4>
 
           {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="mb-3">
-              ⚠️ 
+              ⚠️
               {t('header.connectionError')}
             </Alert>
           )}
@@ -220,7 +219,7 @@ const ChatPage = () => {
                   </p>
                 )
               : (
-                  currentMessages.map((msg) => (
+                  currentMessages.map(msg => (
                     <div
                       key={msg.id}
                       className="mb-3 p-2 bg-white rounded shadow-sm"
@@ -238,9 +237,8 @@ const ChatPage = () => {
             <InputGroup>
               <Form.Control
                 value={newMessage}
-                onChange={(e) =>
-                  setNewMessage(e.target.value)
-                }
+                onChange={e =>
+                  setNewMessage(e.target.value)}
                 placeholder={t('messages.typeMessage')}
                 aria-label="Новое сообщение"
                 disabled={
@@ -270,9 +268,8 @@ const ChatPage = () => {
       <AddChannelModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
-        onAddChannel={(name) =>
-          dispatch(addChannel(name))
-        }
+        onAddChannel={name =>
+          dispatch(addChannel(name))}
         channelNames={channelNames}
       />
 
