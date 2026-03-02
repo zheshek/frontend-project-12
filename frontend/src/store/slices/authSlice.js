@@ -31,7 +31,7 @@ export const login = createAsyncThunk(
       showSuccess('Добро пожаловать!')
 
       return data
-    } 
+    }
     catch (err) {
       if (err.response?.status === 401) {
         return rejectWithValue('Неверные имя пользователя или пароль')
@@ -58,7 +58,7 @@ export const signup = createAsyncThunk(
       showSuccess('Регистрация успешна! Добро пожаловать!')
 
       return data
-    } 
+    }
     catch (err) {
       if (err.response?.status === 409) {
         showError('Пользователь с таким именем уже существует')
