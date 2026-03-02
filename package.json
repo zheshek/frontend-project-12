@@ -5,10 +5,10 @@
   "description": "[![Actions Status](https://github.com/zheshek/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/zheshek/frontend-project-12/actions)",
   "main": "index.js",
   "scripts": {
-  "start": "npx start-server -s ./frontend/dist",
-  "dev": "cd frontend && npm run dev",
-  "build": "cd frontend && npm run build"
-},
+    "start": "npx start-server -s ./frontend/dist",
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zheshek/frontend-project-12.git"
@@ -22,5 +22,9 @@
   "homepage": "https://github.com/zheshek/frontend-project-12#readme",
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2"
   }
 }
