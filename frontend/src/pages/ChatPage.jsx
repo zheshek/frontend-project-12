@@ -203,6 +203,8 @@ const ChatPage = () => {
               <Form.Control
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
+                                placeholder={t('messages.typeMessage')}
+                aria-label="Новое сообщение"
                 disabled={
                   !currentChannelId ||
                   sending ||
