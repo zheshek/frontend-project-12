@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 
-export const getSignupSchema = (t) => Yup.object({
+export const getSignupSchema = t => Yup.object({
   username: Yup.string()
     .min(3, t('auth.errors.usernameLength'))
     .max(20, t('auth.errors.usernameLength'))

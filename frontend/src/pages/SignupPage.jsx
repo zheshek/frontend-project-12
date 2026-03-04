@@ -22,7 +22,7 @@ const SignupPage = () => {
   const navigate = useNavigate()
 
   const { loading, error, isAuthenticated } = useSelector(
-    (state) => state.auth,
+    state => state.auth,
   )
 
   useEffect(() => {

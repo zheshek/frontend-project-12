@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-const loginSchema = (t) =>
+const loginSchema = t =>
   yup.object().shape({
     username: yup
       .string()
