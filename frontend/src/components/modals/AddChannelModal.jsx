@@ -2,10 +2,15 @@ import { useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Form, Button } from 'react-bootstrap'
 import { Formik } from 'formik'
-import * as yup from 'yup'
 import profanityFilter from '../../utils/profanity.js'
+import addChannelSchema from '../../schemas/addChannelSchema'
 
-const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
+const AddChannelModal = ({
+  show,
+  onHide,
+  onAddChannel,
+  channelNames,
+}) => {
   const { t } = useTranslation()
   const inputRef = useRef(null)
 
@@ -14,15 +19,6 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       inputRef.current.focus()
     }
   }, [show])
-
-  const validationSchema = yup.object().shape({
-    name: yup
-      .string()
-      .required(t('channels.errors.required'))
-      .min(3, t('channels.errors.nameLength'))
-      .max(20, t('channels.errors.nameLength'))
-      .notOneOf(channelNames, t('channels.errors.nameExists')),
-  })
 
   const handleSubmit = async (
     values,
@@ -33,13 +29,11 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       await onAddChannel(cleanedName)
       resetForm()
       onHide()
-    }
-    catch (err) {
+    } catch (err) {
       setErrors({
         name: err?.message || 'Failed to add channel',
       })
-    }
-    finally {
+    } finally {
       setSubmitting(false)
     }
   }
@@ -54,7 +48,10 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
 
       <Formik
         initialValues={{ name: '' }}
-        validationSchema={validationSchema}
+        validationSchema={addChannelSchema(
+          t,
+          channelNames,
+        )}
         onSubmit={handleSubmit}
       >
         {({
@@ -80,7 +77,9 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={Boolean(touched.name && errors.name)}
+                  isInvalid={Boolean(
+                    touched.name && errors.name,
+                  )}
                   ref={inputRef}
                   disabled={isSubmitting}
                   aria-label="Имя канала"

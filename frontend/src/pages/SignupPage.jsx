@@ -2,33 +2,28 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Card,
+  Alert,
+  Spinner,
+} from 'react-bootstrap'
 import { Formik } from 'formik'
-import * as yup from 'yup'
 import { signup, clearError } from '../store/slices/authSlice'
+import signupSchema from '../schemas/signupSchema'
 
 const SignupPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { loading, error, isAuthenticated } = useSelector(state => state.auth)
-
-  const validationSchema = yup.object().shape({
-    username: yup
-      .string()
-      .required(t('auth.errors.required'))
-      .min(3, t('auth.errors.usernameLength'))
-      .max(20, t('auth.errors.usernameLength')),
-    password: yup
-      .string()
-      .required(t('auth.errors.required'))
-      .min(6, t('auth.errors.passwordLength')),
-    confirmPassword: yup
-      .string()
-      .required(t('auth.errors.required'))
-      .oneOf([yup.ref('password')], t('auth.errors.passwordsMustMatch')),
-  })
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth,
+  )
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -54,11 +49,19 @@ const SignupPage = () => {
         <Col xs={12} md={6} lg={4}>
           <Card className="shadow-sm">
             <Card.Body className="p-4">
-              <h2 className="text-center mb-4">{t('auth.signup')}</h2>
+              <h2 className="text-center mb-4">
+                {t('auth.signup')}
+              </h2>
 
               {error && (
-                <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
-                  {error === 'Conflict' ? t('auth.errors.userExists') : error}
+                <Alert
+                  variant="danger"
+                  onClose={() => dispatch(clearError())}
+                  dismissible
+                >
+                  {error === 'Conflict'
+                    ? t('auth.errors.userExists')
+                    : error}
                 </Alert>
               )}
 
@@ -68,7 +71,7 @@ const SignupPage = () => {
                   password: '',
                   confirmPassword: '',
                 }}
-                validationSchema={validationSchema}
+                validationSchema={signupSchema(t)}
                 onSubmit={handleSubmit}
               >
                 {({
@@ -81,8 +84,13 @@ const SignupPage = () => {
                   isSubmitting,
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>{t('auth.signupUsername')}</Form.Label>
+                    <Form.Group
+                      className="mb-3"
+                      controlId="username"
+                    >
+                      <Form.Label>
+                        {t('auth.signupUsername')}
+                      </Form.Label>
 
                       <Form.Control
                         type="text"
@@ -90,7 +98,12 @@ const SignupPage = () => {
                         value={values.username}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(touched.username && errors.username)}
+                        isInvalid={
+                          Boolean(
+                            touched.username
+                            && errors.username,
+                          )
+                        }
                         autoComplete="username"
                         disabled={loading}
                       />
@@ -100,8 +113,13 @@ const SignupPage = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="password">
-                      <Form.Label>{t('auth.password')}</Form.Label>
+                    <Form.Group
+                      className="mb-3"
+                      controlId="password"
+                    >
+                      <Form.Label>
+                        {t('auth.password')}
+                      </Form.Label>
 
                       <Form.Control
                         type="password"
@@ -109,7 +127,12 @@ const SignupPage = () => {
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(touched.password && errors.password)}
+                        isInvalid={
+                          Boolean(
+                            touched.password
+                            && errors.password,
+                          )
+                        }
                         autoComplete="new-password"
                         disabled={loading}
                       />
@@ -119,8 +142,13 @@ const SignupPage = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-4" controlId="confirmPassword">
-                      <Form.Label>{t('auth.confirmPassword')}</Form.Label>
+                    <Form.Group
+                      className="mb-4"
+                      controlId="confirmPassword"
+                    >
+                      <Form.Label>
+                        {t('auth.confirmPassword')}
+                      </Form.Label>
 
                       <Form.Control
                         type="password"
@@ -128,7 +156,12 @@ const SignupPage = () => {
                         value={values.confirmPassword}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={Boolean(touched.confirmPassword && errors.confirmPassword)}
+                        isInvalid={
+                          Boolean(
+                            touched.confirmPassword
+                            && errors.confirmPassword,
+                          )
+                        }
                         autoComplete="new-password"
                         disabled={loading}
                       />
@@ -155,7 +188,9 @@ const SignupPage = () => {
                             className="me-2"
                           />
                         )}
-                        {loading ? t('auth.signingUp') : t('auth.signupButton')}
+                        {loading
+                          ? t('auth.signingUp')
+                          : t('auth.signupButton')}
                       </Button>
                     </div>
 
@@ -164,7 +199,9 @@ const SignupPage = () => {
                         {t('auth.hasAccount')}
                         {' '}
                       </span>
-                      <Link to="/login">{t('auth.login')}</Link>
+                      <Link to="/login">
+                        {t('auth.login')}
+                      </Link>
                     </div>
                   </Form>
                 )}

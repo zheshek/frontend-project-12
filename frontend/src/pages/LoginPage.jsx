@@ -4,8 +4,8 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap'
 import { Formik } from 'formik'
-import * as yup from 'yup'
 import { login, clearError } from '../store/slices/authSlice'
+import loginSchema from '../schemas/loginSchema'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -13,18 +13,6 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const { loading, error, isAuthenticated } = useSelector(state => state.auth)
-
-  const validationSchema = yup.object().shape({
-    username: yup
-      .string()
-      .required(t('auth.errors.required'))
-      .min(3, t('auth.errors.usernameLength'))
-      .max(20, t('auth.errors.usernameLength')),
-    password: yup
-      .string()
-      .required(t('auth.errors.required'))
-      .min(3, t('auth.errors.passwordLength')),
-  })
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -38,9 +26,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     dispatch(clearError())
-
     await dispatch(login(values))
-
     setSubmitting(false)
   }
 
@@ -53,14 +39,18 @@ const LoginPage = () => {
               <h2 className="text-center mb-4">{t('auth.login')}</h2>
 
               {error && (
-                <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
+                <Alert
+                  variant="danger"
+                  onClose={() => dispatch(clearError())}
+                  dismissible
+                >
                   {error}
                 </Alert>
               )}
 
               <Formik
                 initialValues={{ username: '', password: '' }}
-                validationSchema={validationSchema}
+                validationSchema={loginSchema(t)}
                 onSubmit={handleSubmit}
               >
                 {({
@@ -74,7 +64,9 @@ const LoginPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>{t('auth.loginUsername')}</Form.Label>
+                      <Form.Label>
+                        {t('auth.loginUsername')}
+                      </Form.Label>
 
                       <Form.Control
                         type="text"
@@ -93,7 +85,9 @@ const LoginPage = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="password">
-                      <Form.Label>{t('auth.password')}</Form.Label>
+                      <Form.Label>
+                        {t('auth.password')}
+                      </Form.Label>
 
                       <Form.Control
                         type="password"
@@ -128,7 +122,9 @@ const LoginPage = () => {
                             className="me-2"
                           />
                         )}
-                        {loading ? t('auth.loggingIn') : t('auth.loginButton')}
+                        {loading
+                          ? t('auth.loggingIn')
+                          : t('auth.loginButton')}
                       </Button>
                     </div>
 
@@ -137,7 +133,9 @@ const LoginPage = () => {
                         {t('auth.noAccount')}
                         {' '}
                       </span>
-                      <Link to="/signup">{t('auth.signup')}</Link>
+                      <Link to="/signup">
+                        {t('auth.signup')}
+                      </Link>
                     </div>
                   </Form>
                 )}
