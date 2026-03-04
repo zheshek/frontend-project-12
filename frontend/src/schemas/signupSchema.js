@@ -1,16 +1,14 @@
 import * as Yup from 'yup'
 
-const signupSchema = Yup.object({
+export const getSignupSchema = (t) => Yup.object({
   username: Yup.string()
-    .min(3)
-    .max(20)
-    .required(),
+    .min(3, t('auth.errors.usernameLength'))
+    .max(20, t('auth.errors.usernameLength'))
+    .required(t('auth.errors.required')),
   password: Yup.string()
-    .min(6)
-    .required(),
+    .min(6, t('auth.errors.passwordLength'))
+    .required(t('auth.errors.required')),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null])
-    .required(),
+    .oneOf([Yup.ref('password')], t('auth.errors.passwordsMustMatch'))
+    .required(t('auth.errors.required')),
 })
-
-export default signupSchema
