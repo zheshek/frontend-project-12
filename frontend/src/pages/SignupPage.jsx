@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap'
 import { Formik } from 'formik'
 import { signup, clearError } from '../store/slices/authSlice'
-import signupSchema from '../schemas/signupSchema'
+import { getSignupSchema } from '../schemas/signupSchema'
 
 const SignupPage = () => {
   const { t } = useTranslation()
@@ -71,7 +71,7 @@ const SignupPage = () => {
                   password: '',
                   confirmPassword: '',
                 }}
-                validationSchema={signupSchema(t)}
+                validationSchema={getSignupSchema(t)}
                 onSubmit={handleSubmit}
               >
                 {({
