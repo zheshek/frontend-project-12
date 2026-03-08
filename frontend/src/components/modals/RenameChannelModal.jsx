@@ -25,20 +25,21 @@ const RenameChannelModal = ({
     { setSubmitting, resetForm, setErrors },
   ) => {
     try {
+      if (!channel) return
+
+      // ❗ НИКАКОГО unwrap здесь
       await onRenameChannel({
         id: channel.id,
         name: values.name,
-      }).unwrap()
+      })
 
       resetForm()
       onHide()
-    }
-    catch (err) {
+    } catch (err) {
       setErrors({
-        name: err?.message || 'Failed to rename channel',
+        name: err?.message || t('modals.renameChannel.error'),
       })
-    }
-    finally {
+    } finally {
       setSubmitting(false)
     }
   }
@@ -83,13 +84,10 @@ const RenameChannelModal = ({
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={Boolean(
-                    touched.name && errors.name,
-                  )}
+                  isInvalid={Boolean(touched.name && errors.name)}
                   ref={inputRef}
                   disabled={isSubmitting}
                   autoComplete="off"
-                  aria-label="Имя канала"
                 />
 
                 <Form.Control.Feedback type="invalid">
