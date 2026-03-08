@@ -6,7 +6,7 @@ export const getSignupSchema = t => Yup.object({
     .max(20, t('auth.errors.usernameLength'))
     .required(t('auth.errors.required')),
   password: Yup.string()
-    .min(6, t('auth.errors.passwordLength'))
+    .min(5, t('auth.errors.passwordLength'))
     .required(t('auth.errors.required')),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], t('auth.errors.passwordsMustMatch'))

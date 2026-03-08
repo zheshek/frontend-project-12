@@ -88,6 +88,7 @@ const RenameChannelModal = ({
                   )}
                   ref={inputRef}
                   disabled={isSubmitting}
+                  autoComplete="off"
                   aria-label="Имя канала"
                 />
 

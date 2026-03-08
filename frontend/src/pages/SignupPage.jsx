@@ -104,7 +104,7 @@ const SignupPage = () => {
                             && errors.username,
                           )
                         }
-                        autoComplete="username"
+                        autoComplete="off"
                         disabled={loading}
                       />
 
@@ -133,7 +133,7 @@ const SignupPage = () => {
                             && errors.password,
                           )
                         }
-                        autoComplete="new-password"
+                        autoComplete="off"
                         disabled={loading}
                       />
 
@@ -162,7 +162,7 @@ const SignupPage = () => {
                             && errors.confirmPassword,
                           )
                         }
-                        autoComplete="new-password"
+                        autoComplete="off"
                         disabled={loading}
                       />
 

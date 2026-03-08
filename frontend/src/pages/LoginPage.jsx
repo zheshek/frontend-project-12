@@ -96,7 +96,7 @@ const LoginPage = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         isInvalid={Boolean(touched.password && errors.password)}
-                        autoComplete="current-password"
+                        autoComplete="off"
                         disabled={loading}
                       />
 
