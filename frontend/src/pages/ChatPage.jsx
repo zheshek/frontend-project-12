@@ -212,34 +212,34 @@ const ChatPage = () => {
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto' }}>
-            <ListGroup variant="flush">
-              {channels.map(channel => (
-<ListGroup.Item
-  key={channel.id}
-  className="d-flex justify-content-between align-items-center text-break"
->
-  <Button
-    variant={channel.id === currentChannelId ? 'secondary' : 'light'}
-    className="w-100 text-start border-0"
-    onClick={() => dispatch(setCurrentChannel(channel.id))}
-  >
-     {channel.name}
-  </Button>
+<ListGroup variant="flush">
+  {channels.map((channel) => (
+    <ListGroup.Item
+      key={channel.id}
+      className="d-flex justify-content-between align-items-center px-2"
+    >
+      <Button
+        variant={channel.id === currentChannelId ? 'secondary' : 'light'}
+        className="w-100 text-start border-0"
+        onClick={() => dispatch(setCurrentChannel(channel.id))}
+      >
+        {channel.name}
+      </Button>
 
-  <ChannelMenu
-    channel={channel}
-    onRename={(ch) => {
-      setSelectedChannel(ch)
-      setShowRenameModal(true)
-    }}
-    onRemove={(ch) => {
-      setSelectedChannel(ch)
-      setShowRemoveModal(true)
-    }}
-  />
-</ListGroup.Item>
-              ))}
-            </ListGroup>
+      <ChannelMenu
+        channel={channel}
+        onRename={(ch) => {
+          setSelectedChannel(ch)
+          setShowRenameModal(true)
+        }}
+        onRemove={(ch) => {
+          setSelectedChannel(ch)
+          setShowRemoveModal(true)
+        }}
+      />
+    </ListGroup.Item>
+  ))}
+</ListGroup>
           </div>
         </Col>
 
