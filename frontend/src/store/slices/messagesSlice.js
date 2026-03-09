@@ -22,9 +22,7 @@ export const sendMessage = createAsyncThunk(
   async (messageData, { rejectWithValue }) => {
     try {
       const { data } = await api.post('/messages', messageData)
-
       socketService.sendMessage(data)
-
       return data
     }
     catch {
@@ -40,12 +38,11 @@ const messagesSlice = createSlice({
     messages: [],
     loading: false,
     error: null,
-    connectionStatus: 'disconnected',
+    connectionStatus: 'reconnecting', // ⚡ Единый статус для всего приложения
   },
   reducers: {
     addMessageFromSocket: (state, { payload }) => {
       const exists = state.messages.some(m => m.id === payload.id)
-
       if (!exists) {
         state.messages.push(payload)
       }
@@ -73,5 +70,4 @@ const messagesSlice = createSlice({
 })
 
 export const { addMessageFromSocket, setConnectionStatus } = messagesSlice.actions
-
 export default messagesSlice.reducer

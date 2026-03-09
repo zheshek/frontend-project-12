@@ -1,103 +1,93 @@
 // services/socket.js
-import { io } from 'socket.io-client';
+import { io } from 'socket.io-client'
 
 class SocketService {
   constructor() {
-    this.socket = null;
-    this.listeners = new Map(); // универсальные колбэки on/off
-    this.connectCallbacks = [];
-    this.disconnectCallbacks = [];
-    this.reconnectingCallbacks = [];
-  }
-
-  getSocket() {
-    if (this.socket) return this.socket;
-
-    const token = localStorage.getItem('token');
-
-    this.socket = io({
-      path: '/socket.io',
-      transports: ['websocket'],
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      randomizationFactor: 0.5,
-      timeout: 20000,
-      withCredentials: true,
-      auth: { token: token || undefined },
-    });
-
-    this.socket.on('connect', () => {
-      this.connectCallbacks.forEach(cb => cb());
-    });
-
-    this.socket.on('disconnect', (reason) => {
-      this.disconnectCallbacks.forEach(cb => cb());
-    });
-
-    this.socket.io.on('reconnect_attempt', () => {
-      this.reconnectingCallbacks.forEach(cb => cb());
-    });
-
-    this.socket.onAny((event, ...args) => {
-      console.log(`📨 Event: ${event}`, args);
-    });
-
-    return this.socket;
+    this.socket = null
   }
 
   connect() {
-    return this.getSocket();
+    // Если сокет уже есть и подключен - возвращаем его
+    if (this.socket?.connected) {
+      return this.socket
+    }
+
+    // Если сокет есть но отключен - пробуем переподключиться
+    if (this.socket) {
+      this.socket.connect()
+      return this.socket
+    }
+
+    const token = localStorage.getItem('token')
+    if (!token) {
+      console.log('No token available')
+      return null
+    }
+
+    console.log('Creating new socket connection')
+    
+    // Создаем новое подключение
+    this.socket = io('/', {
+      auth: { token },
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 2000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+    })
+
+    return this.socket
   }
 
   disconnect() {
     if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
-      this.listeners.clear();
-      this.connectCallbacks = [];
-      this.disconnectCallbacks = [];
-      this.reconnectingCallbacks = [];
+      this.socket.removeAllListeners()
+      this.socket.disconnect()
+      this.socket = null
     }
   }
 
-  on(event, cb) {
-    const socket = this.getSocket();
-    socket.on(event, cb);
-    if (!this.listeners.has(event)) this.listeners.set(event, []);
-    this.listeners.get(event).push(cb);
+  // Методы для событий
+  onNewMessage(callback) {
+    this.socket?.on('newMessage', callback)
   }
 
-  off(event) {
-    const socket = this.socket;
-    if (!socket) return;
-    const callbacks = this.listeners.get(event) || [];
-    callbacks.forEach(cb => socket.off(event, cb));
-    this.listeners.delete(event);
+  offNewMessage() {
+    this.socket?.off('newMessage')
   }
 
-  onNewMessage(cb) { this.on('newMessage', cb); }
-  offNewMessage() { this.off('newMessage'); }
-
-  sendMessage(message, callback) {
-    if (!this.socket?.connected) return;
-    this.socket.emit('newMessage', message, (ack) => {
-      if (callback) callback(ack);
-    });
+  onConnect(callback) {
+    this.socket?.on('connect', callback)
   }
 
-  isConnected() { return this.socket?.connected ?? false; }
+  offConnect(callback) {
+    this.socket?.off('connect', callback)
+  }
 
-  // ⚡ Методы для трёхсостоятий
-  onConnect(cb) { this.connectCallbacks.push(cb); if(this.isConnected()) cb(); }
-  offConnect(cb) { this.connectCallbacks = this.connectCallbacks.filter(fn => fn !== cb); }
+  onDisconnect(callback) {
+    this.socket?.on('disconnect', callback)
+  }
 
-  onDisconnect(cb) { this.disconnectCallbacks.push(cb); }
-  offDisconnect(cb) { this.disconnectCallbacks = this.disconnectCallbacks.filter(fn => fn !== cb); }
+  offDisconnect(callback) {
+    this.socket?.off('disconnect', callback)
+  }
 
-  onReconnecting(cb) { this.reconnectingCallbacks.push(cb); }
-  offReconnecting(cb) { this.reconnectingCallbacks = this.reconnectingCallbacks.filter(fn => fn !== cb); }
+  onReconnecting(callback) {
+    this.socket?.on('reconnect_attempt', callback)
+  }
+
+  offReconnecting(callback) {
+    this.socket?.off('reconnect_attempt', callback)
+  }
+
+  sendMessage(message) {
+    this.socket?.emit('newMessage', message)
+  }
+
+  isConnected() {
+    return this.socket?.connected || false
+  }
 }
 
-export default new SocketService();
+export default new SocketService()

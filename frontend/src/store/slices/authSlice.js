@@ -7,13 +7,34 @@ const saveToken = (token) => {
   localStorage.setItem('token', token)
 }
 
-const clearToken = () => {
-  localStorage.removeItem('token')
+const saveUser = (user) => {
+  localStorage.setItem('user', JSON.stringify(user))
 }
 
-const reconnectSocket = () => {
-  socketService.disconnect()
-  socketService.connect()
+const clearToken = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+}
+
+let connectionTimer = null
+
+const ensureSocketConnection = () => {
+  if (connectionTimer) {
+    clearTimeout(connectionTimer)
+  }
+  
+  connectionTimer = setTimeout(() => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    const status = socketService.getStatus()
+    console.log('🔌 Socket status in auth:', status)
+    
+    if (!status.connected && !status.socketConnected) {
+      socketService.connect()
+    }
+    connectionTimer = null
+  }, 1000)
 }
 
 export const login = createAsyncThunk(
@@ -26,7 +47,8 @@ export const login = createAsyncThunk(
       })
 
       saveToken(data.token)
-      reconnectSocket()
+      saveUser({ username: data.username })
+      ensureSocketConnection() // ✅ Заменили reconnectSocket
 
       showSuccess('Добро пожаловать!')
 
@@ -53,7 +75,8 @@ export const signup = createAsyncThunk(
       })
 
       saveToken(data.token)
-      reconnectSocket()
+      saveUser({ username: data.username })
+      ensureSocketConnection() // ✅ Заменили reconnectSocket
 
       showSuccess('Регистрация успешна! Добро пожаловать!')
 
@@ -73,22 +96,28 @@ export const signup = createAsyncThunk(
 
 export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithValue }) => {
   const token = localStorage.getItem('token')
+  const userStr = localStorage.getItem('user')
 
-  if (!token) {
-    return rejectWithValue('No token')
+  if (!token || !userStr) {
+    return rejectWithValue('No auth data')
   }
 
-  return { token }
+  try {
+    const user = JSON.parse(userStr)
+    return { token, user }
+  } catch (e) {
+    return rejectWithValue('Invalid user data')
+  }
 })
 
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     token: localStorage.getItem('token'),
     loading: false,
     error: null,
-    isAuthenticated: Boolean(localStorage.getItem('token')),
+    isAuthenticated: Boolean(localStorage.getItem('token') && localStorage.getItem('user')),
   },
   reducers: {
     logout: (state) => {
@@ -137,11 +166,21 @@ const authSlice = createSlice({
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.token = action.payload.token
+        state.user = action.payload.user
         state.isAuthenticated = true
+        state.loading = false
+        
+        // ✅ При восстановлении авторизации тоже проверяем сокет
+        ensureSocketConnection()
       })
       .addCase(checkAuth.rejected, (state) => {
         state.token = null
+        state.user = null
         state.isAuthenticated = false
+        state.loading = false
+      })
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true
       })
   },
 })
