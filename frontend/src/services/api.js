@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { showError } from '../utils/toast'
 
+
 const api = axios.create({
   baseURL: '/api/v1',
   timeout: 10000, // Таймаут 10 секунд

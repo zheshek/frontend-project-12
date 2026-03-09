@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRollbar } from '@rollbar/react'
+import api from '../services/api'
 import { useTranslation } from 'react-i18next'
 import {
   Container,
@@ -91,104 +92,38 @@ const ChatPage = () => {
   }, [currentMessages])
 
   // Socket эффект
-  useEffect(() => {
-    if (!user?.username) return
-
-    console.log('Setting up socket')
-    
-    // Подключаемся
-    const socket = socketService.connect()
-
-    const handleConnect = () => {
-      console.log('Socket connected')
-      dispatch(setConnectionStatus('connected'))
-      dispatch(fetchMessages())
-    }
-    
-    const handleDisconnect = () => {
-      console.log('Socket disconnected')
-      dispatch(setConnectionStatus('disconnected'))
-    }
-    
-    const handleReconnecting = () => {
-      console.log('Socket reconnecting')
-      dispatch(setConnectionStatus('reconnecting'))
-    }
-
-  const handleNewMessage = (msg) => {
-  console.log('📨 ChatPage received message:', msg)
-  console.log('👤 Current user:', user?.username)
+ useEffect(() => {
+  if (!currentChannelId) return
   
-  const messageWithAuthor = {
-    ...msg,
-    username: msg.username || user.username,
-  }
-  console.log('✏️ Message with author:', messageWithAuthor)
+  console.log('🔄 Setting up message sync for channel:', currentChannelId)
   
-  dispatch(addMessageFromSocket(messageWithAuthor))
-}
-
-// Добавь логирование в handleSendMessage
-const handleSendMessage = async (e) => {
-  e.preventDefault()
-  if (!newMessage.trim() || !currentChannelId || sending) return
-
-  console.log('📤 Sending message:', newMessage)
-  console.log('📢 Channel ID:', currentChannelId)
-  console.log('👤 User:', user?.username)
-
-  setSending(true)
-  try {
-    const messageData = {
-      text: newMessage,
-      channelId: Number(currentChannelId),
-    }
-
-    const result = await dispatch(sendMessage(messageData)).unwrap()
-    console.log('✅ Message sent, server response:', result)
-    
-    setNewMessage('')
-    inputRef.current?.focus()
-    
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-      })
-    }, 100)
-    
-  } catch (err) {
-    console.error('❌ Error sending message:', err)
-    rollbar.error('Ошибка отправки сообщения', err)
-  } finally {
-    setSending(false)
-  }
-}
-
-    // Подписываемся на события
-    socketService.onConnect(handleConnect)
-    socketService.onDisconnect(handleDisconnect)
-    socketService.onReconnecting(handleReconnecting)
-    socketService.onNewMessage(handleNewMessage)
-
-    // Проверяем текущее состояние через секунду
-    const timer = setTimeout(() => {
-      if (socketService.isConnected()) {
-        dispatch(setConnectionStatus('connected'))
-      } else {
-        dispatch(setConnectionStatus('disconnected'))
+  // Проверяем новые сообщения каждые 2 секунды
+  const interval = setInterval(async () => {
+    try {
+      const response = await api.get('/messages')
+      const latestMessages = response.data
+      
+      // Проверяем, есть ли новые сообщения для текущего канала
+      const channelMessages = latestMessages.filter(
+        m => Number(m.channelId) === Number(currentChannelId)
+      )
+      
+      const currentIds = currentMessages.map(m => m.id)
+      const newMessages = channelMessages.filter(m => !currentIds.includes(m.id))
+      
+      if (newMessages.length > 0) {
+        console.log('📦 Found new messages via API:', newMessages)
+        newMessages.forEach(msg => {
+          dispatch(addMessageFromSocket(msg))
+        })
       }
-    }, 1000)
-
-    return () => {
-      console.log('Cleaning up')
-      clearTimeout(timer)
-      socketService.offConnect(handleConnect)
-      socketService.offDisconnect(handleDisconnect)
-      socketService.offReconnecting(handleReconnecting)
-      socketService.offNewMessage()
+    } catch (error) {
+      console.error('Error fetching messages:', error)
     }
-  }, [dispatch, user?.username])
+  }, 2000)
+  
+  return () => clearInterval(interval)
+}, [currentChannelId, currentMessages.length, dispatch])
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
