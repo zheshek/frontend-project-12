@@ -295,32 +295,33 @@ const ChatPage = () => {
           </div>
 
           {/* Форма отправки сообщения */}
-          <div className="p-3 border-top">
-            <Form onSubmit={handleSendMessage}>
-              <InputGroup>
-                <Form.Control
-                  ref={inputRef}
-                  value={newMessage}
-                  onChange={e => setNewMessage(e.target.value)}
-                  placeholder={t('messages.typeMessage')}
-                  autoComplete="off"
-                  disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
-                />
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={
-                    !currentChannelId ||
-                    !newMessage.trim() ||
-                    sending ||
-                    connectionStatus !== 'connected'
-                  }
-                >
-                  {sending ? t('messages.sending') : t('send')}
-                </Button>
-              </InputGroup>
-            </Form>
-          </div>
+ <div className="p-3 border-top">
+  <Form onSubmit={handleSendMessage}>
+    <InputGroup>
+      <Form.Control
+        ref={inputRef}
+        value={newMessage}
+        onChange={e => setNewMessage(e.target.value)}
+        placeholder={t('messages.typeMessage')}
+        autoComplete="off"
+        disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
+        aria-label="Новое сообщение"  // ✅ Добавь эту строку
+      />
+      <Button
+        type="submit"
+        variant="primary"
+        disabled={
+          !currentChannelId ||
+          !newMessage.trim() ||
+          sending ||
+          connectionStatus !== 'connected'
+        }
+      >
+        {sending ? t('messages.sending') : t('send')}
+      </Button>
+    </InputGroup>
+  </Form>
+</div>
         </Col>
       </Row>
 
