@@ -27,7 +27,6 @@ const RenameChannelModal = ({
     try {
       if (!channel) return
 
-      // ❗ НИКАКОГО unwrap здесь
       await onRenameChannel({
         id: channel.id,
         name: values.name,
@@ -88,6 +87,7 @@ const RenameChannelModal = ({
                   ref={inputRef}
                   disabled={isSubmitting}
                   autoComplete="off"
+                  aria-label="Имя канала" // ✅ Добавлено
                 />
 
                 <Form.Control.Feedback type="invalid">
