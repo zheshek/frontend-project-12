@@ -216,17 +216,16 @@ const ChatPage = () => {
               {channels.map(channel => (
 <ListGroup.Item
   key={channel.id}
-  action
-  active={channel.id === currentChannelId}
-  onClick={() => dispatch(setCurrentChannel(channel.id))}
   className="d-flex justify-content-between align-items-center text-break"
-  role="button"  // Добавь эту строку
-  tabIndex={0}   // Добавь для доступности
-  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') dispatch(setCurrentChannel(channel.id)); }} // Добавь для доступности
 >
-  <span className="text-truncate">
+  <Button
+    variant={channel.id === currentChannelId ? 'secondary' : 'light'}
+    className="w-100 text-start border-0"
+    onClick={() => dispatch(setCurrentChannel(channel.id))}
+  >
     # {channel.name}
-  </span>
+  </Button>
+
   <ChannelMenu
     channel={channel}
     onRename={(ch) => {
