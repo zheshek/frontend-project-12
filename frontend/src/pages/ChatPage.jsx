@@ -223,7 +223,7 @@ const ChatPage = () => {
     className="w-100 text-start border-0"
     onClick={() => dispatch(setCurrentChannel(channel.id))}
   >
-    # {channel.name}
+     {channel.name}
   </Button>
 
   <ChannelMenu
