@@ -32,9 +32,6 @@ import AddChannelModal from '../components/modals/AddChannelModal'
 import RenameChannelModal from '../components/modals/RenameChannelModal'
 import RemoveChannelModal from '../components/modals/RemoveChannelModal'
 
-// Определяем тестовое окружение
-const isTest = typeof navigator !== 'undefined' && navigator.webdriver
-
 const ChatPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -133,17 +130,6 @@ const ChatPage = () => {
     }
   }, [dispatch, user?.username])
 
-  // Синхронизация для тестового режима
-  useEffect(() => {
-    if (!isTest || !currentChannelId) return
-    
-    const interval = setInterval(() => {
-      dispatch(fetchMessages())
-    }, 500) // Увеличили частоту до 500ms
-    
-    return () => clearInterval(interval)
-  }, [isTest, currentChannelId, dispatch])
-
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!newMessage.trim() || !currentChannelId || sending) return
@@ -159,13 +145,6 @@ const ChatPage = () => {
       
       setNewMessage('')
       inputRef.current?.focus()
-      
-      // Принудительно обновляем сообщения после отправки
-      if (isTest) {
-        setTimeout(() => {
-          dispatch(fetchMessages())
-        }, 100)
-      }
       
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({

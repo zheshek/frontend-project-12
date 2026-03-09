@@ -52,18 +52,18 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
             <Modal.Body>
               <Form.Group>
                 <Form.Label>{t('channels.newChannelName')}</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="name"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={Boolean(touched.name && errors.name)}
-                  ref={inputRef}
-                  disabled={isSubmitting}
-                  autoComplete="off"
-                  aria-label="Имя канала"
-                />
+<Form.Control
+  type="text"
+  name="name"
+  value={values.name}
+  onChange={handleChange}
+  onBlur={handleBlur}
+  isInvalid={Boolean(touched.name && errors.name)}
+  ref={inputRef}
+  disabled={isSubmitting}
+  autoComplete="off"
+  aria-label="Имя канала"
+/>
                 <Form.Control.Feedback type="invalid">
                   {errors.name}
                 </Form.Control.Feedback>
