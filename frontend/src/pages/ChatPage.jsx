@@ -214,14 +214,17 @@ const ChatPage = () => {
           <div style={{ flex: 1, overflowY: 'auto' }}>
             <ListGroup variant="flush">
               {channels.map(channel => (
-               <ListGroup.Item
+<ListGroup.Item
   key={channel.id}
   action
   active={channel.id === currentChannelId}
   onClick={() => dispatch(setCurrentChannel(channel.id))}
   className="d-flex justify-content-between align-items-center text-break"
+  role="button"  // Добавь эту строку
+  tabIndex={0}   // Добавь для доступности
+  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') dispatch(setCurrentChannel(channel.id)); }} // Добавь для доступности
 >
-  <span className="text-truncate" data-testid={`channel-name-${channel.name}`}>
+  <span className="text-truncate">
     # {channel.name}
   </span>
   <ChannelMenu
