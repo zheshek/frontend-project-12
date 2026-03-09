@@ -115,13 +115,55 @@ const ChatPage = () => {
       dispatch(setConnectionStatus('reconnecting'))
     }
 
-    const handleNewMessage = (msg) => {
-      const messageWithAuthor = {
-        ...msg,
-        username: msg.username || user.username,
-      }
-      dispatch(addMessageFromSocket(messageWithAuthor))
+  const handleNewMessage = (msg) => {
+  console.log('📨 ChatPage received message:', msg)
+  console.log('👤 Current user:', user?.username)
+  
+  const messageWithAuthor = {
+    ...msg,
+    username: msg.username || user.username,
+  }
+  console.log('✏️ Message with author:', messageWithAuthor)
+  
+  dispatch(addMessageFromSocket(messageWithAuthor))
+}
+
+// Добавь логирование в handleSendMessage
+const handleSendMessage = async (e) => {
+  e.preventDefault()
+  if (!newMessage.trim() || !currentChannelId || sending) return
+
+  console.log('📤 Sending message:', newMessage)
+  console.log('📢 Channel ID:', currentChannelId)
+  console.log('👤 User:', user?.username)
+
+  setSending(true)
+  try {
+    const messageData = {
+      text: newMessage,
+      channelId: Number(currentChannelId),
     }
+
+    const result = await dispatch(sendMessage(messageData)).unwrap()
+    console.log('✅ Message sent, server response:', result)
+    
+    setNewMessage('')
+    inputRef.current?.focus()
+    
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      })
+    }, 100)
+    
+  } catch (err) {
+    console.error('❌ Error sending message:', err)
+    rollbar.error('Ошибка отправки сообщения', err)
+  } finally {
+    setSending(false)
+  }
+}
 
     // Подписываемся на события
     socketService.onConnect(handleConnect)
