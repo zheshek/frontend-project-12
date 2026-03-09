@@ -172,9 +172,10 @@ const ChatPage = () => {
   md={3}
   lg={2}
   className="bg-light border-end d-flex flex-column"
-  style={{ overflow: 'hidden' }}
+  style={{ height: '100vh' }}   // фиксируем высоту
 >
-  <div className="p-3 border-bottom">
+  {/* Header (не скроллится) */}
+  <div className="p-3 border-bottom flex-shrink-0">
     <div className="d-flex justify-content-between align-items-center">
       <h6 className="text-muted mb-0">
         {t('channels.title')}
@@ -189,24 +190,32 @@ const ChatPage = () => {
     </div>
   </div>
 
-  <div className="flex-grow-1 overflow-auto p-3">
+  {/* 🔥 ОТДЕЛЬНЫЙ СКРОЛЛ ТОЛЬКО ДЛЯ КАНАЛОВ */}
+  <div
+    style={{
+      flex: 1,
+      overflowY: 'auto',
+    }}
+  >
     <ListGroup variant="flush">
       {channels.map(channel => (
         <ListGroup.Item
           key={channel.id}
           action
           active={channel.id === currentChannelId}
-          onClick={() => dispatch(setCurrentChannel(channel.id))}
+          onClick={() =>
+            dispatch(setCurrentChannel(channel.id))
+          }
           className="d-flex justify-content-between align-items-center text-break"
         >
           <span># {channel.name}</span>
           <ChannelMenu
             channel={channel}
-            onRename={(ch) => {
+            onRename={ch => {
               setSelectedChannel(ch)
               setShowRenameModal(true)
             }}
-            onRemove={(ch) => {
+            onRemove={ch => {
               setSelectedChannel(ch)
               setShowRemoveModal(true)
             }}

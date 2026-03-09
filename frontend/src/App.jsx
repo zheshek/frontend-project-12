@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { Container } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { Container, Spinner } from 'react-bootstrap'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -15,10 +15,23 @@ import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   const dispatch = useDispatch()
+  const { loading } = useSelector(state => state.auth)
 
   useEffect(() => {
     dispatch(checkAuth())
   }, [dispatch])
+
+  // 🔹 Пока проверяем авторизацию — показываем загрузку
+  if (loading) {
+    return (
+      <Container
+        fluid
+        className="h-100 d-flex justify-content-center align-items-center"
+      >
+        <Spinner animation="border" variant="primary" />
+      </Container>
+    )
+  }
 
   return (
     <Container fluid className="p-0 h-100 d-flex flex-column">
@@ -27,11 +40,11 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={(
+          element={
             <ProtectedRoute>
               <ChatPage />
             </ProtectedRoute>
-          )}
+          }
         />
 
         <Route path="/login" element={<LoginPage />} />
