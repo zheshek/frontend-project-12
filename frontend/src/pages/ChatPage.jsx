@@ -301,12 +301,12 @@ const ChatPage = () => {
         </Col>
       </Row>
 
-      <AddChannelModal
-        show={showAddModal}
-        onHide={() => setShowAddModal(false)}
-        onAddChannel={(name) => dispatch(addChannel(name))}
-        channelNames={channelNames}
-      />
+<AddChannelModal
+  show={showAddModal}
+  onHide={() => setShowAddModal(false)}
+  onAddChannel={(name) => dispatch(addChannel(name))}
+  channelNames={channelNames}
+/>
 
       <RenameChannelModal
         show={showRenameModal}

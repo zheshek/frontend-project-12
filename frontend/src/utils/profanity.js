@@ -11,11 +11,7 @@ const profanityFilter = {
       return text
     }
 
-    if (filter.check(text)) {
-      return '*****'
-    }
-
-    return text
+    return filter.clean(text)
   },
 
   isProfane: (text) => {
