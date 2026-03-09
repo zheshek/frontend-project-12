@@ -33,7 +33,7 @@ import RenameChannelModal from '../components/modals/RenameChannelModal'
 import RemoveChannelModal from '../components/modals/RemoveChannelModal'
 
 // Определяем тестовое окружение
-const isTest = process.env.NODE_ENV === 'test' || (typeof navigator !== 'undefined' && navigator.webdriver)
+const isTest = typeof navigator !== 'undefined' && navigator.webdriver
 
 const ChatPage = () => {
   const { t } = useTranslation()
@@ -133,31 +133,16 @@ const ChatPage = () => {
     }
   }, [dispatch, user?.username])
 
-  // ✅ Синхронизация для тестового режима
+  // Синхронизация для тестового режима
   useEffect(() => {
     if (!isTest || !currentChannelId) return
     
-    console.log('🧪 Test mode: enabling message polling')
-    
-    const interval = setInterval(async () => {
-      try {
-        const response = await fetch('/api/v1/messages')
-        const data = await response.json()
-        const channelMessages = data.filter(m => Number(m.channelId) === Number(currentChannelId))
-        
-        const currentIds = currentMessages.map(m => m.id)
-        const newMessages = channelMessages.filter(m => !currentIds.includes(m.id))
-        
-        newMessages.forEach(msg => {
-          dispatch(addMessageFromSocket(msg))
-        })
-      } catch (error) {
-        console.error('Test mode sync error:', error)
-      }
-    }, 1000)
+    const interval = setInterval(() => {
+      dispatch(fetchMessages())
+    }, 500) // Увеличили частоту до 500ms
     
     return () => clearInterval(interval)
-  }, [isTest, currentChannelId, currentMessages.length, dispatch])
+  }, [isTest, currentChannelId, dispatch])
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -174,6 +159,13 @@ const ChatPage = () => {
       
       setNewMessage('')
       inputRef.current?.focus()
+      
+      // Принудительно обновляем сообщения после отправки
+      if (isTest) {
+        setTimeout(() => {
+          dispatch(fetchMessages())
+        }, 100)
+      }
       
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({
