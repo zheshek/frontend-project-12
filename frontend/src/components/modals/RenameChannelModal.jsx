@@ -87,7 +87,7 @@ const RenameChannelModal = ({
                   ref={inputRef}
                   disabled={isSubmitting}
                   autoComplete="off"
-                  aria-label="Имя канала" // ✅ Добавлено
+                  aria-label="Имя канала"
                 />
 
                 <Form.Control.Feedback type="invalid">

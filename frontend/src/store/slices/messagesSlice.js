@@ -38,19 +38,15 @@ const messagesSlice = createSlice({
     messages: [],
     loading: false,
     error: null,
-    connectionStatus: 'reconnecting', // ⚡ Единый статус для всего приложения
+    connectionStatus: 'reconnecting',
   },
   reducers: {
-addMessageFromSocket: (state, { payload }) => {
-  console.log('📦 Adding message to state:', payload)
-  const exists = state.messages.some(m => m.id === payload.id)
-  if (!exists) {
-    console.log('✅ Message added to state')
-    state.messages.push(payload)
-  } else {
-    console.log('⚠️ Message already exists, skipping')
-  }
-},
+    addMessageFromSocket: (state, { payload }) => {
+      const exists = state.messages.some(m => m.id === payload.id)
+      if (!exists) {
+        state.messages.push(payload)
+      }
+    },
     setConnectionStatus: (state, { payload }) => {
       state.connectionStatus = payload
     },

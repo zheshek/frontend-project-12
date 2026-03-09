@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRollbar } from '@rollbar/react'
-import api from '../services/api'
 import { useTranslation } from 'react-i18next'
 import {
   Container,
@@ -81,7 +80,7 @@ const ChatPage = () => {
   // Фильтруем сообщения для текущего канала
   const currentMessages = messages.filter(m => Number(m.channelId) === Number(currentChannelId))
 
-  // ✅ АВТОСКРОЛЛ к последнему сообщению
+  // Автоскролл к последнему сообщению
   useEffect(() => {
     if (currentMessages.length > 0) {
       messagesEndRef.current?.scrollIntoView({
@@ -92,38 +91,44 @@ const ChatPage = () => {
   }, [currentMessages])
 
   // Socket эффект
- useEffect(() => {
-  if (!currentChannelId) return
-  
-  console.log('🔄 Setting up message sync for channel:', currentChannelId)
-  
-  // Проверяем новые сообщения каждые 2 секунды
-  const interval = setInterval(async () => {
-    try {
-      const response = await api.get('/messages')
-      const latestMessages = response.data
-      
-      // Проверяем, есть ли новые сообщения для текущего канала
-      const channelMessages = latestMessages.filter(
-        m => Number(m.channelId) === Number(currentChannelId)
-      )
-      
-      const currentIds = currentMessages.map(m => m.id)
-      const newMessages = channelMessages.filter(m => !currentIds.includes(m.id))
-      
-      if (newMessages.length > 0) {
-        console.log('📦 Found new messages via API:', newMessages)
-        newMessages.forEach(msg => {
-          dispatch(addMessageFromSocket(msg))
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error)
+  useEffect(() => {
+    if (!user?.username) return
+
+    socketService.connect()
+
+    const handleConnect = () => {
+      dispatch(setConnectionStatus('connected'))
+      dispatch(fetchMessages())
     }
-  }, 2000)
-  
-  return () => clearInterval(interval)
-}, [currentChannelId, currentMessages.length, dispatch])
+    
+    const handleDisconnect = () => {
+      dispatch(setConnectionStatus('disconnected'))
+    }
+    
+    const handleReconnecting = () => {
+      dispatch(setConnectionStatus('reconnecting'))
+    }
+
+    const handleNewMessage = (msg) => {
+      const messageWithAuthor = {
+        ...msg,
+        username: msg.username || user.username,
+      }
+      dispatch(addMessageFromSocket(messageWithAuthor))
+    }
+
+    socketService.onConnect(handleConnect)
+    socketService.onDisconnect(handleDisconnect)
+    socketService.onReconnecting(handleReconnecting)
+    socketService.onNewMessage(handleNewMessage)
+
+    return () => {
+      socketService.offConnect(handleConnect)
+      socketService.offDisconnect(handleDisconnect)
+      socketService.offReconnecting(handleReconnecting)
+      socketService.offNewMessage()
+    }
+  }, [dispatch, user?.username])
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -141,13 +146,12 @@ const ChatPage = () => {
       setNewMessage('')
       inputRef.current?.focus()
       
-      // Принудительный скролл после отправки
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({
           behavior: 'smooth',
           block: 'end',
         })
-      }, 100)
+      }, 50)
       
     } catch (err) {
       rollbar.error('Ошибка отправки сообщения', err)
@@ -157,7 +161,6 @@ const ChatPage = () => {
   }
 
   const currentChannel = channels.find(c => c.id === currentChannelId)
-
   const channelNames = channels.map(c => c.name)
 
   if (channelsLoading || messagesLoading) {
@@ -168,7 +171,6 @@ const ChatPage = () => {
     )
   }
 
-  // Определяем текст для алерта в зависимости от статуса
   const getAlertMessage = () => {
     switch (connectionStatus) {
       case 'reconnecting':
@@ -196,7 +198,6 @@ const ChatPage = () => {
           className="bg-light border-end d-flex flex-column"
           style={{ height: '100vh' }}
         >
-          {/* Заголовок каналов */}
           <div className="p-3 border-bottom flex-shrink-0">
             <div className="d-flex justify-content-between align-items-center">
               <h6 className="text-muted mb-0">{t('channels.title')}</h6>
@@ -210,7 +211,6 @@ const ChatPage = () => {
             </div>
           </div>
 
-          {/* Список каналов со скроллом */}
           <div style={{ flex: 1, overflowY: 'auto' }}>
             <ListGroup variant="flush">
               {channels.map(channel => (
@@ -241,19 +241,16 @@ const ChatPage = () => {
 
         {/* Правая колонка с сообщениями */}
         <Col md={9} lg={10} className="d-flex flex-column" style={{ height: '100%' }}>
-          {/* Заголовок канала */}
           <div className="p-3 border-bottom">
             <h4># {currentChannel?.name}</h4>
           </div>
 
-          {/* Статус подключения */}
           {connectionStatus !== 'connected' && alertMessage && (
             <Alert variant="warning" className="m-3 mb-0">
               {alertMessage}
             </Alert>
           )}
 
-          {/* Сообщения */}
           <div className="p-3" style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">{t('messages.noMessages')}</p>
@@ -267,42 +264,39 @@ const ChatPage = () => {
                 </div>
               ))
             )}
-            {/* Якорь для автоскролла */}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Форма отправки сообщения */}
- <div className="p-3 border-top">
-  <Form onSubmit={handleSendMessage}>
-    <InputGroup>
-      <Form.Control
-        ref={inputRef}
-        value={newMessage}
-        onChange={e => setNewMessage(e.target.value)}
-        placeholder={t('messages.typeMessage')}
-        autoComplete="off"
-        disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
-        aria-label="Новое сообщение"  // ✅ Добавь эту строку
-      />
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={
-          !currentChannelId ||
-          !newMessage.trim() ||
-          sending ||
-          connectionStatus !== 'connected'
-        }
-      >
-        {sending ? t('messages.sending') : t('send')}
-      </Button>
-    </InputGroup>
-  </Form>
-</div>
+          <div className="p-3 border-top">
+            <Form onSubmit={handleSendMessage}>
+              <InputGroup>
+                <Form.Control
+                  ref={inputRef}
+                  value={newMessage}
+                  onChange={e => setNewMessage(e.target.value)}
+                  placeholder={t('messages.typeMessage')}
+                  autoComplete="off"
+                  disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
+                  aria-label="Новое сообщение"
+                />
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={
+                    !currentChannelId ||
+                    !newMessage.trim() ||
+                    sending ||
+                    connectionStatus !== 'connected'
+                  }
+                >
+                  {sending ? t('messages.sending') : t('send')}
+                </Button>
+              </InputGroup>
+            </Form>
+          </div>
         </Col>
       </Row>
 
-      {/* Модалки */}
       <AddChannelModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
