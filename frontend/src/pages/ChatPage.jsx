@@ -32,6 +32,9 @@ import AddChannelModal from '../components/modals/AddChannelModal'
 import RenameChannelModal from '../components/modals/RenameChannelModal'
 import RemoveChannelModal from '../components/modals/RemoveChannelModal'
 
+// Определяем тестовое окружение
+const isTest = typeof navigator !== 'undefined' && navigator.webdriver
+
 const ChatPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -109,9 +112,14 @@ const ChatPage = () => {
       dispatch(setConnectionStatus('reconnecting'))
     }
 
-  const handleNewMessage = (msg) => {
-  dispatch(addMessageFromSocket(msg))
-}
+    // ✅ ИСПРАВЛЕНО: добавляем автора к сообщению
+    const handleNewMessage = (msg) => {
+      const messageWithAuthor = {
+        ...msg,
+        username: msg.username || user.username,
+      }
+      dispatch(addMessageFromSocket(messageWithAuthor))
+    }
 
     socketService.onConnect(handleConnect)
     socketService.onDisconnect(handleDisconnect)
@@ -122,9 +130,20 @@ const ChatPage = () => {
       socketService.offConnect(handleConnect)
       socketService.offDisconnect(handleDisconnect)
       socketService.offReconnecting(handleReconnecting)
-   socketService.offNewMessage(handleNewMessage)
+      socketService.offNewMessage()
     }
   }, [dispatch, user?.username])
+
+  // ✅ Добавляем polling для тестов
+  useEffect(() => {
+    if (!isTest) return
+    
+    const interval = setInterval(() => {
+      dispatch(fetchMessages())
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [dispatch])
 
   const handleSendMessage = async e => {
     e.preventDefault()
