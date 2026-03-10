@@ -100,16 +100,16 @@ const ChatPage = () => {
       dispatch(setConnectionStatus('connected'))
       dispatch(fetchMessages())
     }
-    
+
     const handleDisconnect = () => {
       dispatch(setConnectionStatus('disconnected'))
     }
-    
+
     const handleReconnecting = () => {
       dispatch(setConnectionStatus('reconnecting'))
     }
 
-    const handleNewMessage = (msg) => {
+    const handleNewMessage = msg => {
       const messageWithAuthor = {
         ...msg,
         username: msg.username || user.username,
@@ -130,7 +130,7 @@ const ChatPage = () => {
     }
   }, [dispatch, user?.username])
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async e => {
     e.preventDefault()
     if (!newMessage.trim() || !currentChannelId || sending) return
 
@@ -142,17 +142,16 @@ const ChatPage = () => {
       }
 
       await dispatch(sendMessage(messageData)).unwrap()
-      
+
       setNewMessage('')
       inputRef.current?.focus()
-      
+
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({
           behavior: 'smooth',
           block: 'end',
         })
       }, 50)
-      
     } catch (err) {
       rollbar.error('Ошибка отправки сообщения', err)
     } finally {
@@ -201,45 +200,41 @@ const ChatPage = () => {
           <div className="p-3 border-bottom flex-shrink-0">
             <div className="d-flex justify-content-between align-items-center">
               <h6 className="text-muted mb-0">{t('channels.title')}</h6>
-              <Button 
-                variant="success" 
-                size="sm" 
-                onClick={() => setShowAddModal(true)}
-              >
+              <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>
                 +
               </Button>
             </div>
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto' }}>
-<ListGroup variant="flush">
-  {channels.map((channel) => (
-    <ListGroup.Item
-      key={channel.id}
-      className="d-flex justify-content-between align-items-center px-2"
-    >
-      <Button
-        variant={channel.id === currentChannelId ? 'secondary' : 'light'}
-        className="w-100 text-start border-0"
-        onClick={() => dispatch(setCurrentChannel(channel.id))}
-      >
-        {channel.name}
-      </Button>
+            <ListGroup variant="flush">
+              {channels.map(channel => (
+                <ListGroup.Item
+                  key={channel.id}
+                  className="d-flex justify-content-between align-items-center px-2"
+                >
+                  <Button
+                    variant={channel.id === currentChannelId ? 'secondary' : 'light'}
+                    className="w-100 text-start border-0"
+                    onClick={() => dispatch(setCurrentChannel(channel.id))}
+                  >
+                    {channel.name}
+                  </Button>
 
-      <ChannelMenu
-        channel={channel}
-        onRename={(ch) => {
-          setSelectedChannel(ch)
-          setShowRenameModal(true)
-        }}
-        onRemove={(ch) => {
-          setSelectedChannel(ch)
-          setShowRemoveModal(true)
-        }}
-      />
-    </ListGroup.Item>
-  ))}
-</ListGroup>
+                  <ChannelMenu
+                    channel={channel}
+                    onRename={ch => {
+                      setSelectedChannel(ch)
+                      setShowRenameModal(true)
+                    }}
+                    onRemove={ch => {
+                      setSelectedChannel(ch)
+                      setShowRemoveModal(true)
+                    }}
+                  />
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
           </div>
         </Col>
 
@@ -301,12 +296,12 @@ const ChatPage = () => {
         </Col>
       </Row>
 
-<AddChannelModal
-  show={showAddModal}
-  onHide={() => setShowAddModal(false)}
-  onAddChannel={(name) => dispatch(addChannel(name))}
-  channelNames={channelNames}
-/>
+      <AddChannelModal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
+        onAddChannel={name => dispatch(addChannel(name))}
+        channelNames={channelNames}
+      />
 
       <RenameChannelModal
         show={showRenameModal}
@@ -314,7 +309,7 @@ const ChatPage = () => {
           setShowRenameModal(false)
           setSelectedChannel(null)
         }}
-        onRenameChannel={async (data) => {
+        onRenameChannel={async data => {
           await dispatch(renameChannel(data)).unwrap()
         }}
         channel={selectedChannel}
@@ -327,7 +322,7 @@ const ChatPage = () => {
           setShowRemoveModal(false)
           setSelectedChannel(null)
         }}
-        onRemoveChannel={(id) => dispatch(removeChannel(id))}
+        onRemoveChannel={id => dispatch(removeChannel(id))}
         channel={selectedChannel}
       />
     </Container>

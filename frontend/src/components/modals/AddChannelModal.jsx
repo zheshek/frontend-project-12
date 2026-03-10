@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Modal, Form, Button } from 'react-bootstrap'
 import { Formik } from 'formik'
 import addChannelSchema from '../../schemas/addChannelSchema'
+import profanityFilter from '../../utils/profanityFilter'
 
 const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
   const { t } = useTranslation()
@@ -14,20 +15,21 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
     }
   }, [show])
 
-  const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
-    try {
-      await onAddChannel(values.name)
-      resetForm()
-      onHide()
-    } catch (err) {
-      setErrors({
-        name: err?.message || t('modals.addChannel.error'),
-      })
-    } finally {
-      setSubmitting(false)
-    }
-  }
+ const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
+  try {
+    const cleanName = profanityFilter.clean(values.name)
 
+    await onAddChannel(cleanName)
+    resetForm()
+    onHide()
+  } catch (err) {
+    setErrors({
+      name: err?.message || t('modals.addChannel.error'),
+    })
+  } finally {
+    setSubmitting(false)
+  }
+}
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
