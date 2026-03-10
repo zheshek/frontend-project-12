@@ -109,13 +109,9 @@ const ChatPage = () => {
       dispatch(setConnectionStatus('reconnecting'))
     }
 
-    const handleNewMessage = msg => {
-      const messageWithAuthor = {
-        ...msg,
-        username: msg.username || user.username,
-      }
-      dispatch(addMessageFromSocket(messageWithAuthor))
-    }
+  const handleNewMessage = (msg) => {
+  dispatch(addMessageFromSocket(msg))
+}
 
     socketService.onConnect(handleConnect)
     socketService.onDisconnect(handleDisconnect)
