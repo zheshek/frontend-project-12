@@ -21,7 +21,8 @@ const ChannelMenu = ({ channel, onRename, onRemove }) => {
   if (!channel.removable) return null;
 
   return (
-    <Dropdown align="end">
+    <Dropdown align="end" style={{ zIndex: 1050 }}>
+      {/* align="end" выравнивает меню к правому краю */}
       <Dropdown.Toggle as={CustomToggle} aria-label="Управление каналом">
         <span aria-hidden="true">⋮</span>
         <span className="visually-hidden">Управление каналом</span>

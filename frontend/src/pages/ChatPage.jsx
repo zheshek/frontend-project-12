@@ -32,9 +32,6 @@ import AddChannelModal from '../components/modals/AddChannelModal'
 import RenameChannelModal from '../components/modals/RenameChannelModal'
 import RemoveChannelModal from '../components/modals/RemoveChannelModal'
 
-// Определяем тестовое окружение
-const isTest = typeof navigator !== 'undefined' && navigator.webdriver
-
 const ChatPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -63,118 +60,85 @@ const ChatPage = () => {
     connectionStatus,
   } = useSelector(state => state.messages)
 
-  // Загружаем данные
+  // Загружаем каналы и сообщения
   useEffect(() => {
     dispatch(fetchChannels())
     dispatch(fetchMessages())
   }, [dispatch])
 
-  // Автофокус при смене канала
+  // Автофокус на поле ввода при смене канала
   useEffect(() => {
     if (!currentChannelId) return
-
-    const timer = setTimeout(() => {
-      inputRef.current?.focus()
-    }, 0)
-
-    return () => clearTimeout(timer)
+    inputRef.current?.focus()
   }, [currentChannelId])
 
-  // Фильтруем сообщения для текущего канала
-  const currentMessages = messages.filter(m => Number(m.channelId) === Number(currentChannelId))
+  // Фильтруем сообщения текущего канала
+  const currentMessages = messages.filter(
+    m => Number(m.channelId) === Number(currentChannelId)
+  )
 
   // Автоскролл к последнему сообщению
-useEffect(() => {
-  if (currentMessages.length > 0) {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: isTest ? 'auto' : 'smooth',
-      block: 'end',
-    })
-  }
-}, [currentMessages])
-
- useEffect(() => {
-  if (!user?.username) return
-
-  const socket = socketService.connect()
-  if (!socket) return
-
-  const waitForConnect = () => new Promise(res => {
-    if (socket.connected) return res()
-    socket.on('connect', res)
-  })
-
-  waitForConnect().then(() => {
-    dispatch(setConnectionStatus('connected'))
-    dispatch(fetchMessages())
-  })
-
-  const handleDisconnect = () => dispatch(setConnectionStatus('disconnected'))
-  const handleReconnecting = () => dispatch(setConnectionStatus('reconnecting'))
-
-  const handleNewMessage = (msg) => {
-    const messageWithAuthor = { ...msg, username: msg.username || user.username }
-    dispatch(addMessageFromSocket(messageWithAuthor))
-  }
-
-  socketService.onConnect(waitForConnect)
-  socketService.onDisconnect(handleDisconnect)
-  socketService.onReconnecting(handleReconnecting)
-  socketService.onNewMessage(handleNewMessage)
-
-  return () => {
-    socketService.offConnect(waitForConnect)
-    socketService.offDisconnect(handleDisconnect)
-    socketService.offReconnecting(handleReconnecting)
-    socketService.offNewMessage(handleNewMessage)
-  }
-}, [dispatch, user?.username])
-
   useEffect(() => {
-    if (!isTest) return
-    
-    const interval = setInterval(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [currentMessages])
+
+  // Socket подключение
+  useEffect(() => {
+    if (!user?.username) return
+    const socket = socketService.connect()
+    if (!socket) return
+
+    const handleNewMessage = (msg) => {
+      // Если username нет, используем текущее имя пользователя или 'Unknown'
+      const messageWithAuthor = {
+        ...msg,
+        username: msg.username || msg.user?.username || 'Unknown',
+      }
+      dispatch(addMessageFromSocket(messageWithAuthor))
+    }
+
+    const handleConnect = () => {
+      dispatch(setConnectionStatus('connected'))
       dispatch(fetchMessages())
-    }, 1000)
-    
-    return () => clearInterval(interval)
-  }, [dispatch])
-
-const handleSendMessage = async e => {
-  e.preventDefault()
-  if (!newMessage.trim() || !currentChannelId || sending) return
-
-  setSending(true)
-  try {
-    let messageText = newMessage
-    
-    // Для тестов добавляем имя пользователя в сообщение
-    if (isTest && messageText === 'How are you?') {
-      messageText = `${user.username}: How are you?`
     }
 
-    const messageData = {
-      text: messageText,
-      channelId: Number(currentChannelId),
+    const handleDisconnect = () => dispatch(setConnectionStatus('disconnected'))
+    const handleReconnecting = () => dispatch(setConnectionStatus('reconnecting'))
+
+    socketService.onNewMessage(handleNewMessage)
+    socketService.onConnect(handleConnect)
+    socketService.onDisconnect(handleDisconnect)
+    socketService.onReconnecting(handleReconnecting)
+
+    return () => {
+      socketService.offNewMessage(handleNewMessage)
+      socketService.offConnect(handleConnect)
+      socketService.offDisconnect(handleDisconnect)
+      socketService.offReconnecting(handleReconnecting)
     }
+  }, [dispatch, user?.username])
 
-    await dispatch(sendMessage(messageData)).unwrap()
+  const handleSendMessage = async (e) => {
+    e.preventDefault()
+    if (!newMessage.trim() || !currentChannelId || sending) return
 
-    setNewMessage('')
-    inputRef.current?.focus()
+    setSending(true)
+    try {
+      const messageData = {
+        text: newMessage,
+        channelId: Number(currentChannelId),
+        username: user.username, // ✅ добавляем автора
+      }
 
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-      })
-    }, 50)
-  } catch (err) {
-    rollbar.error('Ошибка отправки сообщения', err)
-  } finally {
-    setSending(false)
+      await dispatch(sendMessage(messageData)).unwrap()
+      setNewMessage('')
+      inputRef.current?.focus()
+    } catch (err) {
+      rollbar.error('Ошибка отправки сообщения', err)
+    } finally {
+      setSending(false)
+    }
   }
-}
 
   const currentChannel = channels.find(c => c.id === currentChannelId)
   const channelNames = channels.map(c => c.name)
@@ -183,87 +147,57 @@ const handleSendMessage = async e => {
     return (
       <Container fluid className="h-100 d-flex justify-content-center align-items-center">
         <Spinner animation="border" variant="primary" />
+        <p className="mt-3">{t('loading')}</p>
       </Container>
     )
   }
 
-  const getAlertMessage = () => {
-    switch (connectionStatus) {
-      case 'reconnecting':
-        return '⚠️ Переподключение...'
-      case 'disconnected':
-        return `⚠️ ${t('header.connectionError')}`
-      default:
-        return null
-    }
-  }
-
-  const alertMessage = getAlertMessage()
-
   return (
-    <Container
-      fluid
-      className="p-0 d-flex flex-column"
-      style={{ height: '100vh', overflow: 'hidden' }}
-    >
+    <Container fluid className="p-0 d-flex flex-column" style={{ height: '100vh', overflow: 'hidden' }}>
       <Row className="g-0" style={{ flex: 1, minHeight: 0 }}>
-        {/* Левая колонка с каналами */}
-        <Col
-          md={3}
-          lg={2}
-          className="bg-light border-end d-flex flex-column"
-          style={{ height: '100vh' }}
-        >
-          <div className="p-3 border-bottom flex-shrink-0">
-            <div className="d-flex justify-content-between align-items-center">
-              <h6 className="text-muted mb-0">{t('channels.title')}</h6>
-              <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>
-                +
-              </Button>
-            </div>
+        {/* Колонка с каналами */}
+        <Col md={3} lg={2} className="bg-light border-end d-flex flex-column" style={{ height: '100vh' }}>
+          <div className="p-3 border-bottom flex-shrink-0 d-flex justify-content-between align-items-center">
+            <h6 className="text-muted mb-0">{t('channels.title')}</h6>
+            <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>+</Button>
           </div>
-
           <div style={{ flex: 1, overflowY: 'auto' }}>
             <ListGroup variant="flush">
               {channels.map(channel => (
-                <ListGroup.Item
-                  key={channel.id}
-                  className="d-flex justify-content-between align-items-center px-2"
-                >
-                  <Button
-                    variant={channel.id === currentChannelId ? 'secondary' : 'light'}
-                    className="w-100 text-start border-0"
-                    onClick={() => dispatch(setCurrentChannel(channel.id))}
-                  >
-                    {channel.name}
-                  </Button>
+<ListGroup.Item
+  key={channel.id}
+  action
+  active={channel.id === currentChannelId}
+  onClick={() => dispatch(setCurrentChannel(channel.id))}
+  className="d-flex justify-content-between align-items-center"
+  style={{ position: 'relative' }}
+>
+  {/* Название канала с обрезкой */}
+  <span className="text-truncate me-2" style={{ maxWidth: 'calc(100% - 40px)' }}>
+    # {channel.name}
+  </span>
 
-                  <ChannelMenu
-                    channel={channel}
-                    onRename={ch => {
-                      setSelectedChannel(ch)
-                      setShowRenameModal(true)
-                    }}
-                    onRemove={ch => {
-                      setSelectedChannel(ch)
-                      setShowRemoveModal(true)
-                    }}
-                  />
-                </ListGroup.Item>
+  {/* Кнопка управления каналом */}
+  <ChannelMenu
+    channel={channel}
+    onRename={ch => { setSelectedChannel(ch); setShowRenameModal(true) }}
+    onRemove={ch => { setSelectedChannel(ch); setShowRemoveModal(true) }}
+  />
+</ListGroup.Item>
               ))}
             </ListGroup>
           </div>
         </Col>
 
-        {/* Правая колонка с сообщениями */}
+        {/* Колонка с сообщениями */}
         <Col md={9} lg={10} className="d-flex flex-column" style={{ height: '100%' }}>
           <div className="p-3 border-bottom">
             <h4># {currentChannel?.name}</h4>
           </div>
 
-          {connectionStatus !== 'connected' && alertMessage && (
+          {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="m-3 mb-0">
-              {alertMessage}
+              ⚠️ {t('header.connectionError')}
             </Alert>
           )}
 
@@ -273,9 +207,7 @@ const handleSendMessage = async e => {
             ) : (
               currentMessages.map(msg => (
                 <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
-                  <strong className="me-2 text-primary">
-                    {msg.username || user?.username || 'Unknown'}
-                  </strong>
+                  <strong className="me-2 text-primary">{msg.username}</strong>
                   <p className="mb-0">{msg.text}</p>
                 </div>
               ))
@@ -293,17 +225,10 @@ const handleSendMessage = async e => {
                   placeholder={t('messages.typeMessage')}
                   autoComplete="off"
                   disabled={!currentChannelId || sending || connectionStatus !== 'connected'}
-                  aria-label="Новое сообщение"
                 />
                 <Button
                   type="submit"
-                  variant="primary"
-                  disabled={
-                    !currentChannelId ||
-                    !newMessage.trim() ||
-                    sending ||
-                    connectionStatus !== 'connected'
-                  }
+                  disabled={!currentChannelId || !newMessage.trim() || sending || connectionStatus !== 'connected'}
                 >
                   {sending ? t('messages.sending') : t('send')}
                 </Button>
@@ -313,32 +238,23 @@ const handleSendMessage = async e => {
         </Col>
       </Row>
 
+      {/* Модалки */}
       <AddChannelModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
         onAddChannel={name => dispatch(addChannel(name))}
         channelNames={channelNames}
       />
-
       <RenameChannelModal
         show={showRenameModal}
-        onHide={() => {
-          setShowRenameModal(false)
-          setSelectedChannel(null)
-        }}
-        onRenameChannel={async data => {
-          await dispatch(renameChannel(data)).unwrap()
-        }}
+        onHide={() => { setShowRenameModal(false); setSelectedChannel(null) }}
+        onRenameChannel={async data => { await dispatch(renameChannel(data)).unwrap() }}
         channel={selectedChannel}
         channelNames={channelNames}
       />
-
       <RemoveChannelModal
         show={showRemoveModal}
-        onHide={() => {
-          setShowRemoveModal(false)
-          setSelectedChannel(null)
-        }}
+        onHide={() => { setShowRemoveModal(false); setSelectedChannel(null) }}
         onRemoveChannel={id => dispatch(removeChannel(id))}
         channel={selectedChannel}
       />

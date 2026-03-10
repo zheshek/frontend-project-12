@@ -6,12 +6,7 @@ class SocketService {
   }
 
   connect() {
-    // Если уже подключен
-    if (this.socket?.connected) {
-      return this.socket
-    }
-
-    // Если есть объект, но отключен
+    if (this.socket?.connected) return this.socket
     if (this.socket) {
       this.socket.connect()
       return this.socket
@@ -30,7 +25,6 @@ class SocketService {
       timeout: 20000,
     })
 
-    // Добавляем лог для дебага подключения
     this.socket.on('connect_error', (err) => {
       console.error('Socket connect_error:', err.message)
     })
@@ -46,7 +40,6 @@ class SocketService {
     }
   }
 
-  // Правильное добавление/удаление конкретных колбеков
   onNewMessage(callback) {
     this.socket?.on('newMessage', callback)
   }

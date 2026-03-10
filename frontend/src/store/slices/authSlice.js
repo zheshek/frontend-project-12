@@ -19,20 +19,17 @@ const clearToken = () => {
 let connectionTimer = null
 
 const ensureSocketConnection = () => {
-  if (connectionTimer) {
-    clearTimeout(connectionTimer)
-  }
+  if (connectionTimer) clearTimeout(connectionTimer)
   
   connectionTimer = setTimeout(() => {
     const token = localStorage.getItem('token')
     if (!token) return
 
-    const status = socketService.getStatus()
-    console.log('🔌 Socket status in auth:', status)
-    
-    if (!status.connected && !status.socketConnected) {
+    const status = socketService.isConnected()
+    if (!status) {
       socketService.connect()
     }
+
     connectionTimer = null
   }, 1000)
 }
@@ -41,74 +38,71 @@ export const login = createAsyncThunk(
   'auth/login',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post('/api/v1/login', {
-        username,
-        password,
-      })
+      const { data } = await axios.post('/api/v1/login', { username, password })
 
       saveToken(data.token)
       saveUser({ username: data.username })
-      ensureSocketConnection() // ✅ Заменили reconnectSocket
+      ensureSocketConnection()
 
-      showSuccess('Добро пожаловать!')
-
+      showSuccess('Добро пожаловать!') // ✅ toast при успешном входе
       return data
-    }
-    catch (err) {
+    } catch (err) {
       if (err.response?.status === 401) {
-        return rejectWithValue('Неверные имя пользователя или пароль')
+        const msg = 'Неверные имя пользователя или пароль'
+        showError(msg) // ✅ toast при ошибке
+        return rejectWithValue(msg)
       }
 
-      showError('Ошибка сервера')
-      return rejectWithValue('Ошибка сервера')
+      const msg = 'Ошибка сервера'
+      showError(msg)
+      return rejectWithValue(msg)
     }
-  },
+  }
 )
 
 export const signup = createAsyncThunk(
   'auth/signup',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post('/api/v1/signup', {
-        username,
-        password,
-      })
+      const { data } = await axios.post('/api/v1/signup', { username, password })
 
       saveToken(data.token)
       saveUser({ username: data.username })
-      ensureSocketConnection() // ✅ Заменили reconnectSocket
+      ensureSocketConnection()
 
       showSuccess('Регистрация успешна! Добро пожаловать!')
-
       return data
-    }
-    catch (err) {
+    } catch (err) {
       if (err.response?.status === 409) {
-        showError('Пользователь с таким именем уже существует')
-        return rejectWithValue('Conflict')
+        const msg = 'Пользователь с таким именем уже существует'
+        showError(msg)
+        return rejectWithValue(msg)
       }
 
-      showError('Ошибка сервера')
-      return rejectWithValue('Ошибка сервера')
+      const msg = 'Ошибка сервера'
+      showError(msg)
+      return rejectWithValue(msg)
     }
-  },
+  }
 )
 
-export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithValue }) => {
-  const token = localStorage.getItem('token')
-  const userStr = localStorage.getItem('user')
+export const checkAuth = createAsyncThunk(
+  'auth/check',
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem('token')
+    const userStr = localStorage.getItem('user')
 
-  if (!token || !userStr) {
-    return rejectWithValue('No auth data')
-  }
+    if (!token || !userStr) return rejectWithValue('Нет авторизации')
 
-  try {
-    const user = JSON.parse(userStr)
-    return { token, user }
-  } catch (e) {
-    return rejectWithValue('Invalid user data')
+    try {
+      const user = JSON.parse(userStr)
+      ensureSocketConnection()
+      return { token, user }
+    } catch (e) {
+      return rejectWithValue('Неверные данные пользователя')
+    }
   }
-})
+)
 
 const authSlice = createSlice({
   name: 'auth',
@@ -124,10 +118,8 @@ const authSlice = createSlice({
       state.user = null
       state.token = null
       state.isAuthenticated = false
-
       clearToken()
       socketService.disconnect()
-
       showSuccess('До встречи!')
     },
     clearError: (state) => {
@@ -136,10 +128,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
+      .addCase(login.pending, (state) => { state.loading = true; state.error = null })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false
         state.user = { username: action.payload.username }
@@ -149,11 +138,9 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+        // showError вызывается внутри thunk, поэтому здесь не нужно
       })
-      .addCase(signup.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
+      .addCase(signup.pending, (state) => { state.loading = true; state.error = null })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false
         state.user = { username: action.payload.username }
@@ -164,23 +151,18 @@ const authSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(checkAuth.pending, (state) => { state.loading = true })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.token = action.payload.token
         state.user = action.payload.user
         state.isAuthenticated = true
         state.loading = false
-        
-        // ✅ При восстановлении авторизации тоже проверяем сокет
-        ensureSocketConnection()
       })
       .addCase(checkAuth.rejected, (state) => {
         state.token = null
         state.user = null
         state.isAuthenticated = false
         state.loading = false
-      })
-      .addCase(checkAuth.pending, (state) => {
-        state.loading = true
       })
   },
 })

@@ -38,6 +38,7 @@ const LoginPage = () => {
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">{t('auth.login')}</h2>
 
+              {/* Ошибка login отображается через Alert */}
               {error && (
                 <Alert
                   variant="danger"
@@ -64,10 +65,7 @@ const LoginPage = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
-                      <Form.Label>
-                        {t('auth.loginUsername')}
-                      </Form.Label>
-
+                      <Form.Label>{t('auth.loginUsername')}</Form.Label>
                       <Form.Control
                         type="text"
                         name="username"
@@ -78,17 +76,13 @@ const LoginPage = () => {
                         autoComplete="username"
                         disabled={loading}
                       />
-
                       <Form.Control.Feedback type="invalid">
                         {errors.username}
                       </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="password">
-                      <Form.Label>
-                        {t('auth.password')}
-                      </Form.Label>
-
+                      <Form.Label>{t('auth.password')}</Form.Label>
                       <Form.Control
                         type="password"
                         name="password"
@@ -99,7 +93,6 @@ const LoginPage = () => {
                         autoComplete="off"
                         disabled={loading}
                       />
-
                       <Form.Control.Feedback type="invalid">
                         {errors.password}
                       </Form.Control.Feedback>
@@ -122,20 +115,15 @@ const LoginPage = () => {
                             className="me-2"
                           />
                         )}
-                        {loading
-                          ? t('auth.loggingIn')
-                          : t('auth.loginButton')}
+                        {loading ? t('auth.loggingIn') : t('auth.loginButton')}
                       </Button>
                     </div>
 
                     <div className="text-center mt-3">
                       <span className="text-muted">
-                        {t('auth.noAccount')}
-                        {' '}
+                        {t('auth.noAccount')}{' '}
                       </span>
-                      <Link to="/signup">
-                        {t('auth.signup')}
-                      </Link>
+                      <Link to="/signup">{t('auth.signup')}</Link>
                     </div>
                   </Form>
                 )}
