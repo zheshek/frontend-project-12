@@ -84,57 +84,52 @@ const ChatPage = () => {
   const currentMessages = messages.filter(m => Number(m.channelId) === Number(currentChannelId))
 
   // Автоскролл к последнему сообщению
-  useEffect(() => {
-    if (currentMessages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-      })
-    }
-  }, [currentMessages])
+useEffect(() => {
+  if (currentMessages.length > 0) {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: isTest ? 'auto' : 'smooth',
+      block: 'end',
+    })
+  }
+}, [currentMessages])
 
-  // Socket эффект
-  useEffect(() => {
-    if (!user?.username) return
+ useEffect(() => {
+  if (!user?.username) return
 
-    socketService.connect()
+  const socket = socketService.connect()
+  if (!socket) return
 
-    const handleConnect = () => {
-      dispatch(setConnectionStatus('connected'))
-      dispatch(fetchMessages())
-    }
+  const waitForConnect = () => new Promise(res => {
+    if (socket.connected) return res()
+    socket.on('connect', res)
+  })
 
-    const handleDisconnect = () => {
-      dispatch(setConnectionStatus('disconnected'))
-    }
+  waitForConnect().then(() => {
+    dispatch(setConnectionStatus('connected'))
+    dispatch(fetchMessages())
+  })
 
-    const handleReconnecting = () => {
-      dispatch(setConnectionStatus('reconnecting'))
-    }
+  const handleDisconnect = () => dispatch(setConnectionStatus('disconnected'))
+  const handleReconnecting = () => dispatch(setConnectionStatus('reconnecting'))
 
-    // ✅ ИСПРАВЛЕНО: добавляем автора к сообщению
-    const handleNewMessage = (msg) => {
-      const messageWithAuthor = {
-        ...msg,
-        username: msg.username || user.username,
-      }
-      dispatch(addMessageFromSocket(messageWithAuthor))
-    }
+  const handleNewMessage = (msg) => {
+    const messageWithAuthor = { ...msg, username: msg.username || user.username }
+    dispatch(addMessageFromSocket(messageWithAuthor))
+  }
 
-    socketService.onConnect(handleConnect)
-    socketService.onDisconnect(handleDisconnect)
-    socketService.onReconnecting(handleReconnecting)
-    socketService.onNewMessage(handleNewMessage)
+  socketService.onConnect(waitForConnect)
+  socketService.onDisconnect(handleDisconnect)
+  socketService.onReconnecting(handleReconnecting)
+  socketService.onNewMessage(handleNewMessage)
 
-    return () => {
-      socketService.offConnect(handleConnect)
-      socketService.offDisconnect(handleDisconnect)
-      socketService.offReconnecting(handleReconnecting)
-      socketService.offNewMessage()
-    }
-  }, [dispatch, user?.username])
+  return () => {
+    socketService.offConnect(waitForConnect)
+    socketService.offDisconnect(handleDisconnect)
+    socketService.offReconnecting(handleReconnecting)
+    socketService.offNewMessage(handleNewMessage)
+  }
+}, [dispatch, user?.username])
 
-  // ✅ Добавляем polling для тестов
   useEffect(() => {
     if (!isTest) return
     

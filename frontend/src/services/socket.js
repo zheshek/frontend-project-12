@@ -6,20 +6,20 @@ class SocketService {
   }
 
   connect() {
+    // Если уже подключен
     if (this.socket?.connected) {
       return this.socket
     }
 
+    // Если есть объект, но отключен
     if (this.socket) {
       this.socket.connect()
       return this.socket
     }
 
     const token = localStorage.getItem('token')
-    if (!token) {
-      return null
-    }
-    
+    if (!token) return null
+
     this.socket = io('/', {
       auth: { token },
       transports: ['websocket'],
@@ -28,6 +28,11 @@ class SocketService {
       reconnectionDelay: 2000,
       reconnectionDelayMax: 5000,
       timeout: 20000,
+    })
+
+    // Добавляем лог для дебага подключения
+    this.socket.on('connect_error', (err) => {
+      console.error('Socket connect_error:', err.message)
     })
 
     return this.socket
@@ -41,16 +46,16 @@ class SocketService {
     }
   }
 
-onNewMessage(callback) {
-  this.socket?.on('newMessage', callback)
-}
+  // Правильное добавление/удаление конкретных колбеков
+  onNewMessage(callback) {
+    this.socket?.on('newMessage', callback)
+  }
 
-offNewMessage(callback) {
-  this.socket?.off('newMessage', callback)
-}
+  offNewMessage(callback) {
+    this.socket?.off('newMessage', callback)
+  }
 
   onConnect(callback) {
-    this.socket?.off('connect')
     this.socket?.on('connect', callback)
   }
 
@@ -59,7 +64,6 @@ offNewMessage(callback) {
   }
 
   onDisconnect(callback) {
-    this.socket?.off('disconnect')
     this.socket?.on('disconnect', callback)
   }
 
@@ -68,7 +72,6 @@ offNewMessage(callback) {
   }
 
   onReconnecting(callback) {
-    this.socket?.off('reconnect_attempt')
     this.socket?.on('reconnect_attempt', callback)
   }
 
