@@ -122,7 +122,7 @@ const ChatPage = () => {
       socketService.offConnect(handleConnect)
       socketService.offDisconnect(handleDisconnect)
       socketService.offReconnecting(handleReconnecting)
-      socketService.offNewMessage()
+   socketService.offNewMessage(handleNewMessage)
     }
   }, [dispatch, user?.username])
 

@@ -41,14 +41,13 @@ class SocketService {
     }
   }
 
-  onNewMessage(callback) {
-    this.socket?.off('newMessage')
-    this.socket?.on('newMessage', callback)
-  }
+onNewMessage(callback) {
+  this.socket?.on('newMessage', callback)
+}
 
-  offNewMessage() {
-    this.socket?.off('newMessage')
-  }
+offNewMessage(callback) {
+  this.socket?.off('newMessage', callback)
+}
 
   onConnect(callback) {
     this.socket?.off('connect')
