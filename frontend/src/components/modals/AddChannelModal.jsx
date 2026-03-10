@@ -2,8 +2,8 @@ import { useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Form, Button } from 'react-bootstrap'
 import { Formik } from 'formik'
-import addChannelSchema from '../../schemas/addChannelSchema'
 import profanityFilter from '../../utils/profanityFilter'
+import addChannelSchema from '../../schemas/addChannelSchema'
 
 const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
   const { t } = useTranslation()
