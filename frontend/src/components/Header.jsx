@@ -20,7 +20,8 @@ const Header = () => {
     e.preventDefault()
     if (isAuthenticated) {
       navigate('/')
-    } else {
+    }
+    else {
       navigate('/login')
     }
   }
@@ -41,7 +42,7 @@ const Header = () => {
   return (
     <Navbar bg="primary" variant="dark" className="flex-shrink-0">
       <Container fluid>
-        <Navbar.Brand 
+        <Navbar.Brand
           onClick={handleBrandClick}
           style={{ cursor: 'pointer' }}
         >
@@ -49,7 +50,8 @@ const Header = () => {
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          {isAuthenticated ? (
+          {isAuthenticated 
+        ? (
             <>
               {getStatusBadge()}
               <span className="text-white me-3">
@@ -59,7 +61,8 @@ const Header = () => {
                 {t('header.logout')}
               </Button>
             </>
-          ) : (
+          ) 
+        : (
             <>
               <Link to="/login" className="text-white text-decoration-none me-3">
                 {t('header.login')}

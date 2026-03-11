@@ -9,21 +9,23 @@ import Header from './components/Header'
 
 function App() {
   return (
-    <div style={{ 
+    <div style={{
       height: '100vh',
       width: '100vw',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden'
-    }}>
+      overflow: 'hidden',
+    }}
+    >
       <Header />
 
-      <div style={{ 
+      <div style={{
         flex: 1,
         overflow: 'auto',
         display: 'flex',
-        flexDirection: 'column'
-      }}>
+        flexDirection: 'column',
+      }}
+      >
         <Routes>
           <Route path="/" element={<ChatPage />} />
           <Route path="/login" element={<LoginPage />} />
