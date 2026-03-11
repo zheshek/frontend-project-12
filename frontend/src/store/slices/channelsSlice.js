@@ -79,9 +79,9 @@ const channelsSlice = createSlice({
       state.currentChannelId = payload
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchChannels.pending, state => {
+      .addCase(fetchChannels.pending, (state) => {
         state.loading = true
         state.error = null
       })

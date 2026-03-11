@@ -49,28 +49,28 @@ const Header = () => {
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          {isAuthenticated ? 
-          (
-            <>
-              {getStatusBadge()}
-              <span className="text-white me-3">
-                <strong>{user?.username}</strong>
-              </span>
-              <Button variant="outline-light" size="sm" onClick={handleLogout}>
-                {t('header.logout')}
-              </Button>
-            </>
-          ) 
-          : (
-            <div>
-              <Link to="/login" className="text-white text-decoration-none me-3">
-                {t('header.login')}
-              </Link>
-              <Link to="/signup" className="text-white text-decoration-none">
-                {t('header.signup')}
-              </Link>
-            </div>
-          )}
+          {isAuthenticated
+            ? (
+              <>
+                {getStatusBadge()}
+                <span className="text-white me-3">
+                  <strong>{user?.username}</strong>
+                </span>
+                <Button variant="outline-light" size="sm" onClick={handleLogout}>
+                  {t('header.logout')}
+                </Button>
+              </>
+            )
+            : (
+              <div>
+                <Link to="/login" className="text-white text-decoration-none me-3">
+                  {t('header.login')}
+                </Link>
+                <Link to="/signup" className="text-white text-decoration-none">
+                  {t('header.signup')}
+                </Link>
+              </div>
+            )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

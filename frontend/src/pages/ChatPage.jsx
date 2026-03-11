@@ -182,9 +182,9 @@ const ChatPage = () => {
                   className="d-flex justify-content-between align-items-center"
                 >
                   <span className="text-truncate">
-                    # 
+                    #
                     {channel.name}
-                    </span>
+                  </span>
 
                   <ChannelMenu
                     channel={channel}
@@ -209,7 +209,11 @@ const ChatPage = () => {
           {/* Заголовок */}
 
           <div className="p-3 border-bottom flex-shrink-0">
-            <h4># {currentChannel?.name || t('channels.select')}</h4>
+            <h4>
+              #
+              {currentChannel?.name 
+              || t('channels.select')}
+            </h4>
           </div>
 
           {connectionStatus !== 'connected' && (

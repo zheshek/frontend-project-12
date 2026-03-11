@@ -28,9 +28,9 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
 
         <p>
           <strong>
-            #
-            {channel?.name}?
-            </strong>
+            # {channel?.name}
+             ?
+          </strong>
         </p>
 
         <p className="text-danger">{t('channels.messagesWillBeDeleted')}</p>
