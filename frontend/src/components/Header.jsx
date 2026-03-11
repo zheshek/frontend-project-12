@@ -67,7 +67,7 @@ const Header = () => {
                   <Link to="/login" className="text-white text-decoration-none me-3">
                     {t('header.login')}
                   </Link>
-                  <Link to="/signup" className="text-white text-decoration-none">
+                    <Link to="/signup" className="text-white text-decoration-none">
                 Регистрация
                   </Link>
                 </>
