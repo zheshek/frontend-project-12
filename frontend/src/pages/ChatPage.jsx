@@ -233,10 +233,10 @@ const ChatPage = () => {
               minHeight: 0,
             }}
           >
-            {currentMessages.length === 0 
-            ? (
-              <p className="text-center text-muted">{t('messages.noMessages')}</p>
-            )
+            {currentMessages.length === 0
+              ? (
+                  <p className="text-center text-muted">{t('messages.noMessages')}</p>
+                )
               : (
                   currentMessages.map(msg => (
                     <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
