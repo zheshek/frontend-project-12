@@ -33,7 +33,8 @@ const SignupPage = () => {
       setLocalError(
         result.payload === 'Conflict'
           ? t('auth.errors.userExists')
-          : result.payload || t('auth.errors.unknown')
+          : result.payload 
+          || t('auth.errors.unknown')
       )
     }
     setSubmitting(false)
@@ -146,7 +147,9 @@ const SignupPage = () => {
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">{t('auth.hasAccount')} </span>
+                      <span className="text-muted">
+                        {t('auth.hasAccount')} 
+                        </span>
                       <Link to="/login">{t('auth.login')}</Link>
                     </div>
                   </Form>

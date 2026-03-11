@@ -9,7 +9,7 @@ const renameChannelSchema = (t, channelNames, currentName) =>
       .max(20, t('channels.errors.nameLength'))
       .notOneOf(
         channelNames.filter(n => n !== currentName),
-        t('channels.errors.nameExists')
+        t('channels.errors.nameExists'),
       ),
   })
 

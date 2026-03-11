@@ -28,5 +28,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </ReduxProvider>
       </ErrorBoundary>
     </RollbarProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 )

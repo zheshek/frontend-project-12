@@ -25,7 +25,7 @@ class SocketService {
       timeout: 20000,
     })
 
-    this.socket.on('connect_error', err => {
+    this.socket.on('connect_error', (err) => {
       console.error('Socket connect_error:', err.message)
     })
 

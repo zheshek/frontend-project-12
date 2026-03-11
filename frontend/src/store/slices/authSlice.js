@@ -3,11 +3,11 @@ import axios from 'axios'
 import { showSuccess, showError } from '../../utils/toast'
 import socketService from '../../services/socket'
 
-const saveToken = token => {
+const saveToken = (token) => {
   localStorage.setItem('token', token)
 }
 
-const saveUser = user => {
+const saveUser = (user) => {
   localStorage.setItem('user', JSON.stringify(user))
 }
 
@@ -51,7 +51,8 @@ export const login = createAsyncThunk(
       showSuccess('Добро пожаловать!')
 
       return data
-    } catch (err) {
+    }
+    catch (err) {
       if (err.response?.status === 401) {
         const errorText = 'Неверные имя пользователя или пароль' // ✅ тест ищет этот текст
         return rejectWithValue(errorText)
@@ -61,7 +62,7 @@ export const login = createAsyncThunk(
       showError(errorText)
       return rejectWithValue(errorText)
     }
-  }
+  },
 )
 
 // ======================== SIGNUP ========================
@@ -78,7 +79,8 @@ export const signup = createAsyncThunk(
       showSuccess('Регистрация успешна! Добро пожаловать!')
 
       return data
-    } catch (err) {
+    }
+    catch (err) {
       if (err.response?.status === 409) {
         const errorText = 'Такой пользователь уже существует' // ✅ точно как ищет тест
         showError(errorText)
@@ -89,7 +91,7 @@ export const signup = createAsyncThunk(
       showError(errorText)
       return rejectWithValue(errorText)
     }
-  }
+  },
 )
 
 // ======================== CHECK AUTH ========================
@@ -104,7 +106,8 @@ export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithVa
   try {
     const user = JSON.parse(userStr)
     return { token, user }
-  } catch (e) {
+  }
+  catch (e) {
     return rejectWithValue('Invalid user data')
   }
 })
@@ -119,7 +122,7 @@ const authSlice = createSlice({
     isAuthenticated: Boolean(localStorage.getItem('token') && localStorage.getItem('user')),
   },
   reducers: {
-    logout: state => {
+    logout: (state) => {
       state.user = null
       state.token = null
       state.isAuthenticated = false
@@ -129,14 +132,14 @@ const authSlice = createSlice({
 
       showSuccess('До встречи!')
     },
-    clearError: state => {
+    clearError: (state) => {
       state.error = null
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       // ---------- LOGIN ----------
-      .addCase(login.pending, state => {
+      .addCase(login.pending, (state) => {
         state.loading = true
         state.error = null
       })
@@ -152,7 +155,7 @@ const authSlice = createSlice({
       })
 
       // ---------- SIGNUP ----------
-      .addCase(signup.pending, state => {
+      .addCase(signup.pending, (state) => {
         state.loading = true
         state.error = null
       })
@@ -175,13 +178,13 @@ const authSlice = createSlice({
         state.loading = false
         ensureSocketConnection()
       })
-      .addCase(checkAuth.rejected, state => {
+      .addCase(checkAuth.rejected, (state) => {
         state.token = null
         state.user = null
         state.isAuthenticated = false
         state.loading = false
       })
-      .addCase(checkAuth.pending, state => {
+      .addCase(checkAuth.pending, (state) => {
         state.loading = true
       })
   },

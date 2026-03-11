@@ -49,7 +49,8 @@ const Header = () => {
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          {isAuthenticated ? (
+          {isAuthenticated ? 
+          (
             <>
               {getStatusBadge()}
               <span className="text-white me-3">
@@ -59,7 +60,8 @@ const Header = () => {
                 {t('header.logout')}
               </Button>
             </>
-          ) : (
+          ) 
+          : (
             <div>
               <Link to="/login" className="text-white text-decoration-none me-3">
                 {t('header.login')}

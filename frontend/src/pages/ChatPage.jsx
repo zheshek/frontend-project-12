@@ -103,7 +103,7 @@ const ChatPage = () => {
       showWarning('Соединение потеряно')
     }
 
-    const handleNewMessage = message => {
+    const handleNewMessage = (message) => {
       dispatch(addMessageFromSocket(message))
     }
 
@@ -118,7 +118,7 @@ const ChatPage = () => {
     }
   }, [dispatch, user?.username])
 
-  const handleSendMessage = async e => {
+  const handleSendMessage = async (e) => {
     e.preventDefault()
 
     if (!newMessage.trim() || !currentChannelId || sending || connectionStatus !== 'connected') {
@@ -138,9 +138,11 @@ const ChatPage = () => {
 
       setNewMessage('')
       inputRef.current?.focus()
-    } catch (err) {
+    }
+    catch (err) {
       rollbar.error('Ошибка отправки сообщения', err)
-    } finally {
+    }
+    finally {
       setSending(false)
     }
   }
@@ -179,15 +181,18 @@ const ChatPage = () => {
                   onClick={() => dispatch(setCurrentChannel(channel.id))}
                   className="d-flex justify-content-between align-items-center"
                 >
-                  <span className="text-truncate"># {channel.name}</span>
+                  <span className="text-truncate">
+                    # 
+                    {channel.name}
+                    </span>
 
                   <ChannelMenu
                     channel={channel}
-                    onRename={ch => {
+                    onRename={(ch) => {
                       setSelectedChannel(ch)
                       setShowRenameModal(true)
                     }}
-                    onRemove={ch => {
+                    onRemove={(ch) => {
                       setSelectedChannel(ch)
                       setShowRemoveModal(true)
                     }}
@@ -209,7 +214,8 @@ const ChatPage = () => {
 
           {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="m-3">
-              ⚠️ {t('header.connectionError')}
+              ⚠️ 
+              {t('header.connectionError')}
             </Alert>
           )}
 
@@ -225,7 +231,8 @@ const ChatPage = () => {
           >
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">{t('messages.noMessages')}</p>
-            ) : (
+            ) 
+            : (
               currentMessages.map(msg => (
                 <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
                   <strong className="me-2 text-primary">{msg.username || 'unknown'}</strong>
@@ -279,7 +286,7 @@ const ChatPage = () => {
           setShowRenameModal(false)
           setSelectedChannel(null)
         }}
-        onRenameChannel={async data => {
+        onRenameChannel={async (data) => {
           await dispatch(renameChannel(data)).unwrap()
         }}
         channel={selectedChannel}

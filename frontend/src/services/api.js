@@ -3,11 +3,10 @@ import { showError } from '../utils/toast'
 
 const api = axios.create({
   baseURL: '/api/v1',
-  timeout: 10000, // Таймаут 10 секунд
+  timeout: 10000,
 })
 
-// Добавляем токен к каждому запросу
-api.interceptors.request.use(config => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -15,7 +14,7 @@ api.interceptors.request.use(config => {
   return config
 })
 
-// Обрабатываем ошибки ответов
+
 api.interceptors.response.use(
   response => response,
   error => {
@@ -26,16 +25,19 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       showError('Неавторизован. Пожалуйста, войдите снова.')
-    } else if (!error.response) {
+    }
+    else if (!error.response) {
       showError('Ошибка соединения с сервером')
-    } else if (dataMessage) {
+    }
+    else if (dataMessage) {
       showError(dataMessage)
-    } else {
+    }
+    else {
       showError('Произошла ошибка')
     }
 
     return Promise.reject(error)
-  }
+  },
 )
 
 export default api

@@ -22,11 +22,13 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
       await onAddChannel(cleanName)
       resetForm()
       onHide()
-    } catch (err) {
+    }
+    catch (err) {
       setErrors({
         name: err?.message || t('modals.addChannel.error'),
       })
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }
