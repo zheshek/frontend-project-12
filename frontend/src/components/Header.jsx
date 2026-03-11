@@ -16,6 +16,15 @@ const Header = () => {
     navigate('/login')
   }
 
+  const handleBrandClick = (e) => {
+    e.preventDefault()
+    if (isAuthenticated) {
+      navigate('/')
+    } else {
+      navigate('/login')
+    }
+  }
+
   const getStatusBadge = () => {
     switch (connectionStatus) {
       case 'connected':
@@ -32,7 +41,12 @@ const Header = () => {
   return (
     <Navbar bg="primary" variant="dark" className="flex-shrink-0">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+        <Navbar.Brand 
+          onClick={handleBrandClick}
+          style={{ cursor: 'pointer' }}
+        >
+          Hexlet Chat
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
