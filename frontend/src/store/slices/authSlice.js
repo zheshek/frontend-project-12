@@ -107,7 +107,7 @@ export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithVa
     const user = JSON.parse(userStr)
     return { token, user }
   }
-  catch (e) {
+  catch {
     return rejectWithValue('Invalid user data')
   }
 })

@@ -151,7 +151,7 @@ const SignupPage = () => {
                         {t('auth.hasAccount')}
                       </span>
                       <Link to="/login">
-                      {t('auth.login')}
+                        {t('auth.login')}
                       </Link>
                     </div>
                   </Form>

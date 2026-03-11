@@ -211,14 +211,14 @@ const ChatPage = () => {
           <div className="p-3 border-bottom flex-shrink-0">
             <h4>
               #
-              {currentChannel?.name 
-              || t('channels.select')}
+              {currentChannel?.name
+                || t('channels.select')}
             </h4>
           </div>
 
           {connectionStatus !== 'connected' && (
             <Alert variant="warning" className="m-3">
-              ⚠️ 
+              ⚠️
               {t('header.connectionError')}
             </Alert>
           )}
@@ -235,16 +235,16 @@ const ChatPage = () => {
           >
             {currentMessages.length === 0 ? (
               <p className="text-center text-muted">{t('messages.noMessages')}</p>
-            ) 
-            : (
-              currentMessages.map(msg => (
-                <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
-                  <strong className="me-2 text-primary">{msg.username || 'unknown'}</strong>
+            )
+              : (
+                  currentMessages.map(msg => (
+                    <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
+                      <strong className="me-2 text-primary">{msg.username || 'unknown'}</strong>
 
-                  <p className="mb-0">{msg.text}</p>
-                </div>
-              ))
-            )}
+                      <p className="mb-0">{msg.text}</p>
+                    </div>
+                  ))
+                )}
 
             <div ref={messagesEndRef} />
           </div>
