@@ -1,85 +1,64 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Navbar, Container, Button, Badge } from 'react-bootstrap';
-import { logout } from '../store/slices/authSlice';
-import socketService from '../services/socket';
-import { setConnectionStatus } from '../store/slices/messagesSlice';
+import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
+import { Navbar, Container, Button, Badge } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
+import { logout } from '../store/slices/authSlice'
 
 const Header = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { isAuthenticated, user } = useSelector(state => state.auth);
-  const [status, setStatus] = useState('reconnecting'); // ⚡ при загрузке
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user, isAuthenticated } = useSelector(state => state.auth)
+  const { connectionStatus } = useSelector(state => state.messages)
 
   const handleLogout = () => {
-    socketService.disconnect(); // сразу разрываем все подписки
-    dispatch(logout());
-    navigate('/login');
-  };
+    dispatch(logout())
+    navigate('/login')
+  }
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const handleConnect = () => { setStatus('connected'); dispatch(setConnectionStatus('connected')); };
-    const handleDisconnect = () => { setStatus('disconnected'); dispatch(setConnectionStatus('disconnected')); };
-    const handleReconnecting = () => { setStatus('reconnecting'); dispatch(setConnectionStatus('reconnecting')); };
-
-    socketService.onConnect(handleConnect);
-    socketService.onDisconnect(handleDisconnect);
-    socketService.onReconnecting(handleReconnecting);
-
-    socketService.connect();
-
-    return () => {
-      socketService.offConnect(handleConnect);
-      socketService.offDisconnect(handleDisconnect);
-      socketService.offReconnecting(handleReconnecting);
-    };
-  }, [dispatch, isAuthenticated]);
-
-  const getBadgeProps = () => {
-    switch (status) {
+  const getStatusBadge = () => {
+    switch (connectionStatus) {
       case 'connected':
-        return { bg: 'success', text: undefined, label: '● ' + t('header.online') };
+        return <Badge bg="success" className="me-2">● Online</Badge>
       case 'reconnecting':
-        return { bg: 'warning', text: 'dark', label: '… Reconnecting' };
+        return <Badge bg="warning" text="dark" className="me-2">⟳ Reconnecting</Badge>
       case 'disconnected':
+        return <Badge bg="danger" className="me-2">○ Offline</Badge>
       default:
-        return { bg: 'danger', text: undefined, label: '○ ' + t('header.offline') };
+        return null
     }
-  };
-
-  const badgeProps = getBadgeProps();
+  }
 
   return (
-    <Navbar bg="primary" variant="dark" expand="lg" className="px-3">
+    <Navbar bg="primary" variant="dark" className="flex-shrink-0">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/">{t('appName')}</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
-            <div className="d-flex align-items-center">
-              <Badge bg={badgeProps.bg} text={badgeProps.text} className="me-3">
-                {badgeProps.label}
-              </Badge>
-              <span className="text-white me-3">{user?.username}</span>
+            <>
+              {getStatusBadge()}
+              <span className="text-white me-3">
+                <strong>{user?.username}</strong>
+              </span>
               <Button variant="outline-light" size="sm" onClick={handleLogout}>
                 {t('header.logout')}
               </Button>
-            </div>
+            </>
           ) : (
-            <Navbar.Text>
-              <Link to="/login" className="text-white text-decoration-none">{t('header.login')}</Link>
-            </Navbar.Text>
+            <div>
+              <Link to="/login" className="text-white text-decoration-none me-3">
+                {t('header.login')}
+              </Link>
+              <Link to="/signup" className="text-white text-decoration-none">
+                {t('header.signup')}
+              </Link>
+            </div>
           )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
