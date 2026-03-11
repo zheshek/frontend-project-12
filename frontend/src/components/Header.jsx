@@ -68,7 +68,7 @@ const Header = () => {
                     {t('header.login')}
                   </Link>
                   <Link to="/signup" className="text-white text-decoration-none">
-                Регистрация
+                    Регистрация
                   </Link>
                 </>
               )}
