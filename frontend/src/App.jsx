@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -8,9 +8,6 @@ import SignupPage from './pages/SignupPage'
 import Header from './components/Header'
 
 function App() {
-  const location = useLocation()
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup'
-
   return (
     <div style={{ 
       height: '100vh',
@@ -19,8 +16,7 @@ function App() {
       flexDirection: 'column',
       overflow: 'hidden'
     }}>
-      
-      <Header isAuthPage={isAuthPage} />
+      <Header />
 
       <div style={{ 
         flex: 1,

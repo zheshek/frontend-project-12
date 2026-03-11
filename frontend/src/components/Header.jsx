@@ -4,7 +4,7 @@ import { Navbar, Container, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { logout } from '../store/slices/authSlice'
 
-const Header = ({ isAuthPage }) => {
+const Header = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -36,7 +36,6 @@ const Header = ({ isAuthPage }) => {
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
-
             <>
               {getStatusBadge()}
               <span className="text-white me-3">
@@ -46,19 +45,15 @@ const Header = ({ isAuthPage }) => {
                 {t('header.logout')}
               </Button>
             </>
-          ) 
-          : (
-
-            !isAuthPage && (
-              <>
-                <Link to="/login" className="text-white text-decoration-none me-3">
-                  {t('header.login')}
-                </Link>
-                <Link to="/signup" className="text-white text-decoration-none">
-                  {t('header.signup')}
-                </Link>
-              </>
-            )
+          ) : (
+            <>
+              <Link to="/login" className="text-white text-decoration-none me-3">
+                {t('header.login')}
+              </Link>
+              <Link to="/signup" className="text-white text-decoration-none">
+                Регистрация
+              </Link>
+            </>
           )}
         </Navbar.Collapse>
       </Container>
