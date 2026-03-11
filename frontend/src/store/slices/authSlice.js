@@ -54,7 +54,7 @@ export const login = createAsyncThunk(
     }
     catch (err) {
       if (err.response?.status === 401) {
-        const errorText = 'Неверные имя пользователя или пароль' // ✅ тест ищет этот текст
+        const errorText = 'Неверные имя пользователя или пароль'
         return rejectWithValue(errorText)
       }
 
@@ -82,7 +82,7 @@ export const signup = createAsyncThunk(
     }
     catch (err) {
       if (err.response?.status === 409) {
-        const errorText = 'Такой пользователь уже существует' // ✅ точно как ищет тест
+        const errorText = 'Такой пользователь уже существует'
         showError(errorText)
         return rejectWithValue(errorText)
       }

@@ -13,7 +13,7 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const { loading, isAuthenticated } = useSelector(state => state.auth)
 
-  const [localError, setLocalError] = useState(null) // ✅ локальная ошибка
+  const [localError, setLocalError] = useState(null)
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -42,7 +42,6 @@ const LoginPage = () => {
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">{t('auth.login')}</h2>
 
-              {/* ✅ Показываем локальную ошибку */}
               {localError && (
                 <Alert variant="danger" onClose={() => setLocalError(null)} dismissible>
                   {localError}
