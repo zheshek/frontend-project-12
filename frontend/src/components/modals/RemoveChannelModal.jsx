@@ -28,7 +28,7 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
 
         <p>
           <strong>
-            # 
+            #
             {channel?.name}
              ?
           </strong>

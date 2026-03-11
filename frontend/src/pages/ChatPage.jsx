@@ -233,7 +233,8 @@ const ChatPage = () => {
               minHeight: 0,
             }}
           >
-            {currentMessages.length === 0 ? (
+            {currentMessages.length === 0 
+            ? (
               <p className="text-center text-muted">{t('messages.noMessages')}</p>
             )
               : (

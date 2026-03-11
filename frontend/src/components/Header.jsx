@@ -54,8 +54,8 @@ const Header = () => {
                 <>
                   {getStatusBadge()}
                   <span className="text-white me-3">
-                   <strong>{user?.username}</strong>
-                   </span>
+                    <strong>{user?.username}</strong>
+                  </span>
                   <Button variant="outline-light" size="sm" onClick={handleLogout}>
                     {t('header.logout')}
                   </Button>
