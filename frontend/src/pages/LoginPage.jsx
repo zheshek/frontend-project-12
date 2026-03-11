@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -11,22 +11,26 @@ const LoginPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { loading, isAuthenticated } = useSelector(state => state.auth)
 
-  const { loading, error, isAuthenticated } = useSelector(state => state.auth)
+  const [localError, setLocalError] = useState(null) // ✅ локальная ошибка
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/')
     }
-
     return () => {
       dispatch(clearError())
+      setLocalError(null)
     }
   }, [isAuthenticated, navigate, dispatch])
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    dispatch(clearError())
-    await dispatch(login(values))
+    setLocalError(null)
+    const result = await dispatch(login(values))
+    if (login.rejected.match(result)) {
+      setLocalError(result.payload || 'Ошибка при входе')
+    }
     setSubmitting(false)
   }
 
@@ -38,14 +42,10 @@ const LoginPage = () => {
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">{t('auth.login')}</h2>
 
-              {/* Ошибка login отображается через Alert */}
-              {error && (
-                <Alert
-                  variant="danger"
-                  onClose={() => dispatch(clearError())}
-                  dismissible
-                >
-                  {error}
+              {/* ✅ Показываем локальную ошибку */}
+              {localError && (
+                <Alert variant="danger" onClose={() => setLocalError(null)} dismissible>
+                  {localError}
                 </Alert>
               )}
 
@@ -54,15 +54,7 @@ const LoginPage = () => {
                 validationSchema={loginSchema(t)}
                 onSubmit={handleSubmit}
               >
-                {({
-                  handleSubmit,
-                  handleChange,
-                  handleBlur,
-                  values,
-                  errors,
-                  touched,
-                  isSubmitting,
-                }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, errors, touched, isSubmitting }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
                       <Form.Label>{t('auth.loginUsername')}</Form.Label>
@@ -76,9 +68,7 @@ const LoginPage = () => {
                         autoComplete="username"
                         disabled={loading}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.username}
-                      </Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="password">
@@ -93,36 +83,18 @@ const LoginPage = () => {
                         autoComplete="off"
                         disabled={loading}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.password}
-                      </Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                     </Form.Group>
 
                     <div className="d-grid gap-2">
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        size="lg"
-                        disabled={loading || isSubmitting}
-                      >
-                        {loading && (
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className="me-2"
-                          />
-                        )}
+                      <Button variant="primary" type="submit" size="lg" disabled={loading || isSubmitting}>
+                        {loading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />}
                         {loading ? t('auth.loggingIn') : t('auth.loginButton')}
                       </Button>
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">
-                        {t('auth.noAccount')}{' '}
-                      </span>
+                      <span className="text-muted">{t('auth.noAccount')}{' '}</span>
                       <Link to="/signup">{t('auth.signup')}</Link>
                     </div>
                   </Form>
