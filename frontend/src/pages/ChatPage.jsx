@@ -296,16 +296,15 @@ const ChatPage = () => {
               <Form onSubmit={handleSendMessage}>
                 <InputGroup>
 
-                  <Form.Control
-                    ref={inputRef}
-                    value={newMessage}
-                    onChange={e =>
-                      setNewMessage(e.target.value)
-                    }
-                    placeholder={t('messages.typeMessage')}
-                    autoComplete="off"
-                    disabled={sending}
-                  />
+                <Form.Control
+  ref={inputRef}
+  value={newMessage}
+  onChange={e => setNewMessage(e.target.value)}
+  placeholder={t('messages.typeMessage')}
+  autoComplete="off"
+  disabled={sending}
+  aria-label="Новое сообщение"
+/>
 
                   <Button
                     type="submit"
