@@ -1,6 +1,7 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useSelector } from 'react-redux'
 
 import ChatPage from './pages/ChatPage'
 import LoginPage from './pages/LoginPage'
@@ -8,8 +9,7 @@ import SignupPage from './pages/SignupPage'
 import Header from './components/Header'
 
 function App() {
-  const location = useLocation()
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup'
+  const { isAuthenticated } = useSelector(state => state.auth)
 
   return (
     <div style={{ 
@@ -19,8 +19,7 @@ function App() {
       flexDirection: 'column',
       overflow: 'hidden'
     }}>
-      {/* Шапка показывается только НЕ на страницах логина/регистрации */}
-      {!isAuthPage && <Header />}
+      <Header />
 
       <div style={{ 
         flex: 1,
@@ -29,7 +28,10 @@ function App() {
         flexDirection: 'column'
       }}>
         <Routes>
-          <Route path="/" element={<ChatPage />} />
+          <Route 
+            path="/" 
+            element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} 
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>
