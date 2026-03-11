@@ -1,13 +1,7 @@
 export default [
   {
     files: ['**/*.{js,jsx}'],
-    ignores: [
-      'frontend/dist/**',
-      'dist/**',
-      'node_modules/**',
-      'build/**',
-      '*.config.js',
-    ],
+    ignores: ['frontend/dist/**', 'dist/**', 'node_modules/**', 'build/**', '*.config.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

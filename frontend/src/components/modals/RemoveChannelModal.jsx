@@ -24,21 +24,13 @@ const RemoveChannelModal = ({ show, onHide, onRemoveChannel, channel }) => {
       </Modal.Header>
 
       <Modal.Body>
-        <p>
-          {t('channels.confirmRemove')}
-        </p>
+        <p>{t('channels.confirmRemove')}</p>
 
         <p>
-          <strong>
-            #
-            {channel?.name}
-            ?
-          </strong>
+          <strong>#{channel?.name}?</strong>
         </p>
 
-        <p className="text-danger">
-          {t('channels.messagesWillBeDeleted')}
-        </p>
+        <p className="text-danger">{t('channels.messagesWillBeDeleted')}</p>
       </Modal.Body>
 
       <Modal.Footer>

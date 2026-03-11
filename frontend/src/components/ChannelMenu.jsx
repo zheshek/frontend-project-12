@@ -1,5 +1,5 @@
-import React from 'react';
-import { Dropdown } from 'react-bootstrap';
+import React from 'react'
+import { Dropdown } from 'react-bootstrap'
 
 const CustomToggle = React.forwardRef(({ children, onClick, 'aria-label': ariaLabel }, ref) => (
   <span
@@ -10,15 +10,17 @@ const CustomToggle = React.forwardRef(({ children, onClick, 'aria-label': ariaLa
     className="p-0 text-muted"
     role="button"
     tabIndex={0}
-    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(e); }}
+    onKeyDown={e => {
+      if (e.key === 'Enter' || e.key === ' ') onClick(e)
+    }}
   >
     {children}
   </span>
-));
-CustomToggle.displayName = 'CustomToggle';
+))
+CustomToggle.displayName = 'CustomToggle'
 
 const ChannelMenu = ({ channel, onRename, onRemove }) => {
-  if (!channel.removable) return null;
+  if (!channel.removable) return null
 
   return (
     <Dropdown align="end" style={{ zIndex: 1050 }}>
@@ -29,10 +31,12 @@ const ChannelMenu = ({ channel, onRename, onRemove }) => {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item onClick={() => onRename(channel)}>Переименовать</Dropdown.Item>
-        <Dropdown.Item onClick={() => onRemove(channel)} className="text-danger">Удалить</Dropdown.Item>
+        <Dropdown.Item onClick={() => onRemove(channel)} className="text-danger">
+          Удалить
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
-  );
-};
+  )
+}
 
-export default ChannelMenu;
+export default ChannelMenu

@@ -54,7 +54,15 @@ const LoginPage = () => {
                 validationSchema={loginSchema(t)}
                 onSubmit={handleSubmit}
               >
-                {({ handleSubmit, handleChange, handleBlur, values, errors, touched, isSubmitting }) => (
+                {({
+                  handleSubmit,
+                  handleChange,
+                  handleBlur,
+                  values,
+                  errors,
+                  touched,
+                  isSubmitting,
+                }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
                       <Form.Label>{t('auth.loginUsername')}</Form.Label>
@@ -68,7 +76,9 @@ const LoginPage = () => {
                         autoComplete="username"
                         disabled={loading}
                       />
-                      <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.username}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="password">
@@ -83,18 +93,34 @@ const LoginPage = () => {
                         autoComplete="off"
                         disabled={loading}
                       />
-                      <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.password}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <div className="d-grid gap-2">
-                      <Button variant="primary" type="submit" size="lg" disabled={loading || isSubmitting}>
-                        {loading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />}
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        size="lg"
+                        disabled={loading || isSubmitting}
+                      >
+                        {loading && (
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            className="me-2"
+                          />
+                        )}
                         {loading ? t('auth.loggingIn') : t('auth.loginButton')}
                       </Button>
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">{t('auth.noAccount')}{' '}</span>
+                      <span className="text-muted">{t('auth.noAccount')} </span>
                       <Link to="/signup">{t('auth.signup')}</Link>
                     </div>
                   </Form>

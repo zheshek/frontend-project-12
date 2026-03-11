@@ -15,21 +15,21 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
     }
   }, [show])
 
- const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
-  try {
-    const cleanName = profanityFilter.clean(values.name)
+  const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
+    try {
+      const cleanName = profanityFilter.clean(values.name)
 
-    await onAddChannel(cleanName)
-    resetForm()
-    onHide()
-  } catch (err) {
-    setErrors({
-      name: err?.message || t('modals.addChannel.error'),
-    })
-  } finally {
-    setSubmitting(false)
+      await onAddChannel(cleanName)
+      resetForm()
+      onHide()
+    } catch (err) {
+      setErrors({
+        name: err?.message || t('modals.addChannel.error'),
+      })
+    } finally {
+      setSubmitting(false)
+    }
   }
-}
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -41,34 +41,24 @@ const AddChannelModal = ({ show, onHide, onAddChannel, channelNames }) => {
         validationSchema={addChannelSchema(t, channelNames)}
         onSubmit={handleSubmit}
       >
-        {({
-          handleSubmit,
-          handleChange,
-          handleBlur,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
+        {({ handleSubmit, handleChange, handleBlur, values, errors, touched, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <Modal.Body>
               <Form.Group>
                 <Form.Label>{t('channels.newChannelName')}</Form.Label>
-<Form.Control
-  type="text"
-  name="name"
-  value={values.name}
-  onChange={handleChange}
-  onBlur={handleBlur}
-  isInvalid={Boolean(touched.name && errors.name)}
-  ref={inputRef}
-  disabled={isSubmitting}
-  autoComplete="off"
-  aria-label="Имя канала"
-/>
-                <Form.Control.Feedback type="invalid">
-                  {errors.name}
-                </Form.Control.Feedback>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={Boolean(touched.name && errors.name)}
+                  ref={inputRef}
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                  aria-label="Имя канала"
+                />
+                <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
             </Modal.Body>
 

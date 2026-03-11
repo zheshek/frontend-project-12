@@ -2,16 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Form,
-  Button,
-  Container,
-  Row,
-  Col,
-  Card,
-  Alert,
-  Spinner,
-} from 'react-bootstrap'
+import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap'
 import { Formik } from 'formik'
 import { signup, clearError } from '../store/slices/authSlice'
 import { getSignupSchema } from '../schemas/signupSchema'
@@ -155,7 +146,7 @@ const SignupPage = () => {
                     </div>
 
                     <div className="text-center mt-3">
-                      <span className="text-muted">{t('auth.hasAccount')}{' '}</span>
+                      <span className="text-muted">{t('auth.hasAccount')} </span>
                       <Link to="/login">{t('auth.login')}</Link>
                     </div>
                   </Form>

@@ -3,11 +3,11 @@ import axios from 'axios'
 import { showSuccess, showError } from '../../utils/toast'
 import socketService from '../../services/socket'
 
-const saveToken = (token) => {
+const saveToken = token => {
   localStorage.setItem('token', token)
 }
 
-const saveUser = (user) => {
+const saveUser = user => {
   localStorage.setItem('user', JSON.stringify(user))
 }
 
@@ -22,14 +22,14 @@ const ensureSocketConnection = () => {
   if (connectionTimer) {
     clearTimeout(connectionTimer)
   }
-  
+
   connectionTimer = setTimeout(() => {
     const token = localStorage.getItem('token')
     if (!token) return
 
     const status = socketService.getStatus()
     console.log('🔌 Socket status in auth:', status)
-    
+
     if (!status.connected && !status.socketConnected) {
       socketService.connect()
     }
@@ -61,7 +61,7 @@ export const login = createAsyncThunk(
       showError(errorText)
       return rejectWithValue(errorText)
     }
-  },
+  }
 )
 
 // ======================== SIGNUP ========================
@@ -89,28 +89,25 @@ export const signup = createAsyncThunk(
       showError(errorText)
       return rejectWithValue(errorText)
     }
-  },
+  }
 )
 
 // ======================== CHECK AUTH ========================
-export const checkAuth = createAsyncThunk(
-  'auth/check',
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem('token')
-    const userStr = localStorage.getItem('user')
+export const checkAuth = createAsyncThunk('auth/check', async (_, { rejectWithValue }) => {
+  const token = localStorage.getItem('token')
+  const userStr = localStorage.getItem('user')
 
-    if (!token || !userStr) {
-      return rejectWithValue('No auth data')
-    }
+  if (!token || !userStr) {
+    return rejectWithValue('No auth data')
+  }
 
-    try {
-      const user = JSON.parse(userStr)
-      return { token, user }
-    } catch (e) {
-      return rejectWithValue('Invalid user data')
-    }
-  },
-)
+  try {
+    const user = JSON.parse(userStr)
+    return { token, user }
+  } catch (e) {
+    return rejectWithValue('Invalid user data')
+  }
+})
 
 const authSlice = createSlice({
   name: 'auth',
@@ -122,7 +119,7 @@ const authSlice = createSlice({
     isAuthenticated: Boolean(localStorage.getItem('token') && localStorage.getItem('user')),
   },
   reducers: {
-    logout: (state) => {
+    logout: state => {
       state.user = null
       state.token = null
       state.isAuthenticated = false
@@ -132,14 +129,14 @@ const authSlice = createSlice({
 
       showSuccess('До встречи!')
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // ---------- LOGIN ----------
-      .addCase(login.pending, (state) => {
+      .addCase(login.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -155,7 +152,7 @@ const authSlice = createSlice({
       })
 
       // ---------- SIGNUP ----------
-      .addCase(signup.pending, (state) => {
+      .addCase(signup.pending, state => {
         state.loading = true
         state.error = null
       })
@@ -178,13 +175,13 @@ const authSlice = createSlice({
         state.loading = false
         ensureSocketConnection()
       })
-      .addCase(checkAuth.rejected, (state) => {
+      .addCase(checkAuth.rejected, state => {
         state.token = null
         state.user = null
         state.isAuthenticated = false
         state.loading = false
       })
-      .addCase(checkAuth.pending, (state) => {
+      .addCase(checkAuth.pending, state => {
         state.loading = true
       })
   },

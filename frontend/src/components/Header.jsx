@@ -19,11 +19,23 @@ const Header = () => {
   const getStatusBadge = () => {
     switch (connectionStatus) {
       case 'connected':
-        return <Badge bg="success" className="me-2">● Online</Badge>
+        return (
+          <Badge bg="success" className="me-2">
+            ● Online
+          </Badge>
+        )
       case 'reconnecting':
-        return <Badge bg="warning" text="dark" className="me-2">⟳ Reconnecting</Badge>
+        return (
+          <Badge bg="warning" text="dark" className="me-2">
+            ⟳ Reconnecting
+          </Badge>
+        )
       case 'disconnected':
-        return <Badge bg="danger" className="me-2">○ Offline</Badge>
+        return (
+          <Badge bg="danger" className="me-2">
+            ○ Offline
+          </Badge>
+        )
       default:
         return null
     }
@@ -32,7 +44,9 @@ const Header = () => {
   return (
     <Navbar bg="primary" variant="dark" className="flex-shrink-0">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">
+          Hexlet Chat
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (

@@ -66,15 +66,11 @@ const ChatPage = () => {
     connectionStatus,
   } = useSelector(state => state.messages)
 
-  const currentChannel = channels.find(
-    c => Number(c.id) === Number(currentChannelId)
-  )
+  const currentChannel = channels.find(c => Number(c.id) === Number(currentChannelId))
 
   const channelNames = channels.map(c => c.name)
 
-  const currentMessages = messages.filter(
-    m => Number(m.channelId) === Number(currentChannelId)
-  )
+  const currentMessages = messages.filter(m => Number(m.channelId) === Number(currentChannelId))
 
   useEffect(() => {
     dispatch(fetchChannels())
@@ -125,12 +121,7 @@ const ChatPage = () => {
   const handleSendMessage = async e => {
     e.preventDefault()
 
-    if (
-      !newMessage.trim() ||
-      !currentChannelId ||
-      sending ||
-      connectionStatus !== 'connected'
-    ) {
+    if (!newMessage.trim() || !currentChannelId || sending || connectionStatus !== 'connected') {
       return
     }
 
@@ -156,41 +147,23 @@ const ChatPage = () => {
 
   if (channelsLoading || messagesLoading) {
     return (
-      <Container
-        fluid
-        className="h-100 d-flex justify-content-center align-items-center"
-      >
+      <Container fluid className="h-100 d-flex justify-content-center align-items-center">
         <Spinner animation="border" variant="primary" />
       </Container>
     )
   }
 
   return (
-    <Container
-      fluid
-      className="p-0"
-      style={{ height: '100vh', overflow: 'hidden' }}
-    >
+    <Container fluid className="p-0" style={{ height: '100vh', overflow: 'hidden' }}>
       <Row className="g-0 h-100">
-
         {/* Каналы */}
 
-        <Col
-          md={3}
-          lg={2}
-          className="bg-light border-end d-flex flex-column h-100"
-        >
+        <Col md={3} lg={2} className="bg-light border-end d-flex flex-column h-100">
           <div className="p-3 border-bottom">
             <div className="d-flex justify-content-between align-items-center">
-              <h6 className="text-muted mb-0">
-                {t('channels.title')}
-              </h6>
+              <h6 className="text-muted mb-0">{t('channels.title')}</h6>
 
-              <Button
-                variant="success"
-                size="sm"
-                onClick={() => setShowAddModal(true)}
-              >
+              <Button variant="success" size="sm" onClick={() => setShowAddModal(true)}>
                 +
               </Button>
             </div>
@@ -198,22 +171,15 @@ const ChatPage = () => {
 
           <div style={{ flex: 1, overflowY: 'auto' }}>
             <ListGroup variant="flush">
-
               {channels.map(channel => (
                 <ListGroup.Item
                   key={channel.id}
                   action
-                  active={
-                    Number(channel.id) === Number(currentChannelId)
-                  }
-                  onClick={() =>
-                    dispatch(setCurrentChannel(channel.id))
-                  }
+                  active={Number(channel.id) === Number(currentChannelId)}
+                  onClick={() => dispatch(setCurrentChannel(channel.id))}
                   className="d-flex justify-content-between align-items-center"
                 >
-                  <span className="text-truncate">
-                    # {channel.name}
-                  </span>
+                  <span className="text-truncate"># {channel.name}</span>
 
                   <ChannelMenu
                     channel={channel}
@@ -228,25 +194,17 @@ const ChatPage = () => {
                   />
                 </ListGroup.Item>
               ))}
-
             </ListGroup>
           </div>
         </Col>
 
         {/* Чат */}
 
-        <Col
-          md={9}
-          lg={10}
-          className="d-flex flex-column h-100"
-        >
-
+        <Col md={9} lg={10} className="d-flex flex-column h-100">
           {/* Заголовок */}
 
           <div className="p-3 border-bottom flex-shrink-0">
-            <h4>
-              # {currentChannel?.name || t('channels.select')}
-            </h4>
+            <h4># {currentChannel?.name || t('channels.select')}</h4>
           </div>
 
           {connectionStatus !== 'connected' && (
@@ -266,22 +224,13 @@ const ChatPage = () => {
             }}
           >
             {currentMessages.length === 0 ? (
-              <p className="text-center text-muted">
-                {t('messages.noMessages')}
-              </p>
+              <p className="text-center text-muted">{t('messages.noMessages')}</p>
             ) : (
               currentMessages.map(msg => (
-                <div
-                  key={msg.id}
-                  className="mb-3 p-2 bg-white rounded shadow-sm"
-                >
-                  <strong className="me-2 text-primary">
-                    {msg.username || 'unknown'}
-                  </strong>
+                <div key={msg.id} className="mb-3 p-2 bg-white rounded shadow-sm">
+                  <strong className="me-2 text-primary">{msg.username || 'unknown'}</strong>
 
-                  <p className="mb-0">
-                    {msg.text}
-                  </p>
+                  <p className="mb-0">{msg.text}</p>
                 </div>
               ))
             )}
@@ -295,32 +244,23 @@ const ChatPage = () => {
             <div className="p-3 border-top flex-shrink-0">
               <Form onSubmit={handleSendMessage}>
                 <InputGroup>
+                  <Form.Control
+                    ref={inputRef}
+                    value={newMessage}
+                    onChange={e => setNewMessage(e.target.value)}
+                    placeholder={t('messages.typeMessage')}
+                    autoComplete="off"
+                    disabled={sending}
+                    aria-label="Новое сообщение"
+                  />
 
-                <Form.Control
-  ref={inputRef}
-  value={newMessage}
-  onChange={e => setNewMessage(e.target.value)}
-  placeholder={t('messages.typeMessage')}
-  autoComplete="off"
-  disabled={sending}
-  aria-label="Новое сообщение"
-/>
-
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={!newMessage.trim() || sending}
-                  >
-                    {sending
-                      ? t('messages.sending')
-                      : t('send')}
+                  <Button type="submit" variant="primary" disabled={!newMessage.trim() || sending}>
+                    {sending ? t('messages.sending') : t('send')}
                   </Button>
-
                 </InputGroup>
               </Form>
             </div>
           )}
-
         </Col>
       </Row>
 
@@ -352,12 +292,9 @@ const ChatPage = () => {
           setShowRemoveModal(false)
           setSelectedChannel(null)
         }}
-        onRemoveChannel={id =>
-          dispatch(removeChannel(id))
-        }
+        onRemoveChannel={id => dispatch(removeChannel(id))}
         channel={selectedChannel}
       />
-
     </Container>
   )
 }

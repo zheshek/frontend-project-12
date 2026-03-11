@@ -12,26 +12,27 @@ function App() {
   const { isAuthenticated } = useSelector(state => state.auth)
 
   return (
-    <div style={{ 
-      height: '100vh',
-      width: '100vw',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden'
-    }}>
+    <div
+      style={{
+        height: '100vh',
+        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}
+    >
       <Header />
 
-      <div style={{ 
-        flex: 1,
-        overflow: 'auto',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
+      <div
+        style={{
+          flex: 1,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <Routes>
-          <Route 
-            path="/" 
-            element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} 
-          />
+          <Route path="/" element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>
